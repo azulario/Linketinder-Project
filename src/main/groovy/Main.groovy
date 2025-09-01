@@ -20,6 +20,10 @@ class Main {
         new Empresa("Mobile Makers", "contato@mobilemakers.com", "BA", "40001-000", "Desenvolvimento Mobile", ["Kotlin", "Flutter"], "65.432.198/0001-00", "Brasil")
     ]
 
+    static List<Curtida> curtidasCandidato = []
+    static List<Curtida> curtidasEmpresa = []
+    static List<Curtida> matches = []
+
     static void listarCandidatos() {
         println "\n--- Lista de Candidatos ---"
         candidatos.each { c ->
@@ -34,13 +38,84 @@ class Main {
         }
     }
 
+    static void candidatoCurteVaga() {
+        println "\nEscolha o candidato pelo número:"
+        candidatos.eachWithIndex { c, i -> println "${i+1} - ${c.nome}" }
+        def idxCand = (System.console() ? System.console().readLine() : new Scanner(System.in).nextLine()).toInteger() - 1
+        if (idxCand < 0 || idxCand >= candidatos.size()) { println "Candidato inválido!"; return }
+        def candidato = candidatos[idxCand]
+
+        println "Escolha a empresa pelo número:"
+        empresas.eachWithIndex { e, i -> println "${i+1} - ${e.nome}" }
+        def idxEmp = (System.console() ? System.console().readLine() : new Scanner(System.in).nextLine()).toInteger() - 1
+        if (idxEmp < 0 || idxEmp >= empresas.size()) { println "Empresa inválida!"; return }
+        def empresa = empresas[idxEmp]
+
+        println "Escolha a competência/vaga para curtir:"
+        empresa.competencias.eachWithIndex { comp, i -> println "${i+1} - ${comp}" }
+        def idxComp = (System.console() ? System.console().readLine() : new Scanner(System.in).nextLine()).toInteger() - 1
+        if (idxComp < 0 || idxComp >= empresa.competencias.size()) { println "Competência inválida!"; return }
+        def competencia = empresa.competencias[idxComp]
+
+        def curtida = new Curtida(candidato, empresa, competencia)
+        curtidasCandidato << curtida
+        println "Candidato ${candidato.nome} curtiu a vaga ${competencia} da empresa ${empresa.nome}."
+    }
+
+    static void empresaCurteCandidato() {
+        println "\nEscolha a empresa pelo número:"
+        empresas.eachWithIndex { e, i -> println "${i+1} - ${e.nome}" }
+        def idxEmp = (System.console() ? System.console().readLine() : new Scanner(System.in).nextLine()).toInteger() - 1
+        if (idxEmp < 0 || idxEmp >= empresas.size()) { println "Empresa inválida!"; return }
+        def empresa = empresas[idxEmp]
+
+        println "Escolha o candidato pelo número:"
+        candidatos.eachWithIndex { c, i -> println "${i+1} - ${c.nome}" }
+        def idxCand = (System.console() ? System.console().readLine() : new Scanner(System.in).nextLine()).toInteger() - 1
+        if (idxCand < 0 || idxCand >= candidatos.size()) { println "Candidato inválido!"; return }
+        def candidato = candidatos[idxCand]
+
+        println "Escolha a competência/vaga para curtir:"
+        candidato.competencias.eachWithIndex { comp, i -> println "${i+1} - ${comp}" }
+        def idxComp = (System.console() ? System.console().readLine() : new Scanner(System.in).nextLine()).toInteger() - 1
+        if (idxComp < 0 || idxComp >= candidato.competencias.size()) { println "Competência inválida!"; return }
+        def competencia = candidato.competencias[idxComp]
+
+        def curtida = new Curtida(candidato, empresa, competencia)
+        curtidasEmpresa << curtida
+        println "Empresa ${empresa.nome} curtiu o candidato ${candidato.nome} para a vaga ${competencia}."
+
+        // Verifica se já existe curtida recíproca
+        def match = curtidasCandidato.find { it.candidato == candidato && it.empresa == empresa && it.competencia == competencia }
+        if (match && !matches.find { it.candidato == candidato && it.empresa == empresa && it.competencia == competencia }) {
+            curtida.match = true
+            match.match = true
+            matches << curtida
+            println "MATCH! Empresa ${empresa.nome} e candidato ${candidato.nome} para a vaga ${competencia}."
+        }
+    }
+
+    static void listarMatches() {
+        println "\n--- Matches ---"
+        if (matches.isEmpty()) {
+            println "Nenhum match encontrado ainda."
+        } else {
+            matches.each { m ->
+                println "Empresa: ${m.empresa.nome}, Candidato: ${m.candidato.nome}, Vaga: ${m.competencia}"
+            }
+        }
+    }
+
     static void main(String[] args) {
         while (true) {
-            println "\nMenu Principal:\n1 - Listar Candidatos\n2 - Listar Empresas\n0 - Sair"
+            println "\nMenu Principal:\n1 - Listar Candidatos\n2 - Listar Empresas\n3 - Candidato curtir vaga de empresa\n4 - Empresa curtir candidato\n5 - Listar matches\n0 - Sair"
             def opcao = System.console() ? System.console().readLine() : new Scanner(System.in).nextLine()
             switch(opcao) {
                 case "1": listarCandidatos(); break
                 case "2": listarEmpresas(); break
+                case "3": candidatoCurteVaga(); break
+                case "4": empresaCurteCandidato(); break
+                case "5": listarMatches(); break
                 case "0": println "Saindo..."; return
                 default: println "Opção inválida!"
             }

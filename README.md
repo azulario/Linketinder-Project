@@ -29,6 +29,19 @@ Projeto MVP de backend para sistema de contratação inspirado no Linkedin e Tin
 - src/main/groovy/Empresa.groovy: Classe de empresa
 - src/main/groovy/Main.groovy: Programa principal
 
+## Novidade: Sistema de Curtidas e Match
+
+Agora o Linketinder possui um sistema de curtidas e match:
+- Candidatos podem curtir vagas de empresas.
+- Empresas podem curtir candidatos para vagas específicas.
+- Quando há curtida recíproca para a mesma vaga, ocorre um MATCH e ambos podem visualizar a relação.
+
+### Novas opções do menu:
+- 3 - Candidato curtir vaga de empresa
+- 4 - Empresa curtir candidato
+- 5 - Listar matches
+
+Use essas opções para simular o funcionamento do Linketinder e visualizar matches entre candidatos e empresas!
+
 ## Observações
 Este projeto é um MVP e pode ser expandido para cadastro dinâmico de candidatos e empresas.
-
