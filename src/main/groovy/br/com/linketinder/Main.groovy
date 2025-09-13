@@ -5,13 +5,6 @@ package br.com.linketinder
 import br.com.linketinder.dominio.Candidato
 import br.com.linketinder.dominio.Empresa
 import br.com.linketinder.servico.SistemaMatch
-import br.com.linketinder.dto.PerfilPublico
-import br.com.linketinder.dto.DadosPessoais
-
-import java.util.List
-import java.util.Optional
-import java.util.Scanner
-import groovy.transform.Field
 
 class Main {
     /*
@@ -32,10 +25,36 @@ class Main {
 
 
     static void main(String[] args) {
+        SistemaMatch sistema = new SistemaMatch()
+
+        // Listas no formato enxuto (id, nome, email, telefone, competencias)
+        List<Candidato> candidatos = List.of(
+            new Candidato("cand-1", "Ana Silva", "ana@email.com", "555-0001", List.of("Java", "Spring Framework")),
+            new Candidato("cand-2", "Bruno Souza", "bruno@email.com", "555-0002", List.of("Angular", "JavaScript")),
+            new Candidato("cand-3", "Carla Lima", "carla@email.com", "555-0003", List.of("Python", "Django")),
+            new Candidato("cand-4", "Daniel Costa", "daniel@email.com", "555-0004", List.of("AWS", "Docker")),
+            new Candidato("cand-5", "Eduarda Alves", "eduarda@email.com", "555-0005", List.of("Kotlin", "Flutter"))
+        )
+
+        List<Empresa> empresas = List.of(
+            new Empresa("emp-1", "Arroz-Gostoso", "contato@arrozgostoso.com", "555-1001", List.of("Java", "Spring Framework")),
+            new Empresa("emp-2", "Império do Boliche", "contato@boliche.com", "555-1002", List.of("Angular", "JavaScript")),
+            new Empresa("emp-3", "Tech Solutions", "contato@techsolutions.com", "555-1003", List.of("Python", "Django")),
+            new Empresa("emp-4", "Cloud Experts", "contato@cloudexperts.com", "555-1004", List.of("AWS", "Docker")),
+            new Empresa("emp-5", "Mobile Makers", "contato@mobilemakers.com", "555-1005", List.of("Kotlin", "Flutter"))
+        )
+
+        // Menu interativo
         Scanner scanner = new Scanner(System.in)
         while (true) {
-            println "\nMenu Principal:\n1 - Listar Candidatos\n2 - Listar Empresas\n3 - Candidato curtir vaga de empresa\n4 - Empresa curtir candidato\n5 - Listar matches\n0 - Sair"
+            println "\nMenu Principal:" +
+                    "\n1 - Listar Candidatos(perfil público)" +
+                    "\n2 - Listar Empresas(perfil público)" +
+                    "\n3 - Candidato curtir vaga de empresa" +
+                    "\n4 - Empresa curtir candidato" +
+                    "\n5 - Listar matches e revelar dados \n0 - Sair"
             String opcao = System.console() ? System.console().readLine() : scanner.nextLine()
+
             switch(opcao) {
                 case "1": listarCandidatos(); break
                 case "2": listarEmpresas(); break
