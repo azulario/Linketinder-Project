@@ -4,6 +4,22 @@
 import groovy.transform.Field
 
 class Main {
+    /*
+     TODO: Implementar curtida às cegas:
+         - Candidato só pode ver as competências/vagas que a empresa busca, não detalhes da empresa.
+         - Empresa só pode ver as competências que o candidato oferece, não detalhes do candidato.
+         - Garantir privacidade dos perfis até o match.
+     TODO: Refatorar Main:
+         - Deixar o Main apenas como orquestrador, chamando métodos das classes de domínio.
+         - Mover lógicas de negócio para as classes apropriadas (Candidato, Empresa, Curtida, etc).
+         - Reduzir o tamanho do Main, removendo código duplicado e responsabilidades excessivas.
+         - Criar métodos utilitários para entrada/saída, se necessário.
+         - Facilitar testes unitários e manutenção.
+     TODO: Validar fluxos de match e curtidas recíprocas.
+     TODO: Garantir tratamento de erros e entradas inválidas.
+     TODO: Melhorar experiência do usuário no menu e fluxos.
+    */
+
     static List<Candidato> candidatos = [
         new Candidato("Ana Silva", "ana@email.com", "SP", "01000-000", "Desenvolvedora experiente", ["Java", "Spring Framework"], "123.456.789-00", 28),
         new Candidato("Bruno Souza", "bruno@email.com", "RJ", "20000-000", "Especialista em Frontend", ["Angular", "JavaScript"], "987.654.321-00", 32),
