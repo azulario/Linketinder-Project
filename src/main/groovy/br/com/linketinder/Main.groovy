@@ -46,7 +46,6 @@ class Main {
     static CandidatoController candidatoController
 
     static void main(String[] args) {
-        sistema = new SistemaMatch()
         candidatos = List.of(
             new Candidato("cand-1", "Ana Silva", "ana@email.com", "555-0001", List.of("Java", "Spring Framework")),
             new Candidato("cand-2", "Bruno Souza", "bruno@email.com", "555-0002", List.of("Angular", "JavaScript")),
@@ -61,10 +60,11 @@ class Main {
             new Empresa("emp-4", "Cloud Experts", "contato@cloudexperts.com", "555-1004", List.of("AWS", "Docker")),
             new Empresa("emp-5", "Mobile Makers", "contato@mobilemakers.com", "555-1005", List.of("Kotlin", "Flutter"))
         )
+        sistema = new SistemaMatch(candidatos, empresas)
         scanner = new Scanner(System.in)
         context = new MenuContext(sistema, candidatos, empresas, scanner)
-        empresaController = new EmpresaControllerImpl()
-        candidatoController = new CandidatoControllerImpl()
+        empresaController = new EmpresaControllerImpl(sistema)
+        candidatoController = new CandidatoControllerImpl(sistema)
         while (true) {
             println "\nMenu Principal:" +
                     "\n1 - Listar Candidatos(perfil público)" +

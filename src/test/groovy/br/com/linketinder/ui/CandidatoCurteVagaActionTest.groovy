@@ -6,7 +6,7 @@ class CandidatoCurteVagaActionTest extends Specification {
     def "deve delegar ao controller e retornar true"() {
         given:
         def controller = Mock(CandidatoController) {
-            1 * curtirVaga(1, 2) >> true
+            1 * curtirVaga("1", "2") >> true
         }
         def action = new CandidatoCurteVagaAction(controller)
 

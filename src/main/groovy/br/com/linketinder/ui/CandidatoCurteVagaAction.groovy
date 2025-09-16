@@ -15,7 +15,7 @@ class CandidatoCurteVagaAction {
     boolean executar(Object idCandidato, Object idVaga) {
         long candidatoId = validarEConverterId(idCandidato, "idCandidato")
         long vagaId = validarEConverterId(idVaga, "idVaga")
-        return candidatoController.curtirVaga((int)candidatoId, (int)vagaId)
+        return candidatoController.curtirVaga(String.valueOf(candidatoId), String.valueOf(vagaId))
     }
 
     private static long validarEConverterId(Object valor, String nomeCampo) {

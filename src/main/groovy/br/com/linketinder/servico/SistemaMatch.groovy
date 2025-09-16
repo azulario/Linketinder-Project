@@ -8,13 +8,24 @@ import br.com.linketinder.dto.PerfilPublico
 import java.util.Collections
 import java.util.HashMap
 import java.util.HashSet
+import java.util.List
 import java.util.Map
 import java.util.Optional
 import java.util.Set
 
 class SistemaMatch {
-    private  final Map<String, Set<String>> likesCandParaEmpresa = new HashMap<>()
-    private  final Map<String, Set<String>> likesEmpParaCandidato = new HashMap<>()
+    private final Map<String, Set<String>> likesCandParaEmpresa = new HashMap<>()
+    private final Map<String, Set<String>> likesEmpParaCandidato = new HashMap<>()
+
+    List<Candidato> candidatos = []
+    List<Empresa> empresas = []
+
+    SistemaMatch(List<Candidato> candidatos, List<Empresa> empresas) {
+        this.candidatos = candidatos
+        this.empresas = empresas
+    }
+
+    SistemaMatch() {}
 
     PerfilPublico verPerfilPublico(Candidato candidato) {
         candidato.obterPerfilPublico()
