@@ -25,22 +25,18 @@ class SistemaMatch {
     }
 
     void curtir(Candidato candidato, Empresa empresa) {
-        likesCandParaEmpresa.putifAbsent(candidato.id) {
-            new HashSet<>()
-        }.add(empresa.id)
+        likesCandParaEmpresa.computeIfAbsent(candidato.getId(), { new HashSet<>() }).add(empresa.getId())
     }
 
     void curtir(Empresa empresa, Candidato candidato) {
-        likesEmpParaCandidato.putifAbsent(empresa.id) {
-            new HashSet<>()
-        }.add(candidato.id)
+        likesEmpParaCandidato.computeIfAbsent(empresa.getId(), { new HashSet<>() }).add(candidato.getId())
     }
     // Verifica se houve um match entre o candidato e a empresa.
     // Um match ocorre quando o candidato curtiu a empresa e a empresa também curtiu o candidato
 
     boolean deuMatch(Candidato candidato, Empresa empresa) {
-        boolean candCurt = likesCandParaEmpresa.getOrDefault(candidato.id, Collections.emptySet()).contains(empresa.id)
-        boolean empCurtiu = likesEmpParaCandidato.getOrDefault(empresa.id, Collections.emptySet()).contains(candidato.id)
+        boolean candCurt = likesCandParaEmpresa.getOrDefault(candidato.getId(), Collections.emptySet()).contains(empresa.getId())
+        boolean empCurtiu = likesEmpParaCandidato.getOrDefault(empresa.getId(), Collections.emptySet()).contains(candidato.getId())
         return candCurt && empCurtiu
     }
 

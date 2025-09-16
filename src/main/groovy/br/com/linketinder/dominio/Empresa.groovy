@@ -8,11 +8,13 @@ import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode(includes = ['id'])
 class Empresa {
-    final String id
-    final String razaoSocial
-    final String email
-    final String telefone
-    final List<String> competenciasBuscadas
+    String id
+    String razaoSocial
+    String email
+    String telefone
+    List<String> competenciasBuscadas
+
+    Empresa() {}
 
     Empresa(String id, String razaoSocial, String email, String telefone, List<String> competenciasBuscadas) {
         this.id = id
@@ -23,12 +25,16 @@ class Empresa {
     }
 
     PerfilPublico obterPerfilPublico() {
-       new PerfilPublico(id, TipoUsuario.EMPRESA as String,competenciasBuscadas)
+       new PerfilPublico(razaoSocial, "Empresa", competenciasBuscadas)
     }
 
     DadosPessoais obterDadosPessoais() {
-        new DadosPessoais(id,razaoSocial,email,telefone)
+        new DadosPessoais(razaoSocial, email, telefone)
     }
+
+    String getId() { return this.id }
+    String getRazaoSocial() { return this.razaoSocial }
+    String getEmail() { return this.email }
+    String getTelefone() { return this.telefone }
+    List<String> getCompetenciasBuscadas() { return this.competenciasBuscadas }
 }
-
-

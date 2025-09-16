@@ -7,8 +7,8 @@ class DadosPessoais {
     final String telefone
 
     DadosPessoais(String nomeOuRazao, String email, String telefone) {
-        this.nome = nomeOuRazao
-        this.email = emailOuRazao
-        this.telefone = telefonezao
+        this.nomeOuRazao = nomeOuRazao
+        this.email = email
+        this.telefone = telefone
     }
 }

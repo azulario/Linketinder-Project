@@ -17,7 +17,7 @@ class ListarEmpresasAction {
             println "Nenhuma empresa cadastrada."
         } else {
             context.empresas.eachWithIndex { empresa, index ->
-                println "${index + 1}. ${empresa.nome} - ${empresa.descricao}"
+                println "ID: ${empresa.id} | Competências desejadas: ${empresa.competenciasBuscadas.join(', ')}"
             }
         }
     }

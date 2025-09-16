@@ -23,10 +23,16 @@ class Candidato{
     }
 
     PerfilPublico obterPerfilPublico() {
-        return new PerfilPublico(id, TipoUsuario.CANDIDATO, competencias)
+        return new PerfilPublico(nome, "Candidato", competencias)
     }
 
     DadosPessoais obterDadosPessoais() {
-        return new DadosPessoais(id, nome, email, telefone)
+        return new DadosPessoais(nome, email, telefone)
     }
+
+    String getId() { return this.id }
+    String getNome() { return this.nome }
+    String getEmail() { return this.email }
+    String getTelefone() { return this.telefone }
+    List<String> getCompetencias() { return this.competencias }
 }

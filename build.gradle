@@ -25,7 +25,7 @@ test {
     jvmArgs '--add-opens', 'java.base/java.lang=ALL-UNNAMED'
 }
 
-mainClassName = 'Main'
+mainClassName = 'br.com.linketinder.Main'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
