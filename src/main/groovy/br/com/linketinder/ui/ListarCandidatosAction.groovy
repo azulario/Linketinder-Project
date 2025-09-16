@@ -7,15 +7,13 @@ class ListarCandidatosAction {
         this.context = context
     }
 
-    @Override
     String label() {
         "Listar Candidatos (perfil público)"
     }
 
-    @Override
     void execute() {
         context.candidatos.eachWithIndex { candidato, index ->
-            def perfil = candidato.perfilPublico(candidato)
+            def perfil = candidato.obterPerfilPublico()
             println "${index}) id = ${candidato.id} competencias = ${perfil.competencias}"
         }
     }

@@ -11,14 +11,23 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.apache.groovy:groovy:5.0.0'
+    implementation 'org.codehaus.groovy:groovy:3.0.9'
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.spockframework:spock-core:2.3-groovy-3.0'
+    testImplementation 'cglib:cglib-nodep:3.3.0'
+    testImplementation 'org.codehaus.groovy:groovy-all:3.0.9'
 }
 
 test {
     useJUnitPlatform()
+    jvmArgs '--add-opens', 'java.base/java.lang=ALL-UNNAMED'
 }
 
 mainClassName = 'Main'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}

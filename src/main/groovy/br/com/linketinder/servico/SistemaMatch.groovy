@@ -13,8 +13,8 @@ import java.util.Optional
 import java.util.Set
 
 class SistemaMatch {
-    private  final Map<String, Set<<String>> likesCandParaEmpresa = new HashMap<>()
-    private  final Map<String, Set<<String>> likesEmpParaCandidato = new HashMap<>()
+    private  final Map<String, Set<String>> likesCandParaEmpresa = new HashMap<>()
+    private  final Map<String, Set<String>> likesEmpParaCandidato = new HashMap<>()
 
     PerfilPublico verPerfilPublico(Candidato candidato) {
         candidato.obterPerfilPublico()

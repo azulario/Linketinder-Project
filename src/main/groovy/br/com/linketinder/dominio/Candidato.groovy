@@ -6,11 +6,13 @@ import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode(includes = ['id'])
 class Candidato{
-    final String id
-    final String nome
-    final String email
-    final String telefone
-    final List<String> competencias
+    String id
+    String nome
+    String email
+    String telefone
+    List<String> competencias
+
+    Candidato() {}
 
     Candidato(String id, String nome, String email, String telefone, List<String> competencias) {
         this.id = id
@@ -28,4 +30,3 @@ class Candidato{
         return new DadosPessoais(id, nome, email, telefone)
     }
 }
-
