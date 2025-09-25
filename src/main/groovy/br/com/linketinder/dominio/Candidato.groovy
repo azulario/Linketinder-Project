@@ -12,8 +12,6 @@ class Candidato{
     String telefone
     List<String> competencias
 
-    Candidato() {}
-
     Candidato(String id, String nome, String email, String telefone, List<String> competencias) {
         this.id = id
         this.nome = nome

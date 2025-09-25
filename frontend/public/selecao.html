@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Linketinder - Seleção</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-100 to-gray-200">
+<div class="w-full max-w-sm h-[90vh] flex flex-col">
+
+    <!-- Header estilo Tinder -->
+    <header class="flex justify-between items-center px-4 py-2">
+        <span class="material-icons text-gray-600 text-2xl">person</span>
+        <h1 class="text-pink-600 text-xl font-bold">Linketinder</h1>
+        <span class="material-icons text-gray-600 text-2xl">chat</span>
+    </header>
+
+    <!-- Card principal -->
+    <div class="flex-grow flex items-center justify-center">
+        <div class="relative w-full h-[70vh] rounded-3xl shadow-xl overflow-hidden bg-gray-200">
+            <!-- Imagem (aqui placeholder) -->
+            <img src="https://via.placeholder.com/400x600.png?text=Foto+Misteriosa"
+                 alt="perfil" class="w-full h-full object-cover">
+
+            <!-- Gradiente escuro no rodapé do card -->
+            <div class="absolute bottom-0 w-full p-4 bg-gradient-to-t from-black/70 to-transparent text-white">
+                <h2 class="text-xl font-bold">Candidato123, 25</h2>
+                <p class="text-sm text-gray-200">Competências: Java, SQL, Git</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botões estilo Tinder -->
+    <div class="flex justify-evenly py-4">
+        <a href="selecao.html">
+            <button class="w-14 h-14 rounded-full bg-white shadow-md flex items-center justify-center text-red-500 hover:scale-110 transition">
+                <span class="material-icons text-3xl">close</span>
+            </button>
+        </a>
+        <a href="match.html">
+            <button class="w-14 h-14 rounded-full bg-white shadow-md flex items-center justify-center text-green-500 hover:scale-110 transition">
+                <span class="material-icons text-3xl">favorite</span>
+            </button>
+        </a>
+    </div>
+</div>
+</body>
+</html>

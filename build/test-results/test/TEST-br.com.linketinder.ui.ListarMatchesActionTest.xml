@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="br.com.linketinder.ui.ListarMatchesActionTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-09-25T20:52:30.281Z" hostname="MacBook-Pro-de-Nathalia.local" time="0.02">
+  <properties/>
+  <testcase name="deve imprimir todos os matches existentes" classname="br.com.linketinder.ui.ListarMatchesActionTest" time="0.018"/>
+  <testcase name="deve imprimir mensagem apropriada quando não houver matches" classname="br.com.linketinder.ui.ListarMatchesActionTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
