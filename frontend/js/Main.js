@@ -10,13 +10,13 @@ window.addEventListener('DOMContentLoaded', () => {
     if (btnCandidato) {
         btnCandidato.addEventListener('click', () => {
             selecionarPerfil('candidato');
-            window.location.href = 'selecao.html';
+            window.location.href = 'cadastro.html';
         });
     }
     if (btnEmpresa) {
         btnEmpresa.addEventListener('click', () => {
             selecionarPerfil('empresa');
-            window.location.href = 'selecao.html';
+            window.location.href = 'cadastro.html';
         });
     }
 });
