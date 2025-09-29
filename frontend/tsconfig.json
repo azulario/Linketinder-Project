@@ -41,5 +41,8 @@
     "skipLibCheck": true,
     "moduleResolution": "node"
   },
-  "include": ["ts/**/*"]
+  "include": ["ts/**/*"],
+  "references": [
+    { "path": "./tsconfig.node.json" }
+  ]
 }

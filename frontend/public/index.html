@@ -7,16 +7,33 @@
     <link rel="stylesheet" href="./styles.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
-<body class="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-purple-100">
-<div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 w-full max-w-md text-center">
-    <h1 class="text-2xl font-bold mb-6 text-gray-700">O que você procura?</h1>
-    <button id="btn-candidato" class="flex items-center justify-center gap-2 w-full px-4 py-3 mb-4 bg-blue-600 text-white rounded-xl shadow hover:bg-blue-700 transition text-base sm:text-lg">
-        <span class="material-icons">business_center</span> Emprego
-    </button>
-    <button id="btn-empresa" class="flex items-center justify-center gap-2 w-full px-4 py-3 bg-green-600 text-white rounded-xl shadow hover:bg-green-700 transition text-base sm:text-lg">
-        <span class="material-icons">person_search</span> Funcionário
-    </button>
-</div>
-<script type="module" src="../js/Main.js"></script>
+<body class="min-h-screen bg-gradient-to-br from-blue-100 to-purple-100 flex flex-col">
+<nav class="w-full bg-white/90 backdrop-blur shadow-sm">
+  <div class="mx-auto w-full max-w-5xl px-4">
+    <ul class="flex flex-wrap gap-4 py-3 text-sm">
+      <li><a href="index.html" class="text-blue-600 font-semibold">Home</a></li>
+      <li><a href="cadastro.html" class="text-gray-700 hover:text-blue-600 font-medium">Cadastro</a></li>
+      <li><a href="perfil-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium">Perfil do Candidato</a></li>
+      <li><a href="perfil-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium">Perfil da Empresa</a></li>
+    </ul>
+  </div>
+</nav>
+<main class="flex-grow">
+  <section class="mx-auto w-full max-w-3xl px-4 py-10 sm:py-16">
+    <div class="bg-white/80 backdrop-blur rounded-2xl shadow-xl p-6 sm:p-10 text-center">
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-800 mb-4">Bem-vindo ao Linketinder!</h1>
+      <p class="text-gray-600 mb-6 text-sm sm:text-base">Conectando candidatos e empresas de forma simples e anônima até o match.</p>
+      <div class="flex items-center justify-center">
+        <img
+          src="../assets/undraw_creative-flow_t3kz.png"
+          alt="Ilustração de uma pessoa organizando ideias em frente a um app"
+          class="max-h-72 w-auto object-contain drop-shadow"
+          onerror="this.onerror=null;this.src='https://via.placeholder.com/640x360.png?text=Bem-vindo+ao+Linketinder'"
+        />
+      </div>
+    </div>
+  </section>
+</main>
+<script type="module" src="./entries/main.js"></script>
 </body>
 </html>

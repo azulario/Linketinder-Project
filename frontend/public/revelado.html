@@ -7,21 +7,33 @@
     <link rel="stylesheet" href="./styles.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col items-center p-2 sm:p-4">
-<div class="bg-white rounded-2xl shadow-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md lg:max-w-lg">
-    <div class="flex flex-col sm:flex-row items-center gap-4 mb-6">
-        <img src="https://via.placeholder.com/80" alt="Foto" class="w-20 h-20 lg:w-24 lg:h-24 rounded-full shadow">
-        <div class="text-center sm:text-left">
-            <h2 class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800">João Silva</h2>
-            <p class="text-gray-500">Desenvolvedor Fullstack</p>
-        </div>
-    </div>
-    <p class="mb-2 sm:mb-4 text-gray-700"><span class="font-semibold">E-mail:</span> joao@email.com</p>
-    <p class="mb-2 sm:mb-4 text-gray-700"><span class="font-semibold">Telefone:</span> (11) 99999-9999</p>
-    <p class="mb-4 sm:mb-6 text-gray-700"><span class="font-semibold">LinkedIn:</span> linkedin.com/in/joaosilva</p>
-    <button class="w-full flex items-center justify-center gap-2 bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-xl font-semibold">
-        <span class="material-icons">send</span> Entrar em contato
-    </button>
-</div>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+<nav class="w-full bg-white/90 backdrop-blur shadow-sm">
+  <div class="mx-auto w-full max-w-5xl px-4">
+    <ul class="flex flex-wrap gap-4 py-3 text-sm">
+      <li><a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium">Home</a></li>
+      <li><a href="cadastro.html" class="text-gray-700 hover:text-blue-600 font-medium">Cadastro</a></li>
+      <li><a href="perfil-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium">Perfil do Candidato</a></li>
+      <li><a href="perfil-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium">Perfil da Empresa</a></li>
+    </ul>
+  </div>
+</nav>
+<main class="flex-grow flex items-center justify-center p-2 sm:p-4">
+  <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md lg:max-w-lg">
+      <div class="flex flex-col sm:flex-row items-center gap-4 mb-6">
+          <img src="https://via.placeholder.com/80" alt="Foto" class="w-20 h-20 lg:w-24 lg:h-24 rounded-full shadow">
+          <div class="text-center sm:text-left">
+              <h2 class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800">João Silva</h2>
+              <p class="text-gray-500">Desenvolvedor Fullstack</p>
+          </div>
+      </div>
+      <p class="mb-2 sm:mb-4 text-gray-700"><span class="font-semibold">E-mail:</span> joao@email.com</p>
+      <p class="mb-2 sm:mb-4 text-gray-700"><span class="font-semibold">Telefone:</span> (11) 99999-9999</p>
+      <p class="mb-4 sm:mb-6 text-gray-700"><span class="font-semibold">LinkedIn:</span> linkedin.com/in/joaosilva</p>
+      <button class="w-full flex items-center justify-center gap-2 bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-xl font-semibold">
+          <span class="material-icons">send</span> Entrar em contato
+      </button>
+  </div>
+</main>
 </body>
 </html>
