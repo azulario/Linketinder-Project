@@ -16,9 +16,10 @@ frontend/js/**/*.map
 frontend/CHECKLIST_FRONTEND.txt
 # Ignore any compiled artifacts mistakenly emitted into TS source folder
 frontend/ts/**/*.js
-frontend/ts/**/*.d.ts
 frontend/ts/**/*.map
 frontend/tailwind-test/
+frontend/js/**/*.d.ts
+frontend/ts/**/*.d.ts
 
 # Logs
 npm-debug.log*
