@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="br.com.linketinder.dto.PerfilPublicoTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-09-25T20:52:30.043Z" hostname="MacBook-Pro-de-Nathalia.local" time="0.004">
-  <properties/>
-  <testcase name="deve criar perfil público corretamente" classname="br.com.linketinder.dto.PerfilPublicoTest" time="0.0"/>
-  <testcase name="deve exibir corretamente as competências" classname="br.com.linketinder.dto.PerfilPublicoTest" time="0.0"/>
-  <testcase name="não deve expor dados pessoais sensíveis" classname="br.com.linketinder.dto.PerfilPublicoTest" time="0.002"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

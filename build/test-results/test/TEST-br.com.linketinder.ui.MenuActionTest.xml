@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="br.com.linketinder.ui.MenuActionTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-09-25T20:52:30.304Z" hostname="MacBook-Pro-de-Nathalia.local" time="0.013">
-  <properties/>
-  <testcase name="deve executar o método execute de uma MenuAction" classname="br.com.linketinder.ui.MenuActionTest" time="0.005"/>
-  <testcase name="deve retornar o label correto" classname="br.com.linketinder.ui.MenuActionTest" time="0.001"/>
-  <testcase name="deve chamar execute da action correta manualmente" classname="br.com.linketinder.ui.MenuActionTest" time="0.007"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

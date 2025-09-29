@@ -18,6 +18,7 @@ frontend/CHECKLIST_FRONTEND.txt
 frontend/ts/**/*.js
 frontend/ts/**/*.d.ts
 frontend/ts/**/*.map
+frontend/tailwind-test/
 
 # Logs
 npm-debug.log*

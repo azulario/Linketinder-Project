@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="br.com.linketinder.servico.CadastroServiceCadastroEmpresaTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-09-25T20:52:30.061Z" hostname="MacBook-Pro-de-Nathalia.local" time="0.003">
-  <properties/>
-  <testcase name="deve adicionar nova empresa à lista" classname="br.com.linketinder.servico.CadastroServiceCadastroEmpresaTest" time="0.002"/>
-  <testcase name="não deve adicionar empresa com id já existente" classname="br.com.linketinder.servico.CadastroServiceCadastroEmpresaTest" time="0.0"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
