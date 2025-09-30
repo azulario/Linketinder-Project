@@ -3,26 +3,23 @@ export class Empresa {
     nomeOuRazao;
     email;
     fotoUrl;
-    competencias;
-    curtidos = [];
-    constructor(id, nomeOuRazao, email, fotoUrl, competencias) {
+    vagas = [];
+    candidatosCurtidos = [];
+    constructor(id, nomeOuRazao, email, fotoUrl) {
         this.id = id;
         this.nomeOuRazao = nomeOuRazao;
         this.email = email;
         this.fotoUrl = fotoUrl;
-        this.competencias = competencias;
+        this.id = id;
+        this.nomeOuRazao = nomeOuRazao;
+        this.email = email;
+        this.fotoUrl = fotoUrl;
     }
-    curtirPerfil(perfilId) {
-        if (!this.curtidos.includes(perfilId)) {
-            this.curtidos.push(perfilId);
-            console.log(`Empresa ${this.nomeOuRazao} curtiu o perfil ${perfilId}`);
-        }
-        else {
-            console.log(`Empresa ${this.nomeOuRazao} já curtiu o perfil ${perfilId}`);
-        }
+    publicarVaga(vaga) {
+        this.vagas.push(vaga);
     }
-    getCurtidos() {
-        return this.curtidos;
+    curtirCandidato(candidato) {
+        this.candidatosCurtidos.push(candidato);
     }
 }
 //# sourceMappingURL=Empresa.js.map

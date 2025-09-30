@@ -1,26 +1,21 @@
 import type { Usuario } from './Usuario';
+import type { Vaga } from './Vaga';
 
 export class Candidato implements Usuario {
-    private curtidos: string[] = [];
 
-    constructor(
-        public id: string,
-        public nomeOuRazao: string,
-        public email: string,
-        public fotoUrl: string,
-        public competencias: string[]
-    ) {}
-
-    curtirPerfil(perfilId: string): void {
-        if (!this.curtidos.includes(perfilId)) {
-            this.curtidos.push(perfilId);
-            console.log(`Candidato ${this.nomeOuRazao} curtiu o perfil ${perfilId}`);
-        } else {
-            console.log(`Candidato ${this.nomeOuRazao} já curtiu o perfil ${perfilId}`);
-        }
+    constructor(public id: string, public nomeOuRazao: string, public email: string, public fotoUrl: string, public competencias: string[],
+    public vagasCurtidas: Vaga[] = []
+    ) {
+        this.id = id;
+        this.nomeOuRazao = nomeOuRazao;
+        this.email = email;
+        this.fotoUrl = fotoUrl;
+        this.competencias = competencias;
+        this.vagasCurtidas = vagasCurtidas;
     }
 
-    getCurtidos(): string[] {
-        return this.curtidos;
+    curtirVaga(vaga : Vaga) {
+        this.vagasCurtidas.push(vaga);
     }
+
 }

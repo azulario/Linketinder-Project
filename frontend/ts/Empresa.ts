@@ -1,26 +1,25 @@
 import type { Usuario } from './Usuario';
+import type { Vaga } from './Vaga';
+import type { Candidato } from './Candidato';
 
 export class Empresa implements Usuario {
-    private curtidos: string[] = [];
+    vagas: Vaga[] = [];
+    candidatosCurtidos: Candidato[] = [];
 
-    constructor(
-        public id: string,
-        public nomeOuRazao: string,
-        public email: string,
-        public fotoUrl: string,
-        public competencias: string[],
-    ) {}
-
-    curtirPerfil(perfilId: string): void {
-        if (!this.curtidos.includes(perfilId)) {
-            this.curtidos.push(perfilId);
-            console.log(`Empresa ${this.nomeOuRazao} curtiu o perfil ${perfilId}`);
-        } else {
-            console.log(`Empresa ${this.nomeOuRazao} já curtiu o perfil ${perfilId}`);
-        }
+    constructor(public id: string, public nomeOuRazao: string, public email: string, public fotoUrl: string,
+    ) {
+        this.id = id;
+        this.nomeOuRazao = nomeOuRazao;
+        this.email = email;
+        this.fotoUrl = fotoUrl;
     }
 
-    getCurtidos(): string[] {
-        return this.curtidos;
+    publicarVaga(vaga: Vaga) {
+        this.vagas.push(vaga);
     }
+
+    curtirCandidato(candidato: Candidato) {
+        this.candidatosCurtidos.push(candidato);
+    }
+
 }
