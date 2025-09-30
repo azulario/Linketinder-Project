@@ -1,13 +1,13 @@
-import { Candidato } from "../models/Candidato";
-import { Vaga } from "../models/Vaga";
-import { Empresa } from "../models/Empresa";
+import { Candidato } from "../models/Candidato.js";
+import { Vaga } from "../models/Vaga.js";
+import { Empresa } from "../models/Empresa.js";
 // Simulação de um banco de dados em memória
 export class BancoDeDadosFake {
     candidatos = [];
     empresa = [];
     vagas = [];
     constructor() {
-        //o metodo seed popula o banco de dados falso com dados iniciais
+        //o metodo seed popula o banco de dados falso com d     ados iniciais
         this.seed();
     }
     // metodos publicos pra acessar os dados
@@ -33,7 +33,8 @@ export class BancoDeDadosFake {
     deleteEmpresa = (id) => {
         // filtra a lista de empresas removendo a empresa com o id especificado
         this.empresa = this.empresa.filter(e => e.id !== id);
-        this.vagas = this.vagas.filter(v => v.id !== id); // remove as vagas associadas a empresa deletada
+        // remove as vagas associadas à empresa deletada
+        this.vagas = this.vagas.filter(v => v.empresa.id !== id);
     };
     // Dados iniciais (SEED)
     seed() {
@@ -50,10 +51,16 @@ export class BancoDeDadosFake {
         const candidato2 = new Candidato('uuid-candidato-2', "Bruno Souza", "bruno.souza@email.com", "https://placehold.co/400x400/f1c40f/ffffff?text=BS", ['Python, R, SQL']);
         const candidato3 = new Candidato('uuid-candidato-3', "Carla Pereira", "carla.p@email.com", "https://placehold.co/400x400/9b59b6/ffffff?text=CP", ['Gestão de Projetos, Scrum, Kanban']);
         const candidato4 = new Candidato('uuid-candidato-4', "Daniel Costa", "d.c@email.com", "https://placehold.co/400x400/1abc9c/ffffff?text=DC", ['Segurança da Informação, Redes, Criptografia']);
+        const candidato5 = new Candidato('uuid-candidato-5', "Eduardo Lima", "edudev@exemplo,com", "https://placehold.co/400x400/34495e/ffffff?text=EL", ['Java, Spring, Microservices']);
+        const candidato6 = new Candidato('uuid-candidato-6', "Fernanda Gomes", "fer@exemplo.com", "https://placehold.co/400x400/e67e22/ffffff?text=FG", ['UX Design, Prototipagem, Pesquisa de Usuário']);
+        const candidato7 = new Candidato('uuid-candidato-7', "Gabriel Rocha", "biel@email.com", "https://placehold.co/400x400/95a5a6/ffffff?text=GR", ['Marketing Digital, SEO, Google Analytics']);
+        const candidato8 = new Candidato('uuid-candidato-8', "Helena Martins", "helenadesign", "https://placehold.co/400x400/d35400/ffffff?text=HM", ['Design Gráfico, Illustrator, Branding']);
+        const candidato9 = new Candidato('uuid-candidato-9', "Igor Fernandes", "idevg@email.com", "https://placehold.co/400x400/7f8c8d/ffffff?text=IF", ['DevOps, AWS, Docker']);
+        const candidato10 = new Candidato('uuid-candidato-10', "Juliana Alves", "fullstack@email.com", "https://placehold.co/400x400/16a085/ffffff?text=JA", ['JavaScript, Python, SQL']);
         // add aos arrays
         this.empresa.push(empresa1, empresa2);
         this.vagas.push(vaga1, vaga2, vaga3, vaga4);
-        this.candidatos.push(candidato1, candidato2, candidato3, candidato4);
+        this.candidatos.push(candidato1, candidato2, candidato3, candidato4, candidato5, candidato6, candidato7, candidato8, candidato9, candidato10);
     }
 }
 // exporta uma instancia unica do banco de dados falso

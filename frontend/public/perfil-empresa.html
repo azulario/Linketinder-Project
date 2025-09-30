@@ -120,9 +120,7 @@
                     <h2 id="tituloGrafico" class="text-xl font-semibold text-gray-800 mb-3">Candidatos por Competência</h2>
                     <div class="bg-white rounded-md shadow-sm p-4">
                         <canvas id="graficoCompetencias" width="800" height="360" role="img" aria-label="Gráfico de candidatos por competência"></canvas>
-                    </div>
-                    <p class="text-gray-600 text-xs mt-2">O gráfico será renderizado com Chart.js em uma etapa posterior.</p>
-                </section>
+                    </div></section>
             </div>
         </main>
 
@@ -157,5 +155,9 @@
         });
     }
 </script>
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Controller como módulo ESM -->
+<script type="module" src="../js/Controllers/perfil-empresa-controller.js"></script>
 </body>
 </html>
