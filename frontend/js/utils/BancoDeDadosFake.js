@@ -4,38 +4,77 @@ import { Empresa } from "../models/Empresa.js";
 // Simulação de um banco de dados em memória
 export class BancoDeDadosFake {
     candidatos = [];
-    empresa = [];
+    empresas = [];
     vagas = [];
+    // Chaves para salvar os dados no localStorage. É uma boa prática para evitar erros de digitação.
+    storageKeyCandidatos = 'linketinder_candidatos';
+    storageKeyEmpresas = 'linketinder_empresas';
     constructor() {
-        //o metodo seed popula o banco de dados falso com d     ados iniciais
-        this.seed();
+        this.carregarDoLocalStorage();
+        // Se não houver nada no localStorage, usamos os dados de exemplo (seed).
+        if (this.candidatos.length === 0 && this.empresas.length === 0) {
+            this.seed();
+            this.salvarNoLocalStorage(); // Salva os dados de exemplo na primeira vez
+        }
     }
-    // metodos publicos pra acessar os dados
-    getCandidatos = () => this.candidatos;
-    getEmpresas = () => this.empresa;
-    getVagas = () => this.vagas;
-    // add um novo candidato a lista
-    addCandidato = (candidato) => {
+    // --- MÉTODOS DE PERSISTÊNCIA ---
+    /**
+     * Salva as listas de candidatos e empresas no localStorage.
+     * O localStorage só armazena texto, então convertemos os objetos para uma string JSON.
+     */
+    salvarNoLocalStorage() {
+        localStorage.setItem(this.storageKeyCandidatos, JSON.stringify(this.candidatos));
+        localStorage.setItem(this.storageKeyEmpresas, JSON.stringify(this.empresas));
+    }
+    /**
+     * Carrega os dados do localStorage.
+     * Se existirem dados, eles são convertidos de string JSON de volta para objetos.
+     */
+    carregarDoLocalStorage() {
+        const candidatosData = localStorage.getItem(this.storageKeyCandidatos);
+        const empresasData = localStorage.getItem(this.storageKeyEmpresas);
+        if (candidatosData) {
+            this.candidatos = JSON.parse(candidatosData);
+        }
+        if (empresasData) {
+            this.empresas = JSON.parse(empresasData);
+        }
+    }
+    // --- MÉTODOS PARA CANDIDATOS ---
+    getCandidatos() {
+        return this.candidatos;
+    }
+    addCandidato(candidato) {
         this.candidatos.push(candidato);
-        console.log('Candidato no banco de dados: ', this.candidatos);
-    };
-    // add uma nova empresa a lista
-    addEmpresa = (empresa) => {
-        this.empresa.push(empresa);
-        console.log('Empresa no banco de dados: ', this.empresa);
-    };
-    // deleta um candidato pelo id
-    deleteCandidato = (id) => {
-        // filtra a lista de candidatos removendo o candidato com o id especificado
+        this.salvarNoLocalStorage(); // <--- SALVA A ALTERAÇÃO
+    }
+    deleteCandidato(id) {
         this.candidatos = this.candidatos.filter(c => c.id !== id);
-    };
-    // deleta uma empresa pelo id
-    deleteEmpresa = (id) => {
-        // filtra a lista de empresas removendo a empresa com o id especificado
-        this.empresa = this.empresa.filter(e => e.id !== id);
-        // remove as vagas associadas à empresa deletada
-        this.vagas = this.vagas.filter(v => v.empresa.id !== id);
-    };
+        this.salvarNoLocalStorage(); // <--- SALVA A ALTERAÇÃO
+    }
+    // --- MÉTODOS PARA EMPRESAS ---
+    getEmpresas() {
+        return this.empresas;
+    }
+    addEmpresa(empresa) {
+        this.empresas.push(empresa);
+        this.salvarNoLocalStorage(); // <--- SALVA A ALTERAÇÃO
+    }
+    deleteEmpresa(id) {
+        this.empresas = this.empresas.filter(e => e.id !== id);
+        this.salvarNoLocalStorage(); // <--- SALVA A ALTERAÇÃO
+    }
+    // --- MÉTODOS PARA VAGAS ---
+    getVagas() {
+        // Por enquanto, as vagas são geradas em memória a partir das empresas
+        const vagasDasEmpresas = [];
+        this.empresas.forEach(empresa => {
+            // Exemplo: cada empresa tem 2 vagas fixas
+            vagasDasEmpresas.push(new Vaga(crypto.randomUUID(), `Vaga Frontend na ${empresa.nomeOuRazao}`, ['React', 'TypeScript'], empresa));
+            vagasDasEmpresas.push(new Vaga(crypto.randomUUID(), `Vaga Backend na ${empresa.nomeOuRazao}`, ['Java', 'Node.js'], empresa));
+        });
+        return vagasDasEmpresas;
+    }
     // Dados iniciais (SEED)
     seed() {
         // empresas
@@ -58,7 +97,7 @@ export class BancoDeDadosFake {
         const candidato9 = new Candidato('uuid-candidato-9', "Igor Fernandes", "idevg@email.com", "https://placehold.co/400x400/7f8c8d/ffffff?text=IF", ['DevOps, AWS, Docker']);
         const candidato10 = new Candidato('uuid-candidato-10', "Juliana Alves", "fullstack@email.com", "https://placehold.co/400x400/16a085/ffffff?text=JA", ['JavaScript, Python, SQL']);
         // add aos arrays
-        this.empresa.push(empresa1, empresa2);
+        this.empresas.push(empresa1, empresa2);
         this.vagas.push(vaga1, vaga2, vaga3, vaga4);
         this.candidatos.push(candidato1, candidato2, candidato3, candidato4, candidato5, candidato6, candidato7, candidato8, candidato9, candidato10);
     }

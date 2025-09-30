@@ -152,37 +152,12 @@
         <main class="w-full md:flex-1 p-6 overflow-y-auto">
             <div class="max-w-6xl mx-auto">
 
-                <h1 class="text-3xl font-bold text-gray-800 mb-8">Vagas Disponíveis</h1>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Vagas Disponíveis</h1>
+                <p class="text-gray-600 text-sm mb-6">O botão "Curtir" está desativado neste MVP. A lógica de curtidas será implementada futuramente.</p>
 
-                <!-- GRID DE VAGAS/CANDIDATOS -->
+                <!-- LISTA DE VAGAS -->
                 <div id="listaVagas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-                    <!-- Card exemplo -->
-                    <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition">
-                        <h3 class="text-lg font-bold text-gray-800 mb-2">Desenvolvedor Frontend</h3>
-                        <p class="text-sm text-gray-500 mb-3">Empresa: ⭐⭐⭐ (Anônimo)</p>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">React</span>
-                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">TypeScript</span>
-                        </div>
-                        <button class="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg font-medium transition">
-                            Curtir
-                        </button>
-                    </div>
-
-                    <!-- Mais cards... -->
-                    <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition">
-                        <h3 class="text-lg font-bold text-gray-800 mb-2">Desenvolvedor Backend</h3>
-                        <p class="text-sm text-gray-500 mb-3">Empresa: ⭐⭐⭐ (Anônimo)</p>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">Java</span>
-                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">Spring</span>
-                        </div>
-                        <button class="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg font-medium transition">
-                            Curtir
-                        </button>
-                    </div>
-
+                    <!-- Conteúdo será populado via script -->
                 </div>
 
             </div>
@@ -219,5 +194,7 @@
         });
     }
 </script>
+<!-- Controller como módulo ESM -->
+<script type="module" src="../js/Controllers/perfil-candidato-controller.js"></script>
 </body>
 </html>
