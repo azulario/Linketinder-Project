@@ -8,9 +8,6 @@ export function getPerfilSelecionado() {
         return v;
     return null;
 }
-export function setPerfilSelecionado(tipo) {
-    localStorage.setItem('perfilSelecionado', tipo);
-}
 export function generateId(prefix) {
     // ID simples, suficiente para localStorage (timestamp + rand)
     const rand = Math.random().toString(36).slice(2, 8);

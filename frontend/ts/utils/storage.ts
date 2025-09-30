@@ -19,9 +19,6 @@ export function getPerfilSelecionado(): PerfilTipo | null {
   return null;
 }
 
-export function setPerfilSelecionado(tipo: PerfilTipo) {
-  localStorage.setItem('perfilSelecionado', tipo);
-}
 
 export function generateId(prefix: PerfilTipo): string {
   // ID simples, suficiente para localStorage (timestamp + rand)

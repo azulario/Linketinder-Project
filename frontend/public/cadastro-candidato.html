@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cadastro Candidato</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-100 to-purple-100 flex flex-col">
+<nav class="w-full bg-white/90 backdrop-blur shadow-sm">
+  <div class="mx-auto w-full max-w-5xl px-4">
+    <ul class="flex flex-wrap gap-4 py-3 text-sm">
+        <li><a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium">Início</a></li>
+        <li><a href="cadastro-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium">Cadastro Candidato</a></li>
+        <li><a href="perfil-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium">Perfil do Candidato</a></li>
+        <li><a href="cadastro-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium">Cadastro Empresa</a></li>
+        <li><a href="perfil-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium">Perfil da Empresa</a></li>
+    </ul>
+  </div>
+</nav>
+<main class="flex-grow">
+  <section class="mx-auto w-full max-w-3xl px-4 py-10 sm:py-16">
+    <!-- Card do formulário -->
+    <div class="bg-white rounded-lg shadow-md p-8">
+      <h1 class="text-2xl font-bold text-gray-800 mb-6">Cadastrar Novo Candidato</h1>
+
+      <form id="formCandidato" class="grid grid-cols-1 gap-4">
+        <div>
+          <label for="nome" class="block text-sm font-medium text-gray-700">Nome Completo</label>
+          <input id="nome" name="nome" type="text" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Seu nome completo" />
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+          <input id="email" name="email" type="email" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="seu@email.com" />
+        </div>
+
+        <div>
+          <label for="fotoUrl" class="block text-sm font-medium text-gray-700">URL da Foto</label>
+          <input id="fotoUrl" name="fotoUrl" type="url" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://exemplo.com/foto.jpg" />
+        </div>
+
+        <div>
+          <label for="competencias" class="block text-sm font-medium text-gray-700">Competências</label>
+          <input id="competencias" name="competencias" type="text" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ex: Java, Python, React (separadas por vírgula)" />
+        </div>
+
+        <button type="submit" class="mt-2 w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2">Cadastrar</button>
+
+        <div id="mensagem" class="hidden mt-3 rounded-lg border px-3 py-2 text-sm" aria-live="polite"></div>
+      </form>
+    </div>
+
+    <!-- Lista de candidatos -->
+    <div class="mt-8 bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-lg font-semibold text-gray-800 mb-3">Candidatos Cadastrados</h2>
+      <div id="listaCandidatos" class="space-y-3">
+        <!-- Populado via script -->
+      </div>
+    </div>
+  </section>
+</main>
+<script type="module" src="../js/cadastro-candidato.js"></script>
+</body>
+</html>
