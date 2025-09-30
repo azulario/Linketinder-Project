@@ -9,20 +9,228 @@
 </head>
 
 <body class="min-h-screen bg-gradient-to-br from-blue-100 to-purple-100 flex flex-col">
+
+<!-- NAVBAR -->
 <nav class="w-full bg-white/90 backdrop-blur shadow-sm">
-    <div class="mx-auto w-full max-w-5xl px-4">
-        <ul class="flex flex-wrap gap-4 py-3 text-sm">
-            <li><a href="cadastro-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium">Cadastro Candidato</a></li>
-            <li><a href="perfil-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium">Perfil do Candidato</a>
-            <li><a href="cadastro-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium">Cadastro Empresa</a></li>
-            <li><a href="perfil-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium">Perfil da Empresa</a></li>
-        </ul>
+    <div class="mx-auto w-full max-w-7xl px-4">
+        <div class="flex items-center justify-between py-3">
+
+            <!-- Logo/Título -->
+            <div class="flex items-center gap-2">
+                <span class="material-icons text-blue-600 text-2xl">link</span>
+                <h1 class="text-xl font-bold text-gray-800">Linketinder</h1>
+            </div>
+
+            <!-- Botão Hamburger (visível apenas no mobile) -->
+            <button id="menuToggle" class="lg:hidden text-gray-700 hover:text-blue-600 focus:outline-none">
+                <span class="material-icons text-3xl">menu</span>
+            </button>
+
+            <!-- Menu Desktop (visível apenas no desktop) -->
+            <ul class="hidden lg:flex gap-6 text-sm">
+                <li>
+                    <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">home</span>
+                        Início
+                    </a>
+                </li>
+                <li>
+                    <a href="cadastro-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">person_add</span>
+                        Cadastro Candidato
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">work</span>
+                        Perfil do Candidato
+                    </a>
+                </li>
+                <li>
+                    <a href="cadastro-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">business</span>
+                        Cadastro Empresa
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">people</span>
+                        Perfil da Empresa
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Menu Mobile (dropdown) -->
+        <div id="mobileMenu" class="hidden lg:hidden pb-4">
+            <ul class="flex flex-col gap-3 text-sm border-t border-gray-200 pt-4">
+                <li>
+                    <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">home</span>
+                        Início
+                    </a>
+                </li>
+                <li>
+                    <a href="cadastro-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">person_add</span>
+                        Cadastro Candidato
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">work</span>
+                        Perfil do Candidato
+                    </a>
+                </li>
+                <li>
+                    <a href="cadastro-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">business</span>
+                        Cadastro Empresa
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">people</span>
+                        Perfil da Empresa
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 </nav>
-<main class="flex-grow">
-    <section class="mx-auto w-full max-w-3xl px-4 py-10 sm:py-16">
-    </section>
-</main>
+
+<!-- LAYOUT PRINCIPAL -->
+<div class="flex justify-center min-h-[calc(100vh-60px)] w-full">
+    <div class="flex flex-col md:flex-row w-full max-w-6xl md:w-4/5">
+
+        <!-- SIDEBAR (25%) -->
+        <aside class="w-full md:w-1/4 bg-white shadow-lg p-6 overflow-y-auto">
+            <div class="sticky top-4">
+
+                <!-- Avatar/Foto -->
+                <div class="flex flex-col items-center mb-6">
+                    <img id="userAvatar"
+                         src="https://via.placeholder.com/100"
+                         alt="Avatar"
+                         class="w-24 h-24 rounded-full border-4 border-blue-500 mb-3 object-cover">
+                    <h2 id="userName" class="text-xl font-bold text-gray-800 text-center">Usuário</h2>
+                    <p id="userType" class="text-sm text-gray-600">Candidato</p>
+                </div>
+
+                <!-- Seletor de Usuário Simulado -->
+                <div class="mb-6">
+                    <label for="selectUser" class="block text-sm font-medium text-gray-700 mb-2">
+                        Simular Login:
+                    </label>
+                    <select id="selectUser"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <option value="0">Usuário 1</option>
+                        <option value="1">Usuário 2</option>
+                        <option value="2">Usuário 3</option>
+                    </select>
+                </div>
+
+                <!-- Informações Adicionais -->
+                <div class="border-t border-gray-200 pt-4">
+                    <h3 class="text-sm font-semibold text-gray-700 mb-3">Informações</h3>
+                    <div id="userInfo" class="text-sm text-gray-600 space-y-2">
+                        <p><strong>Email:</strong> usuario@email.com</p>
+                        <p><strong>Competências:</strong></p>
+                        <div class="flex flex-wrap gap-1 mt-2">
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">Java</span>
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">Python</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estatísticas -->
+                <div class="border-t border-gray-200 pt-4 mt-4">
+                    <h3 class="text-sm font-semibold text-gray-700 mb-3">Estatísticas</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Curtidas:</span>
+                            <span id="statCurtidas" class="font-medium text-blue-600">0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Matches:</span>
+                            <span id="statMatches" class="font-medium text-green-600">0</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </aside>
+
+        <!-- CONTEÚDO PRINCIPAL (75%) -->
+        <main class="w-full md:flex-1 p-6 overflow-y-auto">
+            <div class="max-w-6xl mx-auto">
+
+                <h1 class="text-3xl font-bold text-gray-800 mb-8">Vagas Disponíveis</h1>
+
+                <!-- GRID DE VAGAS/CANDIDATOS -->
+                <div id="listaVagas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <!-- Card exemplo -->
+                    <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition">
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">Desenvolvedor Frontend</h3>
+                        <p class="text-sm text-gray-500 mb-3">Empresa: ⭐⭐⭐ (Anônimo)</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">React</span>
+                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">TypeScript</span>
+                        </div>
+                        <button class="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg font-medium transition">
+                            ❤️ Curtir
+                        </button>
+                    </div>
+
+                    <!-- Mais cards... -->
+                    <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition">
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">Desenvolvedor Backend</h3>
+                        <p class="text-sm text-gray-500 mb-3">Empresa: ⭐⭐⭐ (Anônimo)</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">Java</span>
+                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">Spring</span>
+                        </div>
+                        <button class="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg font-medium transition">
+                            ❤️ Curtir
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+</div>
+
+<!-- Script do menu hambúrguer -->
+<script>
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuIcon = menuToggle ? menuToggle.querySelector('.material-icons') : null;
+
+    if (menuToggle && mobileMenu) {
+        menuToggle.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('show')) {
+                mobileMenu.classList.remove('show');
+                setTimeout(() => mobileMenu.classList.add('hidden'), 300);
+                if (menuIcon) menuIcon.textContent = 'menu';
+            } else {
+                mobileMenu.classList.remove('hidden');
+                setTimeout(() => mobileMenu.classList.add('show'), 10);
+                if (menuIcon) menuIcon.textContent = 'close';
+            }
+        });
+
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('show');
+                setTimeout(() => mobileMenu.classList.add('hidden'), 300);
+                if (menuIcon) menuIcon.textContent = 'menu';
+            });
+        });
+    }
+</script>
 </body>
-<script src=""></script>
 </html>

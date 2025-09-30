@@ -9,14 +9,92 @@
 </head>
 
 <body class="min-h-screen bg-gradient-to-br from-blue-100 to-purple-100 flex flex-col">
+<!-- NAVBAR -->
 <nav class="w-full bg-white/90 backdrop-blur shadow-sm">
-    <div class="mx-auto w-full max-w-5xl px-4">
-        <ul class="flex flex-wrap gap-4 py-3 text-sm">
-            <li><a href="cadastro-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium">Cadastro Candidato</a></li>
-            <li><a href="perfil-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium">Perfil do Candidato</a>
-            <li><a href="cadastro-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium">Cadastro Empresa</a></li>
-            <li><a href="perfil-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium">Perfil da Empresa</a></li>
-        </ul>
+    <div class="mx-auto w-full max-w-7xl px-4">
+        <div class="flex items-center justify-between py-3">
+
+            <!-- Logo/Título -->
+            <div class="flex items-center gap-2">
+                <span class="material-icons text-blue-600 text-2xl">link</span>
+                <h1 class="text-xl font-bold text-gray-800">Linketinder</h1>
+            </div>
+
+            <!-- Botão Hamburger (visível apenas no mobile) -->
+            <button id="menuToggle" class="lg:hidden text-gray-700 hover:text-blue-600 focus:outline-none">
+                <span class="material-icons text-3xl">menu</span>
+            </button>
+
+            <!-- Menu Desktop (visível apenas no desktop) -->
+            <ul class="hidden lg:flex gap-6 text-sm">
+                <li>
+                    <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">home</span>
+                        Início
+                    </a>
+                </li>
+                <li>
+                    <a href="cadastro-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">person_add</span>
+                        Cadastro Candidato
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">work</span>
+                        Perfil do Candidato
+                    </a>
+                </li>
+                <li>
+                    <a href="cadastro-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">business</span>
+                        Cadastro Empresa
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">people</span>
+                        Perfil da Empresa
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Menu Mobile (dropdown) -->
+        <div id="mobileMenu" class="hidden lg:hidden pb-4">
+            <ul class="flex flex-col gap-3 text-sm border-t border-gray-200 pt-4">
+                <li>
+                    <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">home</span>
+                        Início
+                    </a>
+                </li>
+                <li>
+                    <a href="cadastro-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">person_add</span>
+                        Cadastro Candidato
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">work</span>
+                        Perfil do Candidato
+                    </a>
+                </li>
+                <li>
+                    <a href="cadastro-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">business</span>
+                        Cadastro Empresa
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">people</span>
+                        Perfil da Empresa
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 </nav>
 <main class="flex-grow">
@@ -24,5 +102,42 @@
     </section>
 </main>
 </body>
+
+<!-- Script do menu -->
+<script>
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuIcon = menuToggle.querySelector('.material-icons');
+
+    menuToggle.addEventListener('click', () => {
+        // Remove a classe hidden e adiciona show para animação
+        if (mobileMenu.classList.contains('show')) {
+            mobileMenu.classList.remove('show');
+            setTimeout(() => {
+                mobileMenu.classList.add('hidden');
+            }, 300);
+            menuIcon.textContent = 'menu';
+        } else {
+            mobileMenu.classList.remove('hidden');
+            setTimeout(() => {
+                mobileMenu.classList.add('show');
+            }, 10);
+            menuIcon.textContent = 'close';
+        }
+    });
+
+    // Fechar menu ao clicar em um link
+    const mobileLinks = mobileMenu.querySelectorAll('a');
+    mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.remove('show');
+            setTimeout(() => {
+                mobileMenu.classList.add('hidden');
+            }, 300);
+            menuIcon.textContent = 'menu';
+        });
+    });
+</script>
+
 <script src=""></script>
 </html>
