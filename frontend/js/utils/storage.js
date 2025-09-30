@@ -3,6 +3,7 @@ const KEY_MAP = {
     empresa: 'empresas',
 };
 export function getPerfilSelecionado() {
+    // valor pode ser 'candidato', 'empresa' ou null
     const v = localStorage.getItem('perfilSelecionado');
     if (v === 'candidato' || v === 'empresa')
         return v;
