@@ -9,50 +9,57 @@
 </head>
 <body class="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex flex-col">
 <nav class="w-full bg-white/90 backdrop-blur shadow-sm">
-  <div class="mx-auto w-full max-w-5xl px-4">
-    <ul class="flex flex-wrap gap-4 py-3 text-sm">
-      <li><a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium">Home</a></li>
-      <li><a href="cadastro.html" class="text-gray-700 hover:text-blue-600 font-medium">Cadastro</a></li>
-      <li><a href="perfil-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium">Perfil do Candidato</a></li>
-      <li><a href="perfil-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium">Perfil da Empresa</a></li>
-    </ul>
-  </div>
+    <div class="mx-auto w-full max-w-5xl px-4">
+        <ul class="flex flex-wrap gap-4 py-3 text-sm">
+            <li><a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium">Home</a></li>
+            <li><a href="cadastro-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium">Cadastro
+                Candidato</a></li>
+            <li><a href="perfil-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium">Perfil do
+                Candidato</a></li>
+            <li><a href="cadastro-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium">Cadastro Empresa</a>
+            </li>
+            <li><a href="perfil-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium">Perfil da
+                Empresa</a></li>
+        </ul>
+    </div>
 </nav>
 <main class="flex-grow flex items-center justify-center">
-<div class="w-full max-w-md h-[90vh] flex flex-col">
+    <div class="w-full max-w-md h-[90vh] flex flex-col">
 
-    <!-- Header estilo Tinder -->
-    <header class="flex justify-between items-center px-4 py-2">
-        <span class="material-icons text-gray-600 text-2xl">person</span>
-        <h1 class="text-pink-600 text-xl font-bold">Linketinder</h1>
-        <span class="material-icons text-gray-600 text-2xl">chat</span>
-    </header>
+        <!-- Header estilo Tinder -->
+        <header class="flex justify-between items-center px-4 py-2">
+            <span class="material-icons text-gray-600 text-2xl">person</span>
+            <h1 class="text-pink-600 text-xl font-bold">Linketinder</h1>
+            <span class="material-icons text-gray-600 text-2xl">chat</span>
+        </header>
 
-    <!-- Card principal -->
-    <div class="flex-grow flex items-center justify-center">
-        <div class="relative w-full h-[60vh] sm:h-[70vh] rounded-3xl shadow-xl overflow-hidden bg-gray-200">
-            <!-- Imagem -->
-            <img id="card-img" src="https://via.placeholder.com/400x600.png?text=Foto+Misteriosa"
-                 alt="perfil" class="w-full h-full object-cover">
+        <!-- Card principal -->
+        <div class="flex-grow flex items-center justify-center">
+            <div class="relative w-full h-[60vh] sm:h-[70vh] rounded-3xl shadow-xl overflow-hidden bg-gray-200">
+                <!-- Imagem -->
+                <img id="card-img" src="https://via.placeholder.com/400x600.png?text=Foto+Misteriosa"
+                     alt="perfil" class="w-full h-full object-cover">
 
-            <!-- Gradiente escuro no rodapé do card -->
-            <div class="absolute bottom-0 w-full p-4 bg-gradient-to-t from-black/70 to-transparent text-white">
-                <h2 id="card-nome" class="text-lg sm:text-xl font-bold">Perfil Anônimo</h2>
-                <p id="card-comps" class="text-xs sm:text-sm text-gray-200">Competências: -</p>
+                <!-- Gradiente escuro no rodapé do card -->
+                <div class="absolute bottom-0 w-full p-4 bg-gradient-to-t from-black/70 to-transparent text-white">
+                    <h2 id="card-nome" class="text-lg sm:text-xl font-bold">Perfil Anônimo</h2>
+                    <p id="card-comps" class="text-xs sm:text-sm text-gray-200">Competências: -</p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Botões estilo Tinder -->
-    <div class="flex justify-evenly py-4">
-        <button id="btn-dislike" class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white shadow-md flex items-center justify-center text-red-500 hover:scale-110 transition">
-            <span class="material-icons text-3xl sm:text-4xl">close</span>
-        </button>
-        <button id="btn-like" class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white shadow-md flex items-center justify-center text-green-500 hover:scale-110 transition">
-            <span class="material-icons text-3xl sm:text-4xl">favorite</span>
-        </button>
+        <!-- Botões estilo Tinder -->
+        <div class="flex justify-evenly py-4">
+            <button id="btn-dislike"
+                    class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white shadow-md flex items-center justify-center text-red-500 hover:scale-110 transition">
+                <span class="material-icons text-3xl sm:text-4xl">close</span>
+            </button>
+            <button id="btn-like"
+                    class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white shadow-md flex items-center justify-center text-green-500 hover:scale-110 transition">
+                <span class="material-icons text-3xl sm:text-4xl">favorite</span>
+            </button>
+        </div>
     </div>
-</div>
 </main>
 <script type="module" src="./entries/selecao.js"></script>
 </body>

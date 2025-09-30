@@ -1,5 +1,3 @@
-import { Candidato } from "./Candidato.js";
-import { Empresa } from "./Empresa.js";
 // Função para salvar o tipo de perfil escolhido
 export function selecionarPerfil(tipo) {
     localStorage.setItem('perfilSelecionado', tipo);
@@ -20,16 +18,4 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-// Função para instanciar o objeto correto na tela de seleção
-export function getPerfilAtivo() {
-    const tipo = localStorage.getItem('perfilSelecionado');
-    if (tipo === 'candidato') {
-        // Exemplo: dados fictícios, pode ser substituído por dados reais
-        return new Candidato('1', 'João', 'joao@email.com', 'foto.png', ['Java', 'SQL']);
-    }
-    else if (tipo === 'empresa') {
-        return new Empresa('2', 'TechCorp', 'contato@techcorp.com', 'logo.png', ['Java', 'Gestão']);
-    }
-    return null;
-}
 //# sourceMappingURL=Main.js.map
