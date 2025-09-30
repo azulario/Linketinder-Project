@@ -6,10 +6,10 @@
     "watch": "tsc --watch",
     "build:css": "tailwindcss -i ./css/tailwind.css -o ./public/styles.css --minify",
     "dev:css": "tailwindcss -i ./css/tailwind.css -o ./public/styles.css --watch",
-    "dev": "vite --config vite.config.mts",
-    "build:vite": "npm run build:css && npm run build && vite build --config vite.config.mts",
-    "preview": "vite preview --config vite.config.mts",
-    "dev:all": "concurrently -n tsc,css,vite -c blue,magenta,green \"npm:watch\" \"npm:dev:css\" \"vite --config vite.config.mts\""
+    "dev": "vite --config vite.config.ts",
+    "build:vite": "npm run build:css && npm run build && vite build --config vite.config.ts",
+    "preview": "vite preview --config vite.config.ts",
+    "dev:all": "concurrently -n tsc,css,vite -c blue,magenta,green \"npm:watch\" \"npm:dev:css\" \"vite --config vite.config.ts\""
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.13",
