@@ -13,130 +13,149 @@
 <nav class="w-full bg-white/90 backdrop-blur shadow-sm">
     <div class="mx-auto w-full max-w-7xl px-4">
         <div class="flex items-center justify-between py-3">
-
-            <!-- Logo/Título -->
             <div class="flex items-center gap-2">
                 <span class="material-icons text-blue-600 text-2xl">link</span>
                 <h1 class="text-xl font-bold text-gray-800">Linketinder</h1>
             </div>
-
-            <!-- Botão Hamburger (visível apenas no mobile) -->
             <button id="menuToggle" class="lg:hidden text-gray-700 hover:text-blue-600 focus:outline-none">
                 <span class="material-icons text-3xl">menu</span>
             </button>
-
-            <!-- Menu Desktop (visível apenas no desktop) -->
             <ul class="hidden lg:flex gap-6 text-sm">
-                <li>
-                    <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
-                        <span class="material-icons text-lg">home</span>
-                        Início
-                    </a>
-                </li>
-                <li>
-                    <a href="cadastro-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
-                        <span class="material-icons text-lg">person_add</span>
-                        Cadastro Candidato
-                    </a>
-                </li>
-                <li>
-                    <a href="perfil-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
-                        <span class="material-icons text-lg">work</span>
-                        Perfil do Candidato
-                    </a>
-                </li>
-                <li>
-                    <a href="cadastro-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
-                        <span class="material-icons text-lg">business</span>
-                        Cadastro Empresa
-                    </a>
-                </li>
-                <li>
-                    <a href="perfil-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
-                        <span class="material-icons text-lg">people</span>
-                        Perfil da Empresa
-                    </a>
-                </li>
+                <li><a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1"><span class="material-icons text-lg">home</span>Início</a></li>
+                <li><a href="cadastro-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1"><span class="material-icons text-lg">person_add</span>Cadastro Candidato</a></li>
+                <li><a href="perfil-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1"><span class="material-icons text-lg">work</span>Perfil do Candidato</a></li>
+                <li><a href="cadastro-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1"><span class="material-icons text-lg">business</span>Cadastro Empresa</a></li>
+                <li><a href="perfil-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1"><span class="material-icons text-lg">people</span>Perfil da Empresa</a></li>
             </ul>
         </div>
-
-        <!-- Menu Mobile (dropdown) -->
         <div id="mobileMenu" class="hidden lg:hidden pb-4">
             <ul class="flex flex-col gap-3 text-sm border-t border-gray-200 pt-4">
-                <li>
-                    <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
-                        <span class="material-icons text-lg">home</span>
-                        Início
-                    </a>
-                </li>
-                <li>
-                    <a href="cadastro-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
-                        <span class="material-icons text-lg">person_add</span>
-                        Cadastro Candidato
-                    </a>
-                </li>
-                <li>
-                    <a href="perfil-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
-                        <span class="material-icons text-lg">work</span>
-                        Perfil do Candidato
-                    </a>
-                </li>
-                <li>
-                    <a href="cadastro-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
-                        <span class="material-icons text-lg">business</span>
-                        Cadastro Empresa
-                    </a>
-                </li>
-                <li>
-                    <a href="perfil-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
-                        <span class="material-icons text-lg">people</span>
-                        Perfil da Empresa
-                    </a>
-                </li>
+                <li><a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2"><span class="material-icons text-lg">home</span>Início</a></li>
+                <li><a href="cadastro-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2"><span class="material-icons text-lg">person_add</span>Cadastro Candidato</a></li>
+                <li><a href="perfil-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2"><span class="material-icons text-lg">work</span>Perfil do Candidato</a></li>
+                <li><a href="cadastro-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2"><span class="material-icons text-lg">business</span>Cadastro Empresa</a></li>
+                <li><a href="perfil-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2"><span class="material-icons text-lg">people</span>Perfil da Empresa</a></li>
             </ul>
         </div>
     </div>
 </nav>
-<main class="flex-grow">
-    <section class="mx-auto w-full max-w-3xl px-4 py-10 sm:py-16">
-    </section>
-</main>
-</body>
 
-<!-- Script do menu -->
+<!-- CONTAINER CENTRAL: ASIDE (25%) + CONTEÚDO (75%) -->
+<div class="flex justify-center min-h-[calc(100vh-60px)] w-full">
+    <div class="flex flex-col md:flex-row w-full max-w-6xl md:w-4/5">
+
+        <!-- ASIDE EMPRESA (25%) à esquerda -->
+        <aside class="w-full md:w-1/4 bg-white shadow-lg p-6 overflow-y-auto">
+            <div class="sticky top-4">
+                <div class="flex flex-col items-center mb-6">
+                    <img id="companyAvatar" src="../assets/images/undraw_businesswoman-avatar_ktl2.png" alt="Logo da empresa" class="w-38 h-38 rounded-full border-4 border-blue-500 mb-3 object-cover">
+                    <h2 id="companyName" class="text-xl font-bold text-gray-800 text-center">Empresa</h2>
+                    <p id="companyType" class="text-sm text-gray-600">Perfil: Empresa</p>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="text-sm font-semibold text-gray-700 mb-2">Informações</h3>
+                    <div class="text-sm text-gray-600 space-y-1">
+                        <p><strong>Setor:</strong> Tecnologia</p>
+                        <p><strong>Localização:</strong> São Paulo - SP</p>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-200 pt-4">
+                    <h3 class="text-sm font-semibold text-gray-700 mb-2">Estatísticas</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between"><span class="text-gray-600">Vagas:</span><span id="statTotalVagas" class="font-medium text-blue-600">0</span></div>
+                        <div class="flex justify-between"><span class="text-gray-600">Candidatos:</span><span id="statTotalCandidatos" class="font-medium text-green-600">0</span></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CONTEÚDO PRINCIPAL (75%) à direita -->
+        <main class="w-full md:flex-1 p-6 overflow-y-auto">
+            <div class="max-w-6xl mx-auto">
+                <header class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-800">Candidados Dísponiveis</h1>
+                    <p class="text-gray-600 text-sm">Lista anônima de candidatos e painel de competências.</p>
+                </header>
+
+                <!-- Lista de candidatos (Anônimos) -->
+                <section aria-labelledby="tituloCandidatos" class="mb-8">
+                    <div class="overflow-x-auto bg-white rounded-md shadow-sm">
+                        <table class="w-full border-collapse text-sm">
+                            <thead>
+                                <tr class="bg-gray-100 text-left">
+                                    <th class="p-3 border-b border-gray-200">Formação</th>
+                                    <th class="p-3 border-b border-gray-200">Competências</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaCandidatos">
+                                <tr class="align-top">
+                                    <td class="p-3 border-b border-gray-100">Ensino Superior - Ciência da Computação</td>
+                                    <td class="p-3 border-b border-gray-100">
+                                        <ul class="list-disc pl-5 space-y-1">
+                                            <li>Java</li>
+                                            <li>Spring</li>
+                                            <li>SQL</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr class="align-top">
+                                    <td class="p-3 border-b border-gray-100">Tecnólogo - ADS</td>
+                                    <td class="p-3 border-b border-gray-100">
+                                        <ul class="list-disc pl-5 space-y-1">
+                                            <li>Python</li>
+                                            <li>FastAPI</li>
+                                            <li>Docker</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Gráfico de barras: candidatos por competência -->
+                <section aria-labelledby="tituloGrafico" class="mt-8">
+                    <h2 id="tituloGrafico" class="text-xl font-semibold text-gray-800 mb-3">Candidatos por Competência</h2>
+                    <div class="bg-white rounded-md shadow-sm p-4">
+                        <canvas id="graficoCompetencias" width="800" height="360" role="img" aria-label="Gráfico de candidatos por competência"></canvas>
+                    </div>
+                    <p class="text-gray-600 text-xs mt-2">O gráfico será renderizado com Chart.js em uma etapa posterior.</p>
+                </section>
+            </div>
+        </main>
+
+    </div>
+</div>
+
+<!-- Script do menu (mobile) -->
 <script>
     const menuToggle = document.getElementById('menuToggle');
     const mobileMenu = document.getElementById('mobileMenu');
-    const menuIcon = menuToggle.querySelector('.material-icons');
+    const menuIcon = menuToggle ? menuToggle.querySelector('.material-icons') : null;
 
-    menuToggle.addEventListener('click', () => {
-        // Remove a classe hidden e adiciona show para animação
-        if (mobileMenu.classList.contains('show')) {
-            mobileMenu.classList.remove('show');
-            setTimeout(() => {
-                mobileMenu.classList.add('hidden');
-            }, 300);
-            menuIcon.textContent = 'menu';
-        } else {
-            mobileMenu.classList.remove('hidden');
-            setTimeout(() => {
-                mobileMenu.classList.add('show');
-            }, 10);
-            menuIcon.textContent = 'close';
-        }
-    });
-
-    // Fechar menu ao clicar em um link
-    const mobileLinks = mobileMenu.querySelectorAll('a');
-    mobileLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            mobileMenu.classList.remove('show');
-            setTimeout(() => {
-                mobileMenu.classList.add('hidden');
-            }, 300);
-            menuIcon.textContent = 'menu';
+    if (menuToggle && mobileMenu) {
+        menuToggle.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('show')) {
+                mobileMenu.classList.remove('show');
+                setTimeout(() => mobileMenu.classList.add('hidden'), 300);
+                if (menuIcon) menuIcon.textContent = 'menu';
+            } else {
+                mobileMenu.classList.remove('hidden');
+                setTimeout(() => mobileMenu.classList.add('show'), 10);
+                if (menuIcon) menuIcon.textContent = 'close';
+            }
         });
-    });
+
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('show');
+                setTimeout(() => mobileMenu.classList.add('hidden'), 300);
+                if (menuIcon) menuIcon.textContent = 'menu';
+            });
+        });
+    }
 </script>
-<script src=""></script>
+</body>
 </html>

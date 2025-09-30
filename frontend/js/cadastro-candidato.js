@@ -3,6 +3,8 @@
 // - Permite deletar
 const STORAGE_KEY = 'candidatos';
 // Atalho para pegar elementos do DOM com tipo
+// o <T> é o tipo genérico que você quer
+//
 function el(id) {
     const ref = document.getElementById(id);
     if (!ref)
@@ -67,6 +69,7 @@ function renderLista() {
         cont.appendChild(vazio);
         return;
     }
+    // c = candidato
     for (const c of dados) {
         const card = document.createElement('div');
         card.className = 'flex items-start justify-between gap-4 border rounded-lg p-3 bg-white';
@@ -88,6 +91,7 @@ function renderLista() {
         info.appendChild(skills);
         const acoes = document.createElement('div');
         acoes.className = 'flex items-center gap-2';
+        // Botão deletar
         const btnDel = document.createElement('button');
         btnDel.type = 'button';
         btnDel.className = 'px-3 py-1 text-xs rounded bg-red-600 text-white hover:bg-red-700';
