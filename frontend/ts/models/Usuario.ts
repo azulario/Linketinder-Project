@@ -1,7 +1,7 @@
     export interface Usuario {
         id: string;
-        cpfOuCnpj?: string;
         nomeOuRazao: string;
+        cpfOuCnpj: string;
         email: string;
         fotoUrl: string;
     }

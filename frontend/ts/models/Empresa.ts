@@ -6,10 +6,11 @@ export class Empresa implements Usuario {
     vagas: Vaga[] = [];
     candidatosCurtidos: Candidato[] = [];
 
-    constructor(public id: string, public nomeOuRazao: string, public email: string, public fotoUrl: string,
+    constructor(public id: string, public nomeOuRazao: string, public cpfOuCnpj: string, public email: string, public fotoUrl: string,
     ) {
         this.id = id;
         this.nomeOuRazao = nomeOuRazao;
+        this.cpfOuCnpj = cpfOuCnpj;
         this.email = email;
         this.fotoUrl = fotoUrl;
     }
