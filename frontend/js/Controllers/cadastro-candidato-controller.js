@@ -1,5 +1,6 @@
 import { bancoDeDadosFake } from "../utils/BancoDeDadosFake.js";
 import { Candidato } from "../models/Candidato.js";
+import { nomeEhValido, emailEhValido, urlEhValida, validarCompetencias } from "../validation/validacao_regex.js";
 // seleção dos elementos DOM
 const form = document.getElementById('formCandidato');
 const nomeInput = document.getElementById('nome');
@@ -60,8 +61,26 @@ function cadastrarCandidato(event) {
     const fotoUrl = fotoUrlInput.value.trim();
     const competenciasTexto = competenciasInput.value.trim();
     // validação simples
-    if (!nome.trim() || !email.trim()) {
-        exibirMensagem('Por favor, preencha o nome e email.', 'erro');
+    // if (!nome.trim() || !email.trim()) {
+    //     exibirMensagem('Por favor, preencha o nome e email.', 'erro');
+    //     return;
+    // }
+    // VALIDAÇÕES MELHORADAS COM REGEX
+    if (!nomeEhValido(nome)) {
+        exibirMensagem('Nome inválido. Use apenas letras/acentos e espaços (mínimo 2 caracteres).', 'erro');
+        return;
+    }
+    if (!emailEhValido(email)) {
+        exibirMensagem('Email inválido. Verifique o formato e tente novamente.', 'erro');
+        return;
+    }
+    if (!urlEhValida(fotoUrl)) {
+        exibirMensagem('URL da foto inválida. Deve começar com http:// ou https://', 'erro');
+        return;
+    }
+    const competenciasValidacao = validarCompetencias(competenciasTexto);
+    if (!competenciasValidacao.valid) {
+        exibirMensagem('Competências inválidas. Separe por vírgula e use 2–30 caracteres por item.', 'erro');
         return;
     }
     // transforma a string de competências em um array, removendo espaços extras
