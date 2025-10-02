@@ -177,4 +177,31 @@ npm run build:css   # Tailwind → public/styles.css
 
 ---
 
+## Atualizações recentes (Frontend — resumo curto)
+
+- Validações por Regex adicionadas (nível iniciante, foco em formato):
+  - Candidato: Nome, E‑mail, CPF (formato 000.000.000-00), Competências (itens separados por vírgula, 2–30 caracteres, sem duplicatas).
+  - Empresa: Nome/Razão social, E‑mail, CNPJ (formato 00.000.000/0000-00), URL da logo (http/https).
+- Controladores atualizados com mensagens de erro amigáveis e bloqueio do submit quando inválido:
+  - `ts/Controllers/cadastro-candidato-controller.ts`
+  - `ts/Controllers/cadastro-empresa-controller.ts`
+- Seed do “banco de dados” em memória ajustado:
+  - `ts/utils/BancoDeDadosFake.ts` agora inclui CPF/CNPJ nos objetos e competências como arrays.
+- Testes (Vitest) para validações com Regex criados (mantidos fora do Git por padrão):
+  - Arquivo de teste: `ts/validation/validacao_regex.test.ts`
+  - `.gitignore` ignora `frontend/ts/**/*.test.ts` e `frontend/ts/**/*.spec.ts`.
+- Build TypeScript validado e sem erros após os ajustes.
+
+### Testes (Frontend)
+
+Na pasta `frontend/`:
+
+```bash
+npm install
+npm test        # executa a suíte de testes (Vitest)
+npm run build   # compila TS → JS
+```
+
+---
+
 Projeto desenvolvido por Nathalia Veiga para fins didáticos e de demonstração de boas práticas em Groovy, TDD e arquitetura orientada a serviços no programa Acelera ZG.
