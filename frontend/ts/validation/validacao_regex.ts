@@ -66,4 +66,5 @@ export function validarCompetencias(input: string): { valid: boolean; invalid: s
         return true;                       // mantém no array
     });
     return { valid: invalid.length === 0, invalid, normalized };
+
 }
