@@ -55,16 +55,17 @@ export function validarCompetencias(input: string): { valid: boolean; invalid: s
     // c = cada competência no array
     const invalid = competencias.filter(c => !PadroesValidacao.competenciaItem.test(c));
 
-    // remove duplicatas
+    // remove duplicatas (case-insensitive) e EXCLUI itens inválidos da normalização
     const seen = new Set<string>();
-
-    // c = cada competência no array
-    const normalized = competencias.filter(c => {
+    const normalized: string[] = [];
+    for (const c of competencias) {
+        if (!PadroesValidacao.competenciaItem.test(c)) continue; // ignora inválidas na normalização
         const chave = c.toLowerCase();
-        if (seen.has(chave)) return false; //ja existe -> ignora
-        seen.add(chave);                   // primeira vez -> adiciona
-        return true;                       // mantém no array
-    });
+        if (seen.has(chave)) continue; // já vimos (case-insensitive)
+        seen.add(chave);
+        normalized.push(c);
+    }
+
     return { valid: invalid.length === 0, invalid, normalized };
 
 }

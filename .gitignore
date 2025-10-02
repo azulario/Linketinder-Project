@@ -24,6 +24,10 @@ frontend/ts/**/*.d.ts
 frontend/dist/
 frontend/public/styles.css
 
+# Ignore frontend test files (Vitest)
+frontend/ts/**/*.test.ts
+frontend/ts/**/*.spec.ts
+
 # Logs
 npm-debug.log*
 yarn-error.log*
