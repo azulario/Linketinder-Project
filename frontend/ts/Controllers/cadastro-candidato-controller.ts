@@ -2,6 +2,7 @@ import {bancoDeDadosFake} from "../utils/BancoDeDadosFake.js";
 import {Candidato} from "../models/Candidato.js";
 import {
     nomeEhValido,
+    cpfEhValido,
     emailEhValido,
     urlEhValida,
     validarCompetencias
@@ -95,6 +96,13 @@ function cadastrarCandidato(event: SubmitEvent) {
         nomeInput.focus();
         return;
     }
+
+    if (!cpfEhValido(cpf)) {
+        exibirMensagem('CPF inválido. Use o formato 000.000.000-00', 'erro');
+        cpfOuCnpj.focus();
+        return;
+    }
+
     if (!emailEhValido(email)) {
         exibirMensagem('Email inválido. Verifique o formato e tente novamente.', 'erro');
         emailInput.focus();
@@ -119,7 +127,7 @@ function cadastrarCandidato(event: SubmitEvent) {
     const novoCandidato = new Candidato (
         crypto.randomUUID(),
         nome,
-        cpfOuCnpj, // campo obrigatório na classe, mas não usado aqui
+        cpf,
         email,
         fotoUrl,
         competencias

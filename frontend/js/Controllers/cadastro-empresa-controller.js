@@ -1,9 +1,10 @@
 import { bancoDeDadosFake } from "../utils/BancoDeDadosFake.js";
 import { Empresa } from "../models/Empresa.js";
-import { nomeEhValido, emailEhValido, urlEhValida } from "../validation/validacao_regex.js";
+import { nomeEhValido, cnpjEhValido, emailEhValido, urlEhValida } from "../validation/validacao_regex.js";
 // seleção dos elementos DOM
 const form = document.getElementById('formEmpresa');
 const nomeOuRazaoInput = document.getElementById('nomeEmpresa');
+const cnpjInput = document.getElementById('cnpj');
 const emailInput = document.getElementById('emailEmpresa');
 const fotoUrlInput = document.getElementById('fotoUrlEmpresa');
 const listaEmpresasDiv = document.getElementById('listaEmpresas');
@@ -54,32 +55,33 @@ function exibirMensagem(texto, tipo) {
 function cadastrarEmpresa(event) {
     event.preventDefault(); // previne o reload da pagina
     const nomeOuRazao = nomeOuRazaoInput.value.trim(); // remove espacos em branco
+    const cnpjValor = cnpjInput.value.trim();
     const email = emailInput.value.trim();
     const fotoUrl = fotoUrlInput.value.trim();
-    // // validação basica
-    // if (!nomeOuRazao.trim() || !nomeOuRazao.trim() || !email.trim()) {
-    //     exibirMensagem('Por favor, preencha o nome e o email.', 'erro');
-    //     return;
-    // }
-    // NOVA VALIDAÇÃO COM REGEX
+    // NOVA VALIDAÇÃO COM REGEX (simples: apenas formato)
     if (!nomeEhValido(nomeOuRazao)) {
-        exibirMensagem('Nome ou razão social inválido. Deve conter apenas letras e espaços.', 'erro');
+        exibirMensagem('Nome ou razão social inválido(a). Deve conter apenas letras e espaços.', 'erro');
         nomeOuRazaoInput.focus();
+        return;
+    }
+    if (!cnpjEhValido(cnpjValor)) {
+        exibirMensagem('CNPJ inválido. Use o formato 00.000.000/0000-00.', 'erro');
+        cnpjInput.focus();
         return;
     }
     if (!emailEhValido(email)) {
         exibirMensagem('Email inválido. Por favor, insira um email válido.', 'erro');
-        nomeOuRazaoInput.focus();
+        emailInput.focus();
         return;
     }
     if (!urlEhValida(fotoUrl)) {
-        exibirMensagem('RL da logo inválida. Use http(s)://...', 'erro');
+        exibirMensagem('URL da logo inválida. Use http(s)://...', 'erro');
         fotoUrlInput.focus();
         return;
     }
     // cria nova empresa
     const novaEmpresa = new Empresa(crypto.randomUUID(), // gera um id unico
-    nomeOuRazao, email, fotoUrl || `https://placehold.co/40x40/2ecc71/ffffff?text=${nomeOuRazao[0]}` // placeholder se n tiver foto
+    nomeOuRazao, cnpjValor, email, fotoUrl || `https://placehold.co/40x40/2ecc71/ffffff?text=${nomeOuRazao[0]}` // placeholder se n tiver foto
     );
     bancoDeDadosFake.addEmpresa(novaEmpresa);
     form.reset(); // limpa o formulario

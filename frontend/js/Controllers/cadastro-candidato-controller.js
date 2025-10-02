@@ -1,6 +1,6 @@
 import { bancoDeDadosFake } from "../utils/BancoDeDadosFake.js";
 import { Candidato } from "../models/Candidato.js";
-import { nomeEhValido, emailEhValido, urlEhValida, validarCompetencias } from "../validation/validacao_regex.js";
+import { nomeEhValido, cpfEhValido, emailEhValido, urlEhValida, validarCompetencias } from "../validation/validacao_regex.js";
 // seleção dos elementos DOM
 const form = document.getElementById('formCandidato');
 const nomeInput = document.getElementById('nome');
@@ -73,6 +73,11 @@ function cadastrarCandidato(event) {
         nomeInput.focus();
         return;
     }
+    if (!cpfEhValido(cpf)) {
+        exibirMensagem('CPF inválido. Use o formato 000.000.000-00', 'erro');
+        cpfOuCnpj.focus();
+        return;
+    }
     if (!emailEhValido(email)) {
         exibirMensagem('Email inválido. Verifique o formato e tente novamente.', 'erro');
         emailInput.focus();
@@ -90,8 +95,7 @@ function cadastrarCandidato(event) {
     }
     // transforma a string de competências em um array, removendo espaços extras
     const competencias = competenciasTexto.split(',').map(c => c.trim()).filter(c => c); // c é cada competência no array
-    const novoCandidato = new Candidato(crypto.randomUUID(), nome, cpfOuCnpj, // campo obrigatório na classe, mas não usado aqui
-    email, fotoUrl, competencias);
+    const novoCandidato = new Candidato(crypto.randomUUID(), nome, cpf, email, fotoUrl, competencias);
     bancoDeDadosFake.addCandidato(novoCandidato);
     form.reset(); // limpa o formulario
     nomeInput.focus();
