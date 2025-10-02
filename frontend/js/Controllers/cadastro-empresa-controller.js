@@ -1,5 +1,6 @@
 import { bancoDeDadosFake } from "../utils/BancoDeDadosFake.js";
 import { Empresa } from "../models/Empresa.js";
+import { nomeEhValido, emailEhValido, urlEhValida } from "../validation/validacao_regex.js";
 // seleção dos elementos DOM
 const form = document.getElementById('formEmpresa');
 const nomeOuRazaoInput = document.getElementById('nomeEmpresa');
@@ -55,11 +56,28 @@ function cadastrarEmpresa(event) {
     const nomeOuRazao = nomeOuRazaoInput.value.trim(); // remove espacos em branco
     const email = emailInput.value.trim();
     const fotoUrl = fotoUrlInput.value.trim();
-    // validação basica
-    if (!nomeOuRazao.trim() || !nomeOuRazao.trim() || !email.trim()) {
-        exibirMensagem('Por favor, preencha o nome e o email.', 'erro');
+    // // validação basica
+    // if (!nomeOuRazao.trim() || !nomeOuRazao.trim() || !email.trim()) {
+    //     exibirMensagem('Por favor, preencha o nome e o email.', 'erro');
+    //     return;
+    // }
+    // NOVA VALIDAÇÃO COM REGEX
+    if (!nomeEhValido(nomeOuRazao)) {
+        exibirMensagem('Nome ou razão social inválido. Deve conter apenas letras e espaços.', 'erro');
+        nomeOuRazaoInput.focus();
         return;
     }
+    if (!emailEhValido(email)) {
+        exibirMensagem('Email inválido. Por favor, insira um email válido.', 'erro');
+        nomeOuRazaoInput.focus();
+        return;
+    }
+    if (!urlEhValida(fotoUrl)) {
+        exibirMensagem('RL da logo inválida. Use http(s)://...', 'erro');
+        fotoUrlInput.focus();
+        return;
+    }
+    // cria nova empresa
     const novaEmpresa = new Empresa(crypto.randomUUID(), // gera um id unico
     nomeOuRazao, email, fotoUrl || `https://placehold.co/40x40/2ecc71/ffffff?text=${nomeOuRazao[0]}` // placeholder se n tiver foto
     );

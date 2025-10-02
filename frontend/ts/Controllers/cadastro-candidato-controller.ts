@@ -90,15 +90,18 @@ function cadastrarCandidato(event: SubmitEvent) {
     // VALIDAÇÕES MELHORADAS COM REGEX
     if (!nomeEhValido(nome)) {
         exibirMensagem('Nome inválido. Use apenas letras/acentos e espaços (mínimo 2 caracteres).', 'erro');
+        nomeInput.focus();
         return;
     }
     if (!emailEhValido(email)) {
         exibirMensagem('Email inválido. Verifique o formato e tente novamente.', 'erro');
+        emailInput.focus();
         return;
     }
 
     if (!urlEhValida(fotoUrl)) {
         exibirMensagem('URL da foto inválida. Deve começar com http:// ou https://', 'erro');
+        fotoUrlInput.focus();
         return;
     }
 
