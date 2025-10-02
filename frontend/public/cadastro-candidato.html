@@ -104,22 +104,42 @@
 
       <form id="formCandidato" class="grid grid-cols-1 gap-4">
         <div>
-          <label for="nome" class="block text-sm font-medium text-gray-700">Nome Completo</label>
+          <label for="nome" class="block text-sm font-medium text-gray-700 flex items-center gap-1">
+              <span class="material-icons text-sm">person</span>
+              Nome Completo
+          </label>
           <input id="nome" name="nome" type="text" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Seu nome completo" />
         </div>
 
+          <div>
+              <label for="cpf" class="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                    <span class="material-icons text-sm">badge</span>
+                  CPF
+              </label>
+              <input id="cpf" name="cpf" type="text" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="000.000.000-00" />
+          </div>
+
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+          <label for="email" class="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                <span class="material-icons text-sm">email</span>
+              Email
+          </label>
           <input id="email" name="email" type="email" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="seu@email.com" />
         </div>
 
         <div>
-          <label for="fotoUrl" class="block text-sm font-medium text-gray-700">URL da Foto</label>
+          <label for="fotoUrl" class="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                <span class="material-icons text-sm">image</span>
+              URL da Foto
+          </label>
           <input id="fotoUrl" name="fotoUrl" type="url" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://exemplo.com/foto.jpg" />
         </div>
 
         <div>
-          <label for="competencias" class="block text-sm font-medium text-gray-700">Competências</label>
+          <label for="competencias" class="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                <span class="material-icons text-sm">build</span>
+              Competências
+          </label>
           <input id="competencias" name="competencias" type="text" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ex: Java, Python, React (separadas por vírgula)" />
         </div>
 
