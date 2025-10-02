@@ -12,6 +12,7 @@ import {
 const form = document.getElementById('formCandidato') as HTMLFormElement;
 const nomeInput = document.getElementById('nome') as HTMLInputElement;
 const emailInput = document.getElementById('email') as HTMLInputElement;
+const cpfOuCnpj = document.getElementById('cpf') as HTMLInputElement;
 const fotoUrlInput = document.getElementById('fotoUrl') as HTMLInputElement;
 const competenciasInput = document.getElementById('competencias') as HTMLInputElement;
 const listaCandidatosDiv = document.getElementById('listaCandidatos') as HTMLDivElement;
@@ -77,6 +78,7 @@ function cadastrarCandidato(event: SubmitEvent) {
     event.preventDefault(); // previne o comportamento padrão do form (recarregar a página)
 
     const nome = nomeInput.value.trim(); // remove espacos em branco
+    const cpf=cpfOuCnpj.value.trim();
     const email = emailInput.value.trim();
     const fotoUrl = fotoUrlInput.value.trim();
     const competenciasTexto = competenciasInput.value.trim();
@@ -117,6 +119,7 @@ function cadastrarCandidato(event: SubmitEvent) {
     const novoCandidato = new Candidato (
         crypto.randomUUID(),
         nome,
+        cpfOuCnpj, // campo obrigatório na classe, mas não usado aqui
         email,
         fotoUrl,
         competencias

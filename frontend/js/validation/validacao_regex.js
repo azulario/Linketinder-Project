@@ -3,6 +3,15 @@ export const PadroesValidacao = {
     // - aceita letras maiusculas, minusculas e acentuadas
     // - não aceita números, caracteres especiais ou múltiplos espaços consecutivos
     nome: /^[A-Za-zÀ-ÖØ-öø-ÿ]+( [A-Za-zÀ-ÖØ-öø-ÿ]+)*$/,
+    // Validação de CPF e CNPJ no formato padrão:
+    // CPF: 000.000.000-00
+    // CNPJ: 00.000.000/0000-00
+    // - deve conter apenas números, pontos, barras e hífens nos locais corretos
+    // - não aceita letras ou caracteres especiais fora do padrão
+    // - não valida a lógica do número, apenas o formato
+    cpf: /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
+    cnpj: /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/,
+    // Validação de email:
     // - deve começar com letra minúscula
     // - pode conter letras, números, pontos, underscores, porcentagem, sinais de mais e hífens antes do @
     // - deve ter um domínio válido após o @ (letras, números, pontos e hífens)
@@ -22,6 +31,12 @@ export const PadroesValidacao = {
 };
 export function nomeEhValido(nome) {
     return PadroesValidacao.nome.test(nome.trim());
+}
+export function cpfEhValido(cpf) {
+    return PadroesValidacao.cpf.test(cpf.trim());
+}
+export function cnpjEhValido(cnpj) {
+    return PadroesValidacao.cnpj.test(cnpj.trim());
 }
 export function emailEhValido(email) {
     return PadroesValidacao.email.test(email.trim());

@@ -5,6 +5,7 @@ import { nomeEhValido, emailEhValido, urlEhValida, validarCompetencias } from ".
 const form = document.getElementById('formCandidato');
 const nomeInput = document.getElementById('nome');
 const emailInput = document.getElementById('email');
+const cpfOuCnpj = document.getElementById('cpf');
 const fotoUrlInput = document.getElementById('fotoUrl');
 const competenciasInput = document.getElementById('competencias');
 const listaCandidatosDiv = document.getElementById('listaCandidatos');
@@ -57,6 +58,7 @@ function exibirMensagem(texto, tipo) {
 function cadastrarCandidato(event) {
     event.preventDefault(); // previne o comportamento padrão do form (recarregar a página)
     const nome = nomeInput.value.trim(); // remove espacos em branco
+    const cpf = cpfOuCnpj.value.trim();
     const email = emailInput.value.trim();
     const fotoUrl = fotoUrlInput.value.trim();
     const competenciasTexto = competenciasInput.value.trim();
@@ -88,7 +90,8 @@ function cadastrarCandidato(event) {
     }
     // transforma a string de competências em um array, removendo espaços extras
     const competencias = competenciasTexto.split(',').map(c => c.trim()).filter(c => c); // c é cada competência no array
-    const novoCandidato = new Candidato(crypto.randomUUID(), nome, email, fotoUrl, competencias);
+    const novoCandidato = new Candidato(crypto.randomUUID(), nome, cpfOuCnpj, // campo obrigatório na classe, mas não usado aqui
+    email, fotoUrl, competencias);
     bancoDeDadosFake.addCandidato(novoCandidato);
     form.reset(); // limpa o formulario
     nomeInput.focus();
