@@ -20,6 +20,9 @@ frontend/ts/**/*.map
 frontend/tailwind-test/
 frontend/js/**/*.d.ts
 frontend/ts/**/*.d.ts
+# Frontend build outputs
+frontend/dist/
+frontend/public/styles.css
 
 # Logs
 npm-debug.log*
