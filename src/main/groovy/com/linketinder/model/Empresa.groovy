@@ -26,8 +26,16 @@ class Empresa implements Usuarios {
 
     }
 
-    void adicionarVag(Vaga vaga) {
+    void adicionarVaga(Vaga vaga) {
         vagas.add(vaga)
+    }
+
+    Integer getNumeroVagas() {
+        return vagas.size()
+    }
+
+    Integer getNumeroCurtidas() {
+        return candidatosCurtidos.size()
     }
 
     void curtirCandidato(Candidato candidato) {
