@@ -41,12 +41,21 @@ class Menu {
                     listarEmpresas()
                     break
                 case "3":
-                    cadastrarCandidato()
+                    listarVagas()
                     break
                 case "4":
-                    cadastrarEmpresa()
+                    cadastrarCandidato()
                     break
                 case "5":
+                    cadastrarEmpresa()
+                    break
+                case "6":
+                    candidatoCurtirVaga()
+                    break
+                case "7":
+                    empresaCurtirCandidato()
+                    break
+                case "8":
                     continuar = false
                     println "Saindo do Linketinder. Até logo!"
                     break
