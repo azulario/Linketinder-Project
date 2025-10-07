@@ -7,7 +7,7 @@ import com.linketinder.model.Vaga
 class Database {
     List<Candidato> candidatos = []
     List<Empresa> empresas = []
-    //List<Vaga> vagas = []
+    List<Vaga> vagas = []
 
     Database() {
         carregarCandidatos()
@@ -124,7 +124,6 @@ class Database {
                 )
         ]
     }
-
 
     private void carregarVagas() {
         // Vagas da Tech Solutions
