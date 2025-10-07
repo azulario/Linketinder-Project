@@ -240,9 +240,52 @@ class Menu {
         }
 
         Vaga vaga = database.vagas[numVaga]
-        Candidato.curtirVaga(vaga)
+        candidatoSelecionado.curtirVaga(vaga)
 
-        println "\n✓ ${candidato.nome} curtiu a vaga ${vaga.titulo}!"
+        println "\n✓ ${candidatoSelecionado.nome} curtiu a vaga ${vaga.titulo}!"
+    }
+
+    private void empresaCurtirCandidato() {
+        println "### EMPRESA CURTIR CANDIDATO ###"
+
+        if (database.empresas.isEmpty() || database.candidatos.isEmpty()) {
+            println "Não há empresas ou candidatos disponíveis."
+            return
+        }
+
+        println "Empresas disponíveis: "
+        database.empresas.eachWithIndex { Empresa empresa, int i ->
+            println "${i + 1}. ${empresa.nome}"
+        }
+
+        println "Escolha o número da empresa: "
+        Integer numEmpresa = scanner.nextLine().toInteger() - 1 // -1 para ajustar ao índice da lista
+
+        if (numEmpresa < 0 || numEmpresa >= database.empresas.size()) {
+            println "Número de empresa inválido."
+            return
+        }
+
+        Empresa empresaSelecionada = database.empresas[numEmpresa]
+
+        println "Candidatos disponíveis: "
+        database.candidatos.eachWithIndex { Candidato candidato, int i ->
+            println "${i + 1}. ${candidato.nome}"
+        }
+
+        println "Escolha o número do candidato: "
+        Integer numCandidato = scanner.nextLine().toInteger() - 1 // -1 para ajustar ao índice da lista
+
+        if (numCandidato < 0 || numCandidato >= database.candidatos.size()) {
+            println "Número de candidato inválido."
+            return
+        }
+
+        Candidato candidato = database.candidatos[numCandidato]
+        empresaSelecionada.curtirCandidato(candidato)
+
+        println "\n✓ ${empresaSelecionada.nome} curtiu o candidato ${candidato.nome}!"
+
     }
 
 }
