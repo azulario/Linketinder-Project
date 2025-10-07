@@ -22,9 +22,12 @@ class Menu {
             println "=" * 50
             println "1. Listar Candidatos"
             println "2. Listar Empresas"
-            println "3. Cadastrar novo Candidato"
-            println "4. Cadastrar nova Empresa"
-            println "5. Sair"
+            println "3. Listar Vagas"
+            println "4. Cadastrar novo Candidato"
+            println "5. Cadastrar nova Empresa"
+            println "6. Candidato curtir Vaga"
+            println "7. Empresa curtir Candidato"
+            println "8. Sair"
             println "=" * 50
             print "Escolha uma opção: "
 
