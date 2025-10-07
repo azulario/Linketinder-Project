@@ -2,14 +2,17 @@ package com.linketinder.database
 
 import com.linketinder.model.Candidato
 import com.linketinder.model.Empresa
+import com.linketinder.model.Vaga
 
 class Database {
     List<Candidato> candidatos = []
     List<Empresa> empresas = []
+    //List<Vaga> vagas = []
 
     Database() {
         carregarCandidatos()
         carregarEmpresas()
+        carregarVagas()
     }
 
     private void carregarCandidatos() {
@@ -122,11 +125,86 @@ class Database {
         ]
     }
 
+
+    private void carregarVagas() {
+        // Vagas da Tech Solutions
+        Vaga vaga1 = new Vaga(
+                "Desenvolvedor Java Pleno",
+                "Desenvolvimento de aplicações empresariais com Java e Spring",
+                ["Java", "Spring Framework", "PostgreSQL"],
+                empresas[0]
+        )
+        empresas[0].adicionarVaga(vaga1)
+        vagas.add(vaga1)
+
+        Vaga vaga2 = new Vaga(
+                "Desenvolvedor Frontend Angular",
+                "Criar interfaces modernas e responsivas com Angular",
+                ["Angular", "TypeScript", "CSS"],
+                empresas[0]
+        )
+        empresas[0].adicionarVaga(vaga2)
+        vagas.add(vaga2)
+
+        // Vagas da Inovação Digital
+        Vaga vaga3 = new Vaga(
+                "Engenheiro Python",
+                "Desenvolvimento de APIs e automações com Python",
+                ["Python", "Django", "Docker"],
+                empresas[1]
+        )
+        empresas[1].adicionarVaga(vaga3)
+        vagas.add(vaga3)
+
+        // Vagas da Code Masters
+        Vaga vaga4 = new Vaga(
+                "Desenvolvedor Full Stack",
+                "Trabalhar com React no frontend e Node.js no backend",
+                ["React", "Node.js", "TypeScript"],
+                empresas[2]
+        )
+        empresas[2].adicionarVaga(vaga4)
+        vagas.add(vaga4)
+
+        // Vagas da Cloud Systems
+        Vaga vaga5 = new Vaga(
+                "Arquiteto de Soluções Cloud",
+                "Projetar e implementar arquiteturas em nuvem",
+                ["AWS", "Kubernetes", "Microservices"],
+                empresas[3]
+        )
+        empresas[3].adicionarVaga(vaga5)
+        vagas.add(vaga5)
+
+        Vaga vaga6 = new Vaga(
+                "DevOps Engineer",
+                "Automação de deploy e infraestrutura como código",
+                ["Docker", "Kubernetes", "Jenkins"],
+                empresas[3]
+        )
+        empresas[3].adicionarVaga(vaga6)
+        vagas.add(vaga6)
+
+        // Vagas da Mobile Apps
+        Vaga vaga7 = new Vaga(
+                "Desenvolvedor Mobile Flutter",
+                "Criar apps multiplataforma com Flutter",
+                ["Flutter", "Dart", "Firebase"],
+                empresas[4]
+        )
+        empresas[4].adicionarVaga(vaga7)
+        vagas.add(vaga7)
+    }
+
     void adicionarCandidato(Candidato candidato) {
         candidatos.add(candidato)
     }
 
     void adicionarEmpresa(Empresa empresa) {
         empresas.add(empresa)
+    }
+
+    void adicionarVaga(Vaga vaga) {
+        vagas.add(vaga)
     }
 }
