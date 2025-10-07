@@ -1,0 +1,34 @@
+plugins {
+    id 'groovy'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    spockVersion = '2.3-groovy-3.0'
+    groovyVersion = '3.0.19'
+}
+
+dependencies {
+    implementation "org.codehaus.groovy:groovy-all:${groovyVersion}"
+    testImplementation "org.spockframework:spock-core:${spockVersion}"
+    // Optional: Uncomment if you need assertions with Hamcrest/EqualsVerifier/etc.
+    // testImplementation 'org.hamcrest:hamcrest:2.2'
+
+    // JUnit platform launcher (optional but useful for IDEs / detailed console)
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+        exceptionFormat 'full'
+        showStandardStreams = true
+    }
+}
