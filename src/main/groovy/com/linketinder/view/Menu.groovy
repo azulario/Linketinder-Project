@@ -3,6 +3,7 @@ package com.linketinder.view
 import com.linketinder.database.Database
 import com.linketinder.model.Candidato
 import com.linketinder.model.Empresa
+import com.linketinder.model.Vaga
 
 class Menu {
     private Database database
@@ -99,6 +100,22 @@ class Menu {
 
     }
 
+    private void listarVagas() {
+        println "### LISTA DE VAGAS ###"
+
+        if (database.vagas.isEmpty()) {
+            println "Nenhuma vaga cadastrada."
+            return
+        }
+
+        database.vagas.eachWithIndex{ vaga, int i ->
+            println "\nVaga ${i + 1}:"
+            vaga.exibirInfo()
+            println ""
+        }
+
+    }
+
     private void cadastrarCandidato() {
         println "### CADASTRO DE CANDIDATO ###"
 
@@ -183,6 +200,49 @@ class Menu {
 
         database.adicionarEmpresa(novaEmpresa)
         println "Empresa cadastrada com sucesso!"
+    }
+
+    private void candidatoCurtirVaga() {
+        println "### CANDIDATO CURTIR VAGA ###"
+
+        if (database.candidatos.isEmpty() || database.vagas.isEmpty()) {
+            println "Não há candidatos ou vagas disponiveis."
+            return
+        }
+
+        println "Candidatos disponíveis: "
+        database.candidatos.eachWithIndex { Candidato candidato, int i ->
+            println "${i + 1}. ${candidato.nome}"
+        }
+
+        println "Escolha o número do candidato: "
+        Integer numCandidato = scanner.nextLine().toInteger() - 1 // -1 para ajustar ao índice da lista
+
+        if (numCandidato < 0 || numCandidato >= database.candidatos.size()) {
+            println "Número de candidato inválido."
+            return
+
+        }
+
+        Candidato candidatoSelecionado = database.candidatos[numCandidato]
+
+        println "Vagas disponíveis: "
+        database.vagas.eachWithIndex { vaga, int i ->
+            println "${i + 1}. ${vaga.titulo} na ${vaga.empresa.nome}"
+        }
+
+        println "Escolha o número da vaga: "
+        Integer numVaga = scanner.nextLine().toInteger() - 1 // -1 para ajustar ao índice da lista
+
+        if (numVaga < 0 || numVaga >= database.vagas.size()) {
+            println "Número de vaga inválido."
+            return
+        }
+
+        Vaga vaga = database.vagas[numVaga]
+        Candidato.curtirVaga(vaga)
+
+        println "\n✓ ${candidato.nome} curtiu a vaga ${vaga.titulo}!"
     }
 
 }
