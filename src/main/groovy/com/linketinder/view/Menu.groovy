@@ -206,7 +206,7 @@ class Menu {
         println "### CANDIDATO CURTIR VAGA ###"
 
         if (database.candidatos.isEmpty() || database.vagas.isEmpty()) {
-            println "Não há candidatos ou vagas disponiveis."
+            println "Não há candidatos ou vagas disponíveis."
             return
         }
 
@@ -226,12 +226,15 @@ class Menu {
 
         Candidato candidatoSelecionado = database.candidatos[numCandidato]
 
-        println "Vagas disponíveis: "
+        println "\n=== VAGAS DISPONÍVEIS ==="
         database.vagas.eachWithIndex { vaga, int i ->
-            println "${i + 1}. ${vaga.titulo} na ${vaga.empresa.nome}"
+            println "\n${i + 1}."
+            println "Descrição: ${vaga.descricao}"
+            println "Competências necessárias: ${vaga.competencias.join(', ')}"
+            println "-" * 50
         }
 
-        println "Escolha o número da vaga: "
+        println "\nEscolha o número da vaga: "
         Integer numVaga = scanner.nextLine().toInteger() - 1 // -1 para ajustar ao índice da lista
 
         if (numVaga < 0 || numVaga >= database.vagas.size()) {
@@ -242,7 +245,7 @@ class Menu {
         Vaga vaga = database.vagas[numVaga]
         candidatoSelecionado.curtirVaga(vaga)
 
-        println "\n✓ ${candidatoSelecionado.nome} curtiu a vaga ${vaga.titulo}!"
+        println "\n✓ Curtida registrada com sucesso!"
     }
 
     private void empresaCurtirCandidato() {
@@ -268,12 +271,17 @@ class Menu {
 
         Empresa empresaSelecionada = database.empresas[numEmpresa]
 
-        println "Candidatos disponíveis: "
+        println "\n=== CANDIDATOS DISPONÍVEIS ==="
         database.candidatos.eachWithIndex { Candidato candidato, int i ->
-            println "${i + 1}. ${candidato.nome}"
+            println "\n${i + 1}."
+            println "Descrição: ${candidato.descricao}"
+            println "Competências: ${candidato.competencias.join(', ')}"
+            println "Estado: ${candidato.estado}"
+            println "Idade: ${candidato.idade} anos"
+            println "-" * 50
         }
 
-        println "Escolha o número do candidato: "
+        println "\nEscolha o número do candidato: "
         Integer numCandidato = scanner.nextLine().toInteger() - 1 // -1 para ajustar ao índice da lista
 
         if (numCandidato < 0 || numCandidato >= database.candidatos.size()) {
@@ -284,7 +292,7 @@ class Menu {
         Candidato candidato = database.candidatos[numCandidato]
         empresaSelecionada.curtirCandidato(candidato)
 
-        println "\n✓ ${empresaSelecionada.nome} curtiu o candidato ${candidato.nome}!"
+        println "\n✓ Curtida registrada com sucesso!"
 
     }
 
