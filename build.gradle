@@ -5,17 +5,23 @@ plugins {
 group = 'org.example'
 version = '1.0-SNAPSHOT'
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 repositories {
     mavenCentral()
 }
 
 ext {
-    spockVersion = '2.3-groovy-3.0'
-    groovyVersion = '3.0.19'
+    spockVersion = '2.3-groovy-4.0'
+    groovyVersion = '4.0.15'
 }
 
 dependencies {
-    implementation "org.codehaus.groovy:groovy-all:${groovyVersion}"
+    implementation "org.apache.groovy:groovy-all:${groovyVersion}"
     testImplementation "org.spockframework:spock-core:${spockVersion}"
     // Optional: Uncomment if you need assertions with Hamcrest/EqualsVerifier/etc.
     // testImplementation 'org.hamcrest:hamcrest:2.2'
