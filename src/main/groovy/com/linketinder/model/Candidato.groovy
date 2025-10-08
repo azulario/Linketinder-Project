@@ -9,6 +9,7 @@ class Candidato implements Usuarios {
     String cep
     String descricao
     List<String> competencias = []
+    List<Vaga> vagasCurtidas = []
 
     Candidato(String nome, String email, String cpf, Integer idade, String estado, String cep, String descricao, List<String> competencias) {
         this.nome = nome
@@ -20,6 +21,17 @@ class Candidato implements Usuarios {
         this.descricao = descricao
         this.competencias = competencias
 
+    }
+
+    void curtirVaga(Vaga vaga) {
+        if (!vagasCurtidas.contains(vaga)) {
+            vagasCurtidas.add(vaga)
+            vaga.receberCurtida(this)
+        }
+    }
+
+    Integer getTotalVagasCurtidas() {
+        return vagasCurtidas.size()
     }
 
     @Override
