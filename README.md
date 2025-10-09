@@ -204,4 +204,17 @@ npm run build   # compila TS → JS
 
 ---
 
+# Banco de Dados
+
+## Diagrama ER
+
+![Diagrama do Banco](diagram-er.png)
+
+**Software utilizado:** dbdiagram.io
+
+## Tecnologias
+- PostgreSQL
+- 7 tabelas
+- Relacionamentos N:N
+
 Projeto desenvolvido por Nathalia Veiga para fins didáticos e de demonstração de boas práticas em Groovy, TDD e arquitetura orientada a serviços no programa Acelera ZG.
