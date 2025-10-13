@@ -72,5 +72,35 @@ class DatabaseConnection {
             }
         }
     }
-}
 
+    /**
+     * Fecha recursos JDBC de forma segura (Connection, Statement, ResultSet)
+     * @param conn - conexão a ser fechada
+     * @param stmt - statement a ser fechado
+     * @param rs - result set a ser fechado
+     */
+    static void closeResources(Connection conn, java.sql.Statement stmt, java.sql.ResultSet rs) {
+        if (rs != null) {
+            try {
+                rs.close()
+            } catch (SQLException e) {
+                println "✗ ERRO ao fechar ResultSet: ${e.message}"
+            }
+        }
+        if (stmt != null) {
+            try {
+                stmt.close()
+            } catch (SQLException e) {
+                println "✗ ERRO ao fechar Statement: ${e.message}"
+            }
+        }
+        if (conn != null) {
+            try {
+                conn.close()
+                println "✓ Recursos do banco fechados!"
+            } catch (SQLException e) {
+                println "✗ ERRO ao fechar conexão: ${e.message}"
+            }
+        }
+    }
+}

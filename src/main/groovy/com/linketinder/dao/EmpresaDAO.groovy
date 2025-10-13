@@ -6,6 +6,7 @@ import com.linketinder.model.Empresa
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
+import java.sql.Statement
 import java.time.LocalDateTime
 
 /**
@@ -23,15 +24,44 @@ class EmpresaDAO {
      * Insere uma nova empresa no banco de dados
      * @param empresa - objeto Empresa a ser inserido
      */
-    void inserir(Empresa empresa) {
-        // TODO: Implementar inserção de empresa no banco
-        // 1. Abrir conexão com o banco
-        // 2. Preparar SQL INSERT com PreparedStatement
-        // 3. Preencher os parâmetros (nome, email, cnpj, etc)
-        // 4. Executar o INSERT
-        // 5. Recuperar o ID gerado pelo banco
-        // 6. Atribuir o ID ao objeto empresa
-        // 7. Fechar conexão
+    void inserir (Empresa empresa) {
+        String sql = """
+            INSERT INTO empresas (nome_empresa, email, cnpj, pais, cep, descricao, senha, criado_em)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """
+
+        Connection conn = null
+        PreparedStatement statement = null
+        ResultSet resultSet = null
+
+        try {
+            conn = DatabaseConnection.getConnection()
+            statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+
+            statement.setString(1, empresa.nome)
+            statement.setString(2, empresa.email)
+            statement.setString(3, empresa.cnpj)
+            statement.setString(4, empresa.pais)
+            statement.setString(5, empresa.cep)
+            statement.setString(6, empresa.descricao)
+            statement.setString(7, empresa.senha ?: "senha123") // senha padrão se não informada
+            statement.setObject(8, LocalDateTime.now())
+
+            int rowsAffected = statement.executeUpdate()
+            println "DEBUG: Rows affected: ${rowsAffected}"
+
+            resultSet = statement.getGeneratedKeys()
+            if (resultSet.next()) {
+                empresa.id = resultSet.getInt(1)
+                println "DEBUG: ID gerado: ${empresa.id}"
+            }
+        } catch (Exception e) {
+            println "ERRO ao inserir empresa: ${e.message}"
+            e.printStackTrace()
+            throw e
+        } finally {
+            DatabaseConnection.closeResources(conn, statement, resultSet)
+        }
     }
 
     /**
@@ -39,15 +69,26 @@ class EmpresaDAO {
      * @return List<Empresa> - lista com todas as empresas
      */
     List<Empresa> listar() {
-        // TODO: Implementar listagem de empresas
-        // 1. Abrir conexão
-        // 2. Executar SELECT * FROM empresas
-        // 3. Percorrer o ResultSet
-        // 4. Para cada linha, criar um objeto Empresa
-        // 5. Adicionar empresa na lista
-        // 6. Fechar conexão
-        // 7. Retornar lista
-        return []
+        String sql = "SELECT * FROM empresas ORDER BY idEmpresas"
+        List<Empresa> empresas = []
+
+        Connection conn = null
+        Statement statement = null
+        ResultSet resultSet = null
+
+        try {
+            conn = DatabaseConnection.getConnection()
+            statement = conn.createStatement()
+            resultSet = statement.executeQuery(sql)
+
+            while (resultSet.next()) {
+                empresas.add(mapearEmpresa(resultSet))
+            }
+        } finally {
+            DatabaseConnection.closeResources(conn, statement, resultSet)
+        }
+
+        return empresas
     }
 
     /**
@@ -56,14 +97,27 @@ class EmpresaDAO {
      * @return Empresa - objeto encontrado ou null
      */
     Empresa buscarPorId(Integer id) {
-        // TODO: Implementar busca por ID
-        // 1. Abrir conexão
-        // 2. Preparar SELECT WHERE id = ?
-        // 3. Executar query
-        // 4. Se encontrou, criar objeto Empresa
-        // 5. Fechar conexão
-        // 6. Retornar empresa ou null
-        return null
+        String sql = "SELECT * FROM empresas WHERE idEmpresas = ?"
+        Empresa empresa = null
+
+        Connection conn = null
+        PreparedStatement statement = null
+        ResultSet resultSet = null
+
+        try {
+            conn = DatabaseConnection.getConnection()
+            statement = conn.prepareStatement(sql)
+            statement.setInt(1, id)
+            resultSet = statement.executeQuery()
+
+            if (resultSet.next()) {
+                empresa = mapearEmpresa(resultSet)
+            }
+        } finally {
+            DatabaseConnection.closeResources(conn, statement, resultSet)
+        }
+
+        return empresa
     }
 
     /**
@@ -71,12 +125,32 @@ class EmpresaDAO {
      * @param empresa - objeto com dados atualizados
      */
     void atualizar(Empresa empresa) {
-        // TODO: Implementar atualização de empresa
-        // 1. Abrir conexão
-        // 2. Preparar UPDATE SET ... WHERE id = ?
-        // 3. Preencher parâmetros
-        // 4. Executar UPDATE
-        // 5. Fechar conexão
+        String sql = """
+            UPDATE empresas 
+            SET nome_empresa = ?, email = ?, cnpj = ?, pais = ?, cep = ?, descricao = ?, senha = ?
+            WHERE idEmpresas = ?
+        """
+
+        Connection conn = null
+        PreparedStatement statement = null
+
+        try {
+            conn = DatabaseConnection.getConnection()
+            statement = conn.prepareStatement(sql)
+
+            statement.setString(1, empresa.nome)
+            statement.setString(2, empresa.email)
+            statement.setString(3, empresa.cnpj)
+            statement.setString(4, empresa.pais)
+            statement.setString(5, empresa.cep)
+            statement.setString(6, empresa.descricao)
+            statement.setString(7, empresa.senha ?: "senha123") // senha padrão se null
+            statement.setInt(8, empresa.id)
+
+            statement.executeUpdate()
+        } finally {
+            DatabaseConnection.closeResources(conn, statement, null)
+        }
     }
 
     /**
@@ -84,11 +158,40 @@ class EmpresaDAO {
      * @param id - ID da empresa a ser removida
      */
     void deletar(Integer id) {
-        // TODO: Implementar exclusão de empresa
-        // 1. Abrir conexão
-        // 2. Preparar DELETE WHERE id = ?
-        // 3. Executar DELETE
-        // 4. Fechar conexão
+        String sql = "DELETE FROM empresas WHERE idEmpresas = ?"
+
+        Connection conn = null
+        PreparedStatement statement = null
+
+        try {
+            conn = DatabaseConnection.getConnection()
+            statement = conn.prepareStatement(sql)
+            statement.setInt(1, id)
+            statement.executeUpdate()
+        } finally {
+            DatabaseConnection.closeResources(conn, statement, null)
+        }
+    }
+
+    private Empresa mapearEmpresa(ResultSet rs) {
+        Integer empresaId = rs.getInt("idEmpresas")
+
+        // Buscar competências da empresa (se necessário implementar no futuro)
+        List<String> competencias = [] // Por enquanto retorna vazio, pois a tabela empresas não tem relação N:N com competências
+
+        Empresa empresa = new Empresa(
+            rs.getString("nome_empresa"),
+            rs.getString("email"),
+            rs.getString("cnpj"),
+            rs.getString("pais"),
+            rs.getString("pais"), // estado - usando pais já que estado não existe na tabela
+            rs.getString("cep"),
+            rs.getString("descricao"),
+            competencias
+        )
+        empresa.id = empresaId
+        empresa.senha = rs.getString("senha")
+        empresa.criadoEm = rs.getTimestamp("criado_em")?.toLocalDateTime()
+        return empresa
     }
 }
-
