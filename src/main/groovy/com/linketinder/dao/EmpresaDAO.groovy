@@ -176,9 +176,6 @@ class EmpresaDAO {
     private Empresa mapearEmpresa(ResultSet rs) {
         Integer empresaId = rs.getInt("idEmpresas")
 
-        // Buscar competências da empresa (se necessário implementar no futuro)
-        List<String> competencias = [] // Por enquanto retorna vazio, pois a tabela empresas não tem relação N:N com competências
-
         Empresa empresa = new Empresa(
             rs.getString("nome_empresa"),
             rs.getString("email"),
@@ -186,8 +183,7 @@ class EmpresaDAO {
             rs.getString("pais"),
             rs.getString("pais"), // estado - usando pais já que estado não existe na tabela
             rs.getString("cep"),
-            rs.getString("descricao"),
-            competencias
+            rs.getString("descricao")
         )
         empresa.id = empresaId
         empresa.senha = rs.getString("senha")

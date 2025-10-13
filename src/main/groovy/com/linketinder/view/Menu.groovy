@@ -186,9 +186,6 @@ class Menu {
         print "Descrição: "
         String descricao = scanner.nextLine()
 
-        print "Competências buscadas (separadas por vírgula): "
-        List<String> competencias = scanner.nextLine().split(",").collect { it.trim() }
-
         Empresa novaEmpresa = new Empresa(
                 nome,
                 email,
@@ -196,8 +193,7 @@ class Menu {
                 pais,
                 estado,
                 cep,
-                descricao,
-                competencias
+                descricao
         )
 
         database.adicionarEmpresa(novaEmpresa)

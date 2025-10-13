@@ -6,7 +6,6 @@ interface Usuarios {
     String getCep()
     String getEstado()
     String getDescricao()
-    List<String> getCompetencias()
 
     void exibirInfo()
 }

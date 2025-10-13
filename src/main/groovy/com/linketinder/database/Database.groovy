@@ -79,8 +79,7 @@ class Database {
                         "Brasil",
                         "SP",
                         "01310-100",
-                        "Empresa de consultoria em tecnologia",
-                        ["Java", "Spring Framework", "Angular"]
+                        "Empresa de consultoria em tecnologia"
                 ),
                 new Empresa(
                         "Inovação Digital S.A.",
@@ -89,8 +88,7 @@ class Database {
                         "Brasil",
                         "RJ",
                         "20040-020",
-                        "Startup de transformação digital",
-                        ["Python", "React", "AWS", "Docker"]
+                        "Startup de transformação digital"
                 ),
                 new Empresa(
                         "Code Masters",
@@ -99,8 +97,7 @@ class Database {
                         "Brasil",
                         "MG",
                         "30130-100",
-                        "Software house especializada em produtos web",
-                        ["JavaScript", "TypeScript", "Node.js", "React"]
+                        "Software house especializada em produtos web"
                 ),
                 new Empresa(
                         "Cloud Systems",
@@ -109,8 +106,7 @@ class Database {
                         "Brasil",
                         "PR",
                         "80060-000",
-                        "Empresa focada em soluções cloud",
-                        ["Java", "Kubernetes", "Microservices", "AWS"]
+                        "Empresa focada em soluções cloud"
                 ),
                 new Empresa(
                         "Mobile Apps Inc",
@@ -119,8 +115,7 @@ class Database {
                         "Brasil",
                         "RS",
                         "90040-000",
-                        "Desenvolvimento de aplicativos mobile",
-                        ["Kotlin", "Swift", "Flutter", "React Native"]
+                        "Desenvolvimento de aplicativos mobile"
                 )
         ]
     }

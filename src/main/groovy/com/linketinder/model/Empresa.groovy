@@ -13,12 +13,11 @@ class Empresa implements Usuarios {
     String cep
     String descricao
     LocalDateTime criadoEm
-    List<String> competencias = []
     List<Vaga> vagas = []
     List<Candidato> candidatosCurtidos
 
     // Construtor único - usado pelo Menu e pelo DAO
-    Empresa(String nome, String email, String cnpj, String pais, String estado, String cep, String descricao, List<String> competencias) {
+    Empresa(String nome, String email, String cnpj, String pais, String estado, String cep, String descricao) {
         this.nome = nome
         this.email = email
         this.cnpj = cnpj
@@ -26,7 +25,6 @@ class Empresa implements Usuarios {
         this.estado = estado
         this.cep = cep
         this.descricao = descricao
-        this.competencias = competencias
         this.vagas = []
         this.candidatosCurtidos = []
         this.criadoEm = LocalDateTime.now()
@@ -47,7 +45,7 @@ class Empresa implements Usuarios {
     void curtirCandidato(Candidato candidato) {
         if (!candidatosCurtidos.contains(candidato)) {
             candidatosCurtidos.add(candidato)
-        } //traduzindo: se o candidato ainda não foi curtido, adiciona ele na lista de candidatos que foram curtidos
+        }
     }
 
     //override é usado para sobrescrever um metodo de uma classe pai ou interface implementada
@@ -63,7 +61,6 @@ class Empresa implements Usuarios {
         println "Estado: $estado"
         println "CEP: $cep"
         println "Descrição: $descricao"
-        println "Competências buscadas: ${competencias.join(', ')}"
         if (criadoEm) println "Cadastrado em: $criadoEm"
         println "=" * 50
     }

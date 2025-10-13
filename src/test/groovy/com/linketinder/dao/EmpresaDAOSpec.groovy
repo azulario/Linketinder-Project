@@ -49,15 +49,14 @@ class EmpresaDAOSpec extends Specification {
 
     def "deve inserir uma nova empresa no banco de dados"() {
         given: "uma empresa válida"
-        def empresa = new Empresa(
+        Empresa empresa = new Empresa(
             "Tech Solutions",
             "contato@techsolutions.com",
             "12.345.678/0001-90",
             "Brasil",
             "SP",
             "01310-100",
-            "Empresa de tecnologia e inovação",
-            ["Java", "Spring", "AWS"]
+            "Empresa de tecnologia e inovação"
         )
 
         when: "inserir a empresa no banco"
@@ -70,32 +69,30 @@ class EmpresaDAOSpec extends Specification {
 
     def "deve listar todas as empresas cadastradas"() {
         given: "duas empresas cadastradas no banco"
-        def empresa1 = new Empresa(
+        Empresa empresa1 = new Empresa(
             "DataCorp",
             "contato@datacorp.com",
             "11.222.333/0001-44",
             "Brasil",
             "RJ",
             "20000-000",
-            "Análise de dados e BI",
-            ["Python", "SQL", "Tableau"]
+            "Análise de dados e BI"
         )
-        def empresa2 = new Empresa(
+        Empresa empresa2 = new Empresa(
             "WebDev SA",
             "contato@webdev.com",
             "55.666.777/0001-88",
             "Brasil",
             "MG",
             "30000-000",
-            "Desenvolvimento web",
-            ["JavaScript", "React", "Node.js"]
+            "Desenvolvimento web"
         )
 
         dao.inserir(empresa1)
         dao.inserir(empresa2)
 
         when: "listar todas as empresas"
-        def empresas = dao.listar()
+        List<Empresa> empresas = dao.listar()
 
         then: "deve retornar as 2 empresas cadastradas"
         empresas.size() == 2
@@ -104,21 +101,20 @@ class EmpresaDAOSpec extends Specification {
 
     def "deve buscar uma empresa por ID"() {
         given: "uma empresa cadastrada no banco"
-        def empresaOriginal = new Empresa(
+        Empresa empresaOriginal = new Empresa(
             "DesignHub",
             "contato@designhub.com",
             "99.888.777/0001-66",
             "Brasil",
             "PR",
             "80000-000",
-            "Agência de design criativo",
-            ["Figma", "Adobe", "UI/UX"]
+            "Agência de design criativo"
         )
         dao.inserir(empresaOriginal)
-        def idGerado = empresaOriginal.id
+        Integer idGerado = empresaOriginal.id
 
         when: "buscar a empresa pelo ID"
-        def empresaEncontrada = dao.buscarPorId(idGerado)
+        Empresa empresaEncontrada = dao.buscarPorId(idGerado)
 
         then: "deve retornar a empresa correta"
         empresaEncontrada != null
@@ -129,10 +125,10 @@ class EmpresaDAOSpec extends Specification {
 
     def "deve retornar null ao buscar empresa inexistente"() {
         given: "um ID que não existe no banco"
-        def idInexistente = 99999
+        Integer idInexistente = 99999
 
         when: "buscar pelo ID inexistente"
-        def empresa = dao.buscarPorId(idInexistente)
+        Empresa empresa = dao.buscarPorId(idInexistente)
 
         then: "deve retornar null"
         empresa == null
@@ -140,15 +136,14 @@ class EmpresaDAOSpec extends Specification {
 
     def "deve atualizar os dados de uma empresa"() {
         given: "uma empresa cadastrada no banco"
-        def empresa = new Empresa(
+        Empresa empresa = new Empresa(
             "CodeFactory",
             "contato@codefactory.com",
             "12.312.312/0001-34",
             "Brasil",
             "BA",
             "40000-000",
-            "Fábrica de software",
-            ["Java", "C#", ".NET"]
+            "Fábrica de software"
         )
         dao.inserir(empresa)
 
@@ -159,7 +154,7 @@ class EmpresaDAOSpec extends Specification {
         dao.atualizar(empresa)
 
         and: "buscar a empresa atualizada"
-        def empresaAtualizada = dao.buscarPorId(empresa.id)
+        Empresa empresaAtualizada = dao.buscarPorId(empresa.id)
 
         then: "os dados devem estar atualizados"
         empresaAtualizada.nome == "CodeFactory Brasil"
@@ -169,24 +164,23 @@ class EmpresaDAOSpec extends Specification {
 
     def "deve deletar uma empresa do banco"() {
         given: "uma empresa cadastrada no banco"
-        def empresa = new Empresa(
+        Empresa empresa = new Empresa(
             "TestLab",
             "contato@testlab.com",
             "77.788.799/0001-00",
             "Brasil",
             "RS",
             "90000-000",
-            "Laboratório de testes",
-            ["Selenium", "JUnit", "TestNG"]
+            "Laboratório de testes"
         )
         dao.inserir(empresa)
-        def idParaDeletar = empresa.id
+        Integer idParaDeletar = empresa.id
 
         when: "deletar a empresa"
         dao.deletar(idParaDeletar)
 
         and: "tentar buscar a empresa deletada"
-        def empresaDeletada = dao.buscarPorId(idParaDeletar)
+        Empresa empresaDeletada = dao.buscarPorId(idParaDeletar)
 
         then: "não deve encontrar a empresa"
         empresaDeletada == null
@@ -201,8 +195,7 @@ class EmpresaDAOSpec extends Specification {
             "Brasil",
             "SC",
             "88000-000",
-            "Desenvolvimento full stack",
-            ["JavaScript", "TypeScript", "React", "Angular", "Vue"]
+            "Desenvolvimento full stack"
         )
         dao.inserir(empresa)
 
@@ -214,7 +207,24 @@ class EmpresaDAOSpec extends Specification {
         empresaEncontrada != null
         empresaEncontrada.nome == "FullStack Corp"
         empresaEncontrada.email == "contato@fullstack.com"
-        // Nota: Competências de empresas não são persistidas no banco (apenas vagas têm competências)
     }
 
+    def "não deve inserir empresa com CNPJ nulo"() {
+        given: "uma empresa com CNPJ nulo"
+        Empresa empresa = new Empresa(
+            "Teste",
+            "teste@email.com",
+            null, // CNPJ nulo
+            "Brasil",
+            "SP",
+            "01234-567",
+            "Teste"
+        )
 
+        when: "tentar inserir a empresa"
+        dao.inserir(empresa)
+
+        then: "deve lançar exceção"
+        thrown(Exception)
+    }
+}
