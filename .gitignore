@@ -43,7 +43,4 @@ bin/
 .DS_Store
 
 ### Documentação Privada ###
-doc/LOGICA_CURTIDAS_EXPLICACAO.txt
-doc/LOGICA_TESTES_UNITARIOS_EXPLICACAO.txt
-doc/GUIA_ESTUDO_TDD_SPOCK.txt
-doc/GUIA_INTEGRACAO_JDBC.txt
+doc/
