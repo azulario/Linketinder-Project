@@ -1,214 +1,198 @@
-# Linketinder
-
+==================================================
+```
+# LinkeTinder
+## 🔄 Mudanças da Refatoração
 ## Autor
-Nathalia Veiga 
+### O que mudou do projeto anterior:
+- ✅ **Simplificação da estrutura** - Código mais direto e fácil de entender
+- ✅ **Integração JDBC** - Preparação para persistência real no PostgreSQL
+- ✅ **Testes com Spock** - Framework moderno e expressivo
+- ✅ **Padrão DAO** - Separação da lógica de acesso a dados
+- ✅ **Models atualizados** - Campos necessários para banco (id, timestamps, etc)
+- ✅ **Data de nascimento** - Candidatos agora informam data de nascimento em vez de idade
+- ✅ **Sistema de curtidas simplificado** - Lógica mantida simples para fins didáticos
 
-## Descrição
-Projeto MVP de backend para sistema de contratação inspirado no Linkedin e Tinder, desenvolvido em Groovy. Permite listar candidatos e empresas, cada um com suas competências e dados principais. Estrutura orientada a objetos, utilizando interface e herança.
+### Documentação adicional:
+- `doc/GUIA_INTEGRACAO_JDBC.txt` - Guia passo a passo da integração JDBC
+- `doc/GUIA_SUBSTITUIR_CODIGO_GITHUB.txt` - Como gerenciar branches no Git
+- `doc/GUIA_ESTUDO_TDD_SPOCK.txt` - Dicas para estudar TDD com Spock
+- `doc/LOGICA_CURTIDAS_EXPLICACAO.txt` - Explicação da lógica de curtidas
+- `doc/LOGICA_TESTES_UNITARIOS_EXPLICACAO.txt` - Explicação dos testes
 
+## 📚 Aprendizados Aplicados
+
+Este projeto demonstra:
+- ✅ Programação Orientada a Objetos (POO)
+- ✅ Interfaces e Herança
+- ✅ Integração JDBC com PostgreSQL
+- ✅ Padrão DAO (Data Access Object)
+- ✅ Testes Unitários com Spock
+- ✅ TDD (Test-Driven Development)
+- ✅ Estrutura de projeto Gradle
+- ✅ Versionamento com Git
 > **Este projeto está em desenvolvimento para fins de aprendizado e aplicação dos conhecimentos adquiridos no programa Acelera ZG.**
+> 
+> **Versão atual:** Refatoração e simplificação com foco em JDBC e testes unitários com Spock.
 
-## Como executar (Backend)
+## 🚀 Tecnologias Utilizadas
 
-1. Certifique-se de ter o Groovy ou o Gradle instalado.
-2. Para executar via Groovy:
-   ```
-   groovy src/main/groovy/Main.groovy
-   ```
-3. Para executar via Gradle:
-   ```
-   ./gradlew run
-   ```
+### Backend
+- **Groovy 4.0.15** - Linguagem de programação
+- **Gradle 8.14** - Build tool
+- **PostgreSQL 42.7.1** - Banco de dados relacional
+- **JDBC** - Integração com banco de dados
+- **Spock 2.3** - Framework de testes unitários
 
-## Como rodar os testes automatizados (Backend)
+### Frontend
+- **TypeScript** - Linguagem tipada
+- **Vite** - Build tool moderno
+- **Tailwind CSS** - Framework de estilos
+- **Chart.js** - Visualização de dados
 
-1. Certifique-se de estar na raiz do projeto.
-2. Execute:
-   ```
-   ./gradlew test
-   ```
-3. Os relatórios de teste estarão disponíveis em:
-   - build/reports/tests/test/index.html (relatório HTML)
-   - build/test-results/test/ (arquivos XML)
+## 📁 Estrutura do Projeto (Backend)
 
-### Rodar um teste específico
-
-Para rodar um teste específico, use:
 ```
-./gradlew test --tests nome.completo.da.ClasseDeTeste
-```
-Exemplo:
-```
-./gradlew test --tests br.com.linketinder.ui.CadastroEmpresaUiMockTest
+src/main/groovy/com/linketinder/
+├── Main.groovy                    # Ponto de entrada da aplicação
+├── model/                         # Entidades do domínio
+│   ├── Candidato.groovy
+│   ├── Empresa.groovy
+│   ├── Vaga.groovy
+│   └── Usuarios.groovy (interface)
+├── view/                          # Interface com usuário
+│   └── Menu.groovy
+├── database/                      # Camada de dados
+│   ├── Database.groovy            # Gerenciador central
+│   └── DatabaseConnection.groovy  # Conexão JDBC
+└── dao/                          # Data Access Objects (em desenvolvimento)
+    ├── CandidatoDAO.groovy
+    ├── EmpresaDAO.groovy
+    └── VagaDAO.groovy
+
+src/test/groovy/com/linketinder/
+├── database/
+│   └── DatabaseConnectionSpec.groovy  # Testes de conexão
+└── view/
+    ├── MenuCadastroCandidatoSpec.groovy
+    ├── MenuCadastroEmpresaSpec.groovy
+    ├── MenuCurtidasCandidatoSpec.groovy
+    └── MenuCurtidasEmpresaSpec.groovy
 ```
 
-## Funcionalidades (Backend)
-- Listagem de candidatos e empresas pré-cadastrados
+## 🎯 Funcionalidades (Backend)
+
+### ✅ Implementadas
 - Menu interativo no terminal
-- Cadastro de novos candidatos e empresas (com validação de duplicidade)
-- Sistema de curtidas e match entre candidatos e empresas
-- Testes unitários completos (Spock)
-- Simulação de entrada de dados via mocks nos testes
-- Separação de responsabilidades por domínio, serviço e UI
+- Cadastro de candidatos (com data de nascimento)
+- Cadastro de empresas
+- Listagem de candidatos e empresas
+- Sistema de curtidas:
+  - Candidatos podem curtir vagas
+  - Empresas podem curtir candidatos
+- Testes unitários com Spock
+- Conexão JDBC com PostgreSQL
 
-## Estrutura do Projeto (Backend)
-- `src/main/groovy/dominio`: Domínio do sistema (Candidato, Empresa, etc)
-- `src/main/groovy/servico`: Serviços de negócio (SistemaMatch, CadastroService)
-- `src/main/groovy/ui`: Interface de usuário, ações e utilitários
-- `src/test/groovy`: Testes unitários (Spock)
+### 🚧 Em Desenvolvimento
+- Persistência completa no banco de dados (DAOs)
+- CRUD completo de candidatos, empresas e vagas
+- Sistema de competências (tabela N:N)
+- Matches entre candidatos e empresas
 
-## Principais Mudanças e Melhorias (Backend)
-- **Refatoração do cadastro**: O cadastro de candidatos e empresas foi movido para a classe de serviço `CadastroService`, removendo essa responsabilidade do `SistemaMatch`.
-- **Testes TDD completos**: Todos os fluxos de cadastro, validação de duplicidade e match possuem testes unitários, seguindo TDD.
-- **Mocks para entrada de dados**: Testes de UI utilizam mocks para simular entrada do usuário, garantindo testes automatizados e independentes.
-- **Separação de responsabilidades**: O domínio, serviços e UI estão bem separados, facilitando manutenção e evolução.
-- **Checklist de TDD**: O arquivo `CHECKLIST_TESTES.txt` documenta todos os requisitos de testes e TDD realizados.
-- **Código comentado e organizado**: Todos os arquivos possuem imports organizados e comentários de autoria nos testes.
+## 💾 Banco de Dados
 
-## Novidade: Sistema de Curtidas e Match
-
-Agora o Linketinder possui um sistema de curtidas e match:
-- Candidatos podem curtir vagas de empresas.
-- Empresas podem curtir candidatos para vagas específicas.
-- Quando há curtida recíproca para a mesma vaga, ocorre um MATCH e ambos podem visualizar a relação.
-
-### Novas opções do menu:
-- 3 - Candidato curtir vaga de empresa
-- 4 - Empresa curtir candidato
-- 5 - Listar matches
-
-Use essas opções para simular o funcionamento do Linketinder e visualizar matches entre candidatos e empresas!
-
-## Observações
-Este projeto é um MVP e pode ser expandido para cadastro dinâmico de candidatos e empresas.
-
-## Testes e TDD
-- Todos os testes unitários estão em `src/test/groovy`.
-- O projeto segue TDD para cadastro e validação de candidatos/empresas.
-- Testes de UI utilizam mocks para simular entrada de dados.
-
----
-
-# Frontend (MVP) — TypeScript + Tailwind + Chart.js
-
-O frontend vive em `frontend/` e é independente do backend neste MVP. Ele usa TypeScript (TS → JS), Tailwind CSS e Chart.js para visualização.
-
-## Estrutura (frontend/)
-```
-frontend/
-  assets/              # imagens e estáticos
-  css/                 # fonte do Tailwind (tailwind.css)
-  js/                  # JS compilado a partir de ts/
-  public/              # páginas HTML (abra estas no navegador)
-  ts/                  # código-fonte TypeScript (models, controllers)
-  package.json         # scripts de build/dev
-  tailwind.config.js   # config Tailwind
-  tsconfig.json        # config TypeScript
-  vite.config.ts       # (opcional) config do Vite
-```
-
-## Páginas principais (public/)
-- `index.html`: home e navegação.
-- `cadastro-candidato.html`: formulário para cadastrar candidato; lista de candidatos com delete; persiste em localStorage.
-- `cadastro-empresa.html`: formulário para cadastrar empresa; lista de empresas com delete; persiste em localStorage.
-- `perfil-candidato.html`: lista de vagas disponíveis (empresas anônimas); botão “Curtir” desativado (MVP).
-- `perfil-empresa.html`: tabela anônima de candidatos + gráfico de competências (Chart.js).
-
-## Persistência (localStorage)
-- Chaves utilizadas:
-  - `linketinder_candidatos`
-  - `linketinder_empresas`
-- O “banco” em `ts/utils/BancoDeDadosFake.ts` carrega do localStorage na inicialização, e salva a cada inclusão/remoção.
-- Se o storage estiver vazio, o seed inicial é aplicado e salvo.
-
-## Como rodar o frontend
-Na primeira vez:
-```bash
-cd frontend
-npm install
-```
-
-Opção A — Fluxo simples (TS + Tailwind em watch) e abrir HTMLs:
-```bash
-# terminal 1: compilar TS em watch
-npm run watch
-
-# terminal 2: Tailwind em watch para gerar public/styles.css
-npm run dev:css
-
-# abra no navegador via servidor do IDE (IntelliJ):
-# http://localhost:63342/Linketinder-Project/frontend/public/index.html
-```
-
-Opção B — Servir com Vite (recomendado para dev):
-```bash
-cd frontend
-# Se o script `npm run dev` falhar por causa de vite.config.mts,
-# rode o Vite diretamente — ele lê o vite.config.ts automaticamente
-npx vite
-```
-Em produção simples (sem bundle):
-```bash
-# gera JS e CSS
-npm run build       # TS → JS (js/)
-npm run build:css   # Tailwind → public/styles.css
-```
-
-## Importante: Módulos ES (ESM) no navegador
-- Os controllers são carregados com `<script type="module">` a partir de `public/*.html`.
-- Dentro do JS/TS, os imports usam sufixo `.js` (ex.: `import { bancoDeDadosFake } from "../utils/BancoDeDadosFake.js";`).
-- Se você vir 404 em imports: confira se o caminho tem `.js` e se o script está com `type="module"`.
-
-## Gráficos
-- `perfil-empresa.html` usa Chart.js via CDN para exibir “Candidatos por Competência”.
-- A lógica atual agrupa competências de todos os candidatos e contabiliza frequências.
-
-## Troubleshooting
-- 404 ao carregar módulos: garanta `.js` nos imports ESM e `<script type="module">` nos HTMLs.
-- Nada aparece nas listas após cadastro: abra o Console e verifique `localStorage.getItem('linketinder_candidatos')` e `..._empresas`.
-- Rodando com Vite: se `npm run dev` falhar por `vite.config.mts` ausente, use `npx vite` (o projeto tem `vite.config.ts`).
-- CSS não aplica: verifique se `public/styles.css` foi gerado (`npm run dev:css`).
-
-## Próximos Passos (Frontend)
-- Implementar a lógica de “Curtir/Match”.
-- Melhorar a modelagem de “Vaga” (CRUD e vínculo com Empresa em memória/localStorage).
-- Filtrar/ordenar listas (por competência, formação, etc.).
-- Acessibilidade e testes de UI.
-
----
-
-## Atualizações recentes (Frontend — resumo curto)
-
-- Validações por Regex adicionadas (nível iniciante, foco em formato):
-  - Candidato: Nome, E‑mail, CPF (formato 000.000.000-00), Competências (itens separados por vírgula, 2–30 caracteres, sem duplicatas).
-  - Empresa: Nome/Razão social, E‑mail, CNPJ (formato 00.000.000/0000-00), URL da logo (http/https).
-- Controladores atualizados com mensagens de erro amigáveis e bloqueio do submit quando inválido:
-  - `ts/Controllers/cadastro-candidato-controller.ts`
-  - `ts/Controllers/cadastro-empresa-controller.ts`
-- Seed do “banco de dados” em memória ajustado:
-  - `ts/utils/BancoDeDadosFake.ts` agora inclui CPF/CNPJ nos objetos e competências como arrays.
-- Testes (Vitest) para validações com Regex criados (mantidos fora do Git por padrão):
-  - Arquivo de teste: `ts/validation/validacao_regex.test.ts`
-  - `.gitignore` ignora `frontend/ts/**/*.test.ts` e `frontend/ts/**/*.spec.ts`.
-- Build TypeScript validado e sem erros após os ajustes.
-
-### Testes (Frontend)
-
-Na pasta `frontend/`:
-
-```bash
-npm install
-npm test        # executa a suíte de testes (Vitest)
-npm run build   # compila TS → JS
-```
-
----
-
-# Banco de Dados
-
-## Diagrama ER
-
+### Diagrama ER
 ![Diagrama do Banco](diagram-er.png)
+
+**Software utilizado:** dbdiagram.io
+
+### Estrutura
+- **PostgreSQL** como SGBD
+- **7 tabelas principais**:
+  - `candidatos` - Dados dos candidatos
+  - `empresas` - Dados das empresas
+  - `vagas` - Vagas disponíveis
+  - `competencias` - Lista de competências
+  - `competencias_candidatos` - N:N entre candidatos e competências
+  - `competencias_vagas` - N:N entre vagas e competências
+  - `curtidas` - Registro de curtidas entre candidatos e empresas
+
+### Scripts SQL
+- `LinkeTinder.sql` - Script completo de criação do banco e dados de exemplo
+
+## 🏃 Como Executar
+
+### Pré-requisitos
+1. **Java 21+** instalado
+2. **Groovy 4.0+** ou usar via Gradle
+3. **PostgreSQL** instalado e rodando
+4. **Gradle** (ou usar o wrapper `./gradlew`)
+
+### Configuração do Banco de Dados
+
+1. Criar o banco:
+```sql
+CREATE DATABASE linketinder;
+```
+
+2. Executar o script SQL:
+```bash
+psql -U postgres -d linketinder -f LinkeTinder.sql
+```
+
+3. Configurar senha em `DatabaseConnection.groovy`:
+```groovy
+private static final String PASSWORD = "sua_senha_aqui"
+```
+
+### Executar a Aplicação
+
+Via Gradle (recomendado):
+```bash
+./gradlew run
+```
+
+Via Groovy:
+```bash
+groovy src/main/groovy/com/linketinder/Main.groovy
+```
+
+## 🧪 Testes Automatizados
+
+### Executar todos os testes
+```bash
+./gradlew test
+```
+
+### Executar teste específico
+```bash
+./gradlew test --tests "com.linketinder.database.DatabaseConnectionSpec"
+```
+
+### Relatórios de Teste
+Após executar os testes, os relatórios estarão em:
+- `build/reports/tests/test/index.html` (HTML - abra no navegador)
+- `build/test-results/test/` (XML)
+
+### Cobertura de Testes
+- ✅ Conexão com banco de dados (5 cenários)
+- ✅ Cadastro de candidatos
+- ✅ Cadastro de empresas
+- ✅ Sistema de curtidas (candidato → vaga)
+- ✅ Sistema de curtidas (empresa → candidato)
+
+## 📖 Menu do Sistema
+
+```
+LINKETINDER - MENU PRINCIPAL
+==================================================
+1. Listar Candidatos
+2. Listar Empresas
+3. Listar Vagas
+4. Cadastrar novo Candidato
+5. Cadastrar nova Empresa
+6. Candidato curtir Vaga
+7. Empresa curtir Candidato
+8. Sair
 
 **Software utilizado:** dbdiagram.io
 
