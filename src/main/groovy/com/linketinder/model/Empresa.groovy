@@ -1,17 +1,23 @@
 package com.linketinder.model
 
+import java.time.LocalDateTime
+
 class Empresa implements Usuarios {
+    Integer id
     String nome
     String email
     String cnpj
+    String senha
     String pais
     String estado
     String cep
     String descricao
+    LocalDateTime criadoEm
     List<String> competencias = []
     List<Vaga> vagas = []
     List<Candidato> candidatosCurtidos
 
+    // Construtor único - usado pelo Menu e pelo DAO
     Empresa(String nome, String email, String cnpj, String pais, String estado, String cep, String descricao, List<String> competencias) {
         this.nome = nome
         this.email = email
@@ -23,7 +29,7 @@ class Empresa implements Usuarios {
         this.competencias = competencias
         this.vagas = []
         this.candidatosCurtidos = []
-
+        this.criadoEm = LocalDateTime.now()
     }
 
     void adicionarVaga(Vaga vaga) {
@@ -49,6 +55,7 @@ class Empresa implements Usuarios {
     void exibirInfo() {
         println "=" * 50
         println "EMPRESA"
+        if (id) println "ID: $id"
         println "Nome: $nome"
         println "Email: $email"
         println "CNPJ: $cnpj"
@@ -57,6 +64,7 @@ class Empresa implements Usuarios {
         println "CEP: $cep"
         println "Descrição: $descricao"
         println "Competências buscadas: ${competencias.join(', ')}"
+        if (criadoEm) println "Cadastrado em: $criadoEm"
         println "=" * 50
     }
 }
