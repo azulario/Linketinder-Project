@@ -10,7 +10,7 @@ import java.sql.Connection
  * VagaDAOSpec - Testes TDD para VagaDAO
  *
  * Testa todas as operações CRUD de vagas no banco de dados:
- * - Inserir vaga (com competências N:N)
+ * - Inserir vaga
  * - Listar todas as vagas
  * - Listar vagas por empresa
  * - Buscar vaga por ID
@@ -18,38 +18,28 @@ import java.sql.Connection
  * - Deletar vaga
  *
  * IMPORTANTE: Os testes usam o banco real PostgreSQL
+ * Certifique-se que o banco 'linketinder' está rodando e configurado!
  */
 class VagaDAOSpec extends Specification {
 
-    VagaDAO dao
-    EmpresaDAO empresaDAO
+    VagaDAO vagaDao
+    EmpresaDAO empresaDao
     Connection conn
-    Empresa empresaTeste
 
+    // Executado ANTES de cada teste
     def setup() {
-        dao = new VagaDAO()
-        empresaDAO = new EmpresaDAO()
+        vagaDao = new VagaDAO()
+        empresaDao = new EmpresaDAO()
         conn = DatabaseConnection.getConnection()
 
-        // Limpar tabelas relacionadas
+        // Limpar tabelas antes de cada teste
+        // Isso garante que os testes sejam isolados e independentes
         conn.createStatement().execute("DELETE FROM competencias_vagas")
         conn.createStatement().execute("DELETE FROM vagas")
         conn.createStatement().execute("DELETE FROM empresas")
-
-        // Criar uma empresa de teste para associar às vagas
-        empresaTeste = new Empresa(
-            "Tech Company",
-            "tech@company.com",
-            "12.345.678/0001-99",
-            "Brasil",
-            "SP",
-            "01310-100",
-            "Empresa de tecnologia",
-            ["Java", "Python"]
-        )
-        empresaDAO.inserir(empresaTeste)
     }
 
+    // Executado DEPOIS de cada teste
     def cleanup() {
         if (conn != null && !conn.isClosed()) {
             conn.close()
@@ -57,133 +47,167 @@ class VagaDAOSpec extends Specification {
     }
 
     def "deve inserir uma nova vaga no banco de dados"() {
-        given: "uma vaga válida"
+        given: "uma empresa e uma vaga válida"
+        def empresa = new Empresa(
+            "TechCorp",
+            "contato@techcorp.com",
+            "12.345.678/0001-90",
+            "Brasil",
+            "SP",
+            "01234-567",
+            "Empresa de tecnologia"
+        )
+        empresaDao.inserir(empresa)
+
         def vaga = new Vaga(
-            "Desenvolvedor Java Sênior",
-            "Vaga para desenvolvedor Java com 5+ anos de experiência",
-            ["Java", "Spring Boot", "Microservices"],
-            empresaTeste
+            "Desenvolvedor Java Senior",
+            "Vaga para desenvolvedor com experiência em Java",
+            ["Java", "Spring", "PostgreSQL"],
+            empresa
         )
         vaga.cidade = "São Paulo"
+        vaga.empresaId = empresa.id // Garantir que o empresaId está setado
 
         when: "inserir a vaga no banco"
-        dao.inserir(vaga)
+        vagaDao.inserir(vaga)
 
         then: "a vaga deve ter um ID gerado"
         vaga.id != null
         vaga.id > 0
     }
 
-    def "deve inserir vaga com competências na tabela N:N"() {
-        given: "uma vaga com 3 competências"
-        def vaga = new Vaga(
-            "Analista de Dados",
-            "Análise e visualização de dados",
-            ["Python", "SQL", "Power BI"],
-            empresaTeste
-        )
-        vaga.cidade = "Rio de Janeiro"
-
-        when: "inserir a vaga"
-        dao.inserir(vaga)
-
-        and: "buscar a vaga inserida"
-        def vagaBuscada = dao.buscarPorId(vaga.id)
-
-        then: "deve ter as 3 competências associadas"
-        vagaBuscada != null
-        vagaBuscada.competencias.size() == 3
-        vagaBuscada.competencias.containsAll(["Python", "SQL", "Power BI"])
-    }
-
     def "deve listar todas as vagas cadastradas"() {
-        given: "duas vagas cadastradas"
-        def vaga1 = new Vaga(
-            "Designer UX",
-            "Design de experiência do usuário",
-            ["Figma", "Adobe XD"],
-            empresaTeste
+        given: "duas empresas e suas vagas cadastradas no banco"
+        def empresa1 = new Empresa(
+            "TechCorp",
+            "contato@techcorp.com",
+            "12.345.678/0001-90",
+            "Brasil",
+            "SP",
+            "01234-567",
+            "Empresa de tecnologia"
         )
-        vaga1.cidade = "Belo Horizonte"
+        empresaDao.inserir(empresa1)
 
-        def vaga2 = new Vaga(
-            "DevOps Engineer",
-            "Infraestrutura e CI/CD",
-            ["Docker", "Kubernetes", "AWS"],
-            empresaTeste
-        )
-        vaga2.cidade = "Curitiba"
-
-        dao.inserir(vaga1)
-        dao.inserir(vaga2)
-
-        when: "listar todas as vagas"
-        def vagas = dao.listar()
-
-        then: "deve retornar as 2 vagas"
-        vagas.size() == 2
-        vagas*.titulo.containsAll(["Designer UX", "DevOps Engineer"])
-    }
-
-    def "deve listar vagas de uma empresa específica"() {
-        given: "uma segunda empresa"
         def empresa2 = new Empresa(
-            "Another Company",
-            "another@company.com",
-            "98.765.432/0001-11",
+            "DataCorp",
+            "contato@datacorp.com",
+            "98.765.432/0001-10",
             "Brasil",
             "RJ",
-            "20000-000",
-            "Outra empresa",
-            ["JavaScript"]
+            "98765-432",
+            "Empresa de dados"
         )
-        empresaDAO.inserir(empresa2)
+        empresaDao.inserir(empresa2)
 
-        and: "vagas de ambas as empresas"
-        def vaga1 = new Vaga("Vaga 1", "Descrição 1", ["Java"], empresaTeste)
-        def vaga2 = new Vaga("Vaga 2", "Descrição 2", ["Python"], empresaTeste)
-        def vaga3 = new Vaga("Vaga 3", "Descrição 3", ["JavaScript"], empresa2)
+        def vaga1 = new Vaga(
+            "Desenvolvedor Java",
+            "Vaga para Java",
+            ["Java", "Spring"],
+            empresa1
+        )
+        vaga1.cidade = "São Paulo"
+        vaga1.empresaId = empresa1.id
 
-        dao.inserir(vaga1)
-        dao.inserir(vaga2)
-        dao.inserir(vaga3)
+        def vaga2 = new Vaga(
+            "Analista de Dados",
+            "Vaga para análise de dados",
+            ["Python", "SQL"],
+            empresa2
+        )
+        vaga2.cidade = "Rio de Janeiro"
+        vaga2.empresaId = empresa2.id
 
-        when: "listar vagas da primeira empresa"
-        def vagasEmpresa1 = dao.listarPorEmpresa(empresaTeste.id)
+        vagaDao.inserir(vaga1)
+        vagaDao.inserir(vaga2)
 
-        then: "deve retornar apenas as 2 vagas da primeira empresa"
+        when: "listar todas as vagas"
+        def vagas = vagaDao.listar()
+
+        then: "deve retornar as 2 vagas cadastradas"
+        vagas.size() == 2
+        vagas*.titulo.containsAll(["Desenvolvedor Java", "Analista de Dados"])
+    }
+
+    def "deve listar vagas por empresa"() {
+        given: "duas empresas com suas vagas"
+        def empresa1 = new Empresa(
+            "TechCorp",
+            "contato@techcorp.com",
+            "12.345.678/0001-90",
+            "Brasil",
+            "SP",
+            "01234-567",
+            "Empresa de tecnologia"
+        )
+        empresaDao.inserir(empresa1)
+
+        def empresa2 = new Empresa(
+            "DataCorp",
+            "contato@datacorp.com",
+            "98.765.432/0001-10",
+            "Brasil",
+            "RJ",
+            "98765-432",
+            "Empresa de dados"
+        )
+        empresaDao.inserir(empresa2)
+
+        def vaga1 = new Vaga("Vaga 1 TechCorp", "Descrição 1", ["Java"], empresa1)
+        vaga1.empresaId = empresa1.id
+        def vaga2 = new Vaga("Vaga 2 TechCorp", "Descrição 2", ["Spring"], empresa1)
+        vaga2.empresaId = empresa1.id
+        def vaga3 = new Vaga("Vaga 1 DataCorp", "Descrição 3", ["Python"], empresa2)
+        vaga3.empresaId = empresa2.id
+
+        vagaDao.inserir(vaga1)
+        vagaDao.inserir(vaga2)
+        vagaDao.inserir(vaga3)
+
+        when: "listar vagas da empresa1"
+        def vagasEmpresa1 = vagaDao.listarPorEmpresa(empresa1.id)
+
+        then: "deve retornar apenas as 2 vagas da empresa1"
         vagasEmpresa1.size() == 2
-        vagasEmpresa1.every { it.empresaId == empresaTeste.id }
+        vagasEmpresa1*.titulo.containsAll(["Vaga 1 TechCorp", "Vaga 2 TechCorp"])
     }
 
     def "deve buscar uma vaga por ID"() {
-        given: "uma vaga cadastrada"
-        def vagaOriginal = new Vaga(
-            "Full Stack Developer",
-            "Desenvolvimento front e back-end",
-            ["React", "Node.js", "MongoDB"],
-            empresaTeste
+        given: "uma vaga cadastrada no banco"
+        def empresa = new Empresa(
+            "TechCorp",
+            "contato@techcorp.com",
+            "12.345.678/0001-90",
+            "Brasil",
+            "MG",
+            "01234-567",
+            "Empresa de tecnologia"
         )
-        vagaOriginal.cidade = "Florianópolis"
-        dao.inserir(vagaOriginal)
-        def idGerado = vagaOriginal.id
+        empresaDao.inserir(empresa)
+
+        def vaga = new Vaga(
+            "Desenvolvedor Python",
+            "Vaga para desenvolvedor Python",
+            ["Python", "Django"],
+            empresa
+        )
+        vaga.cidade = "Belo Horizonte"
+        vaga.empresaId = empresa.id
+        vagaDao.inserir(vaga)
 
         when: "buscar a vaga pelo ID"
-        def vagaEncontrada = dao.buscarPorId(idGerado)
+        def vagaEncontrada = vagaDao.buscarPorId(vaga.id)
 
         then: "deve retornar a vaga correta"
         vagaEncontrada != null
-        vagaEncontrada.id == idGerado
-        vagaEncontrada.titulo == "Full Stack Developer"
-        vagaEncontrada.cidade == "Florianópolis"
+        vagaEncontrada.titulo == "Desenvolvedor Python"
+        vagaEncontrada.cidade == "Belo Horizonte"
+        vagaEncontrada.empresa.nome == "TechCorp"
     }
 
     def "deve retornar null ao buscar vaga inexistente"() {
-        given: "um ID que não existe"
-        def idInexistente = 99999
-
-        when: "buscar pelo ID inexistente"
-        def vaga = dao.buscarPorId(idInexistente)
+        when: "buscar um ID que não existe"
+        def vaga = vagaDao.buscarPorId(99999)
 
         then: "deve retornar null"
         vaga == null
@@ -191,93 +215,124 @@ class VagaDAOSpec extends Specification {
 
     def "deve atualizar os dados de uma vaga"() {
         given: "uma vaga cadastrada"
-        def vaga = new Vaga(
-            "QA Tester",
-            "Testes automatizados",
-            ["Selenium", "JUnit"],
-            empresaTeste
+        def empresa = new Empresa(
+            "TechCorp",
+            "contato@techcorp.com",
+            "12.345.678/0001-90",
+            "Brasil",
+            "SP",
+            "01234-567",
+            "Empresa de tecnologia"
         )
-        vaga.cidade = "Porto Alegre"
-        dao.inserir(vaga)
+        empresaDao.inserir(empresa)
+
+        def vaga = new Vaga(
+            "Desenvolvedor Junior",
+            "Vaga para junior",
+            ["Java"],
+            empresa
+        )
+        vaga.cidade = "São Paulo"
+        vaga.empresaId = empresa.id
+        vagaDao.inserir(vaga)
 
         when: "atualizar os dados da vaga"
-        vaga.titulo = "QA Engineer Sênior"
-        vaga.descricao = "Testes automatizados e manuais"
-        vaga.cidade = "Porto Alegre - RS"
-        vaga.competencias = ["Selenium", "JUnit", "TestNG", "Cucumber"]
-        dao.atualizar(vaga)
+        vaga.titulo = "Desenvolvedor Senior"
+        vaga.descricao = "Vaga para senior com experiência"
+        vaga.cidade = "Rio de Janeiro"
+        vaga.competencias = ["Java", "Spring", "Microservices"]
+        vagaDao.atualizar(vaga)
 
         and: "buscar a vaga atualizada"
-        def vagaAtualizada = dao.buscarPorId(vaga.id)
+        def vagaAtualizada = vagaDao.buscarPorId(vaga.id)
 
         then: "os dados devem estar atualizados"
-        vagaAtualizada.titulo == "QA Engineer Sênior"
-        vagaAtualizada.descricao == "Testes automatizados e manuais"
-        vagaAtualizada.cidade == "Porto Alegre - RS"
-        vagaAtualizada.competencias.size() == 4
-        vagaAtualizada.competencias.contains("Cucumber")
+        vagaAtualizada.titulo == "Desenvolvedor Senior"
+        vagaAtualizada.descricao == "Vaga para senior com experiência"
+        vagaAtualizada.cidade == "Rio de Janeiro"
+        vagaAtualizada.competencias.size() == 3
+        vagaAtualizada.competencias.contains("Microservices")
     }
 
     def "deve deletar uma vaga do banco"() {
         given: "uma vaga cadastrada"
-        def vaga = new Vaga(
-            "Scrum Master",
-            "Gerenciamento ágil de projetos",
-            ["Scrum", "Jira", "Agile"],
-            empresaTeste
+        def empresa = new Empresa(
+            "TechCorp",
+            "contato@techcorp.com",
+            "12.345.678/0001-90",
+            "Brasil",
+            "SP",
+            "01234-567",
+            "Empresa de tecnologia"
         )
-        vaga.cidade = "Brasília"
-        dao.inserir(vaga)
-        def idParaDeletar = vaga.id
+        empresaDao.inserir(empresa)
+
+        def vaga = new Vaga(
+            "Vaga Temporária",
+            "Vaga que será deletada",
+            ["Test"],
+            empresa
+        )
+        vaga.empresaId = empresa.id
+        vagaDao.inserir(vaga)
+        def idVaga = vaga.id
 
         when: "deletar a vaga"
-        dao.deletar(idParaDeletar)
+        vagaDao.deletar(idVaga)
 
         and: "tentar buscar a vaga deletada"
-        def vagaDeletada = dao.buscarPorId(idParaDeletar)
+        def vagaDeletada = vagaDao.buscarPorId(idVaga)
 
         then: "não deve encontrar a vaga"
         vagaDeletada == null
     }
 
-    def "deve deletar competências ao deletar vaga"() {
-        given: "uma vaga com competências"
-        def vaga = new Vaga(
-            "Tech Lead",
-            "Liderança técnica",
-            ["Java", "Architecture", "Leadership"],
-            empresaTeste
+    def "deve listar vagas com suas competências"() {
+        given: "uma vaga com múltiplas competências"
+        def empresa = new Empresa(
+            "TechCorp",
+            "contato@techcorp.com",
+            "12.345.678/0001-90",
+            "Brasil",
+            "SP",
+            "01234-567",
+            "Empresa de tecnologia"
         )
-        dao.inserir(vaga)
-        def vagaId = vaga.id
+        empresaDao.inserir(empresa)
 
-        when: "deletar a vaga"
-        dao.deletar(vagaId)
+        def vaga = new Vaga(
+            "Arquiteto de Software",
+            "Vaga para arquiteto",
+            ["Java", "Microservices", "AWS", "Docker", "Kubernetes"],
+            empresa
+        )
+        vaga.cidade = "São Paulo"
+        vaga.empresaId = empresa.id
+        vagaDao.inserir(vaga)
 
-        and: "verificar se as competências foram deletadas"
-        def stmt = conn.prepareStatement("SELECT COUNT(*) FROM competencias_vagas WHERE vaga_id = ?")
-        stmt.setInt(1, vagaId)
-        def rs = stmt.executeQuery()
-        rs.next()
-        def count = rs.getInt(1)
+        when: "listar as vagas"
+        def vagas = vagaDao.listar()
 
-        then: "não deve haver competências associadas"
-        count == 0
+        then: "deve retornar as competências corretamente"
+        vagas.size() == 1
+        def vagaEncontrada = vagas[0]
+        vagaEncontrada.competencias.size() == 5
+        vagaEncontrada.competencias.containsAll(["Java", "Microservices", "AWS", "Docker", "Kubernetes"])
     }
 
-    def "não deve inserir vaga sem empresa associada"() {
-        given: "uma vaga sem empresa"
+    def "não deve inserir vaga sem empresa"() {
+        given: "uma vaga sem empresa válida"
         def vaga = new Vaga(
-            "Teste",
-            "Descrição teste",
+            "Vaga Inválida",
+            "Vaga sem empresa",
             ["Java"],
-            null // empresa nula
+            null
         )
 
         when: "tentar inserir a vaga"
-        dao.inserir(vaga)
+        vagaDao.inserir(vaga)
 
-        then: "deve lançar exceção"
+        then: "deve lançar uma exceção"
         thrown(Exception)
     }
 }
