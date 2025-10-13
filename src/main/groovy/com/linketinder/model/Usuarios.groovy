@@ -4,8 +4,7 @@ interface Usuarios {
     String getNome()
     String getEmail()
     String getCep()
-    String getEstado()
-    String getDescricao()
-
+    String getPais()
     void exibirInfo()
 }
+

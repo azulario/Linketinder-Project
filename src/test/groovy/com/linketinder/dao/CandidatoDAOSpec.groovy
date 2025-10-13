@@ -50,7 +50,7 @@ class CandidatoDAOSpec extends Specification {
             "joao@email.com",
             "123.456.789-00",
             LocalDate.of(1990, 5, 15),
-            "SP",
+            "Brasil",
             "01234-567",
             "Desenvolvedor Java",
             ["Java", "Spring", "SQL"]
@@ -72,7 +72,7 @@ class CandidatoDAOSpec extends Specification {
             "maria@email.com",
             "111.222.333-44",
             LocalDate.of(1995, 8, 20),
-            "RJ",
+            "Brasil",
             "20000-000",
             "Desenvolvedora Python",
             ["Python", "Django"]
@@ -83,7 +83,7 @@ class CandidatoDAOSpec extends Specification {
             "pedro@email.com",
             "555.666.777-88",
             LocalDate.of(1988, 3, 10),
-            "MG",
+            "Brasil",
             "30000-000",
             "Analista de Dados",
             ["SQL", "Power BI"]
@@ -108,7 +108,7 @@ class CandidatoDAOSpec extends Specification {
             "ana@email.com",
             "999.888.777-66",
             LocalDate.of(1993, 12, 25),
-            "BA",
+            "Brasil",
             "40000-000",
             "Analista QA",
             ["Selenium", "JUnit"]
@@ -140,7 +140,7 @@ class CandidatoDAOSpec extends Specification {
             "carlos@email.com",
             "777.666.555-44",
             LocalDate.of(1991, 6, 10),
-            "RS",
+            "Brasil",
             "90000-000",
             "Desenvolvedor Mobile",
             ["Kotlin", "Swift"]
@@ -173,7 +173,7 @@ class CandidatoDAOSpec extends Specification {
             "paula@email.com",
             "444.333.222-11",
             LocalDate.of(1997, 4, 5),
-            "PR",
+            "Brasil",
             "80000-000",
             "Scrum Master",
             ["Agile", "Scrum"]
@@ -199,7 +199,7 @@ class CandidatoDAOSpec extends Specification {
             "ricardo@email.com",
             "111.999.888-77",
             LocalDate.of(1989, 1, 30),
-            "CE",
+            "Brasil",
             "60000-000",
             "Arquiteto de Software",
             ["Java", "Microservices", "AWS", "Docker"]
@@ -224,7 +224,7 @@ class CandidatoDAOSpec extends Specification {
             null,  // email null
             "123.456.789-00",
             LocalDate.of(1990, 1, 1),
-            "SP",
+            "Brasil",
             "01000-000",
             "Descrição",
             ["Java"]

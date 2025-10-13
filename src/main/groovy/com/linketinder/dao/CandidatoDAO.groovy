@@ -27,7 +27,7 @@ class CandidatoDAO {
     void inserir(Candidato candidato) {
 
         String sql = """
-            INSERT INTO candidatos (nome, sobrenome, data_nascimento, email, cpf, pais, cep, descricao, senha, criado_em)
+            INSERT INTO candidatos (nome, sobrenome, data_de_nascimento, email, cpf, pais, cep, descricao, senha, criado_em)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
 
@@ -42,13 +42,13 @@ class CandidatoDAO {
 
             statement.setString(1, candidato.nome)
             statement.setString(2, candidato.sobrenome)
-            statement.setObject(3, candidato.dataNascimento)
+            statement.setObject(3, candidato.dataDeNascimento)
             statement.setString(4, candidato.email)
             statement.setString(5, candidato.cpf)
             statement.setString(6, candidato.pais)
             statement.setString(7, candidato.cep)
             statement.setString(8, candidato.descricao)
-            statement.setString(9, candidato.senha ?: "senha123") // senha padrão se não informada
+            statement.setString(9, candidato.senha ?: "senha123")
             statement.setObject(10, LocalDateTime.now())
 
             int rowsAffected = statement.executeUpdate()
@@ -79,6 +79,7 @@ class CandidatoDAO {
         } catch (Exception e) {
             println "ERRO ao inserir candidato: ${e.message}"
             e.printStackTrace()
+            throw e  // Relançar a exceção para que o teste possa capturá-la
         } finally {
             DatabaseConnection.closeResources(conn, statement, resultSet)
 
@@ -168,7 +169,7 @@ class CandidatoDAO {
 
         String sql = """
             UPDATE candidatos 
-            SET nome = ?, sobrenome = ?, data_nascimento = ?, email = ?, cpf = ?, pais = ?, cep = ?, descricao = ?, senha = ?
+            SET nome = ?, sobrenome = ?, data_de_nascimento = ?, email = ?, cpf = ?, pais = ?, cep = ?, descricao = ?, senha = ?
             WHERE idCandidatos = ?
         """
 
@@ -181,7 +182,7 @@ class CandidatoDAO {
 
             statement.setString(1, candidato.nome)
             statement.setString(2, candidato.sobrenome)
-            statement.setObject(3, candidato.dataNascimento)
+            statement.setObject(3, candidato.dataDeNascimento)
             statement.setString(4, candidato.email)
             statement.setString(5, candidato.cpf)
             statement.setString(6, candidato.pais)
@@ -218,6 +219,7 @@ class CandidatoDAO {
         } catch (Exception e) {
             println "ERRO ao atualizar candidato: ${e.message}"
             e.printStackTrace()
+            throw e // Relançar a exceção para que o teste possa capturá-la
         } finally {
             DatabaseConnection.closeResources(conn, statement, null)
         }

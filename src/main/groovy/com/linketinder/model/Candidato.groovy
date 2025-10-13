@@ -11,7 +11,7 @@ class Candidato implements Usuarios {
     String cpf
     String senha
     LocalDate dataDeNascimento
-    String estado
+    String pais
     String cep
     String descricao
     LocalDateTime criadoEm
@@ -19,13 +19,13 @@ class Candidato implements Usuarios {
     List<Vaga> vagasCurtidas = []
 
     // Construtor único - usado pelo Menu e pelo DAO
-    Candidato(String nome, String sobrenome, String email, String cpf, LocalDate dataDeNascimento, String estado, String cep, String descricao, List<String> competencias) {
+    Candidato(String nome, String sobrenome, String email, String cpf, LocalDate dataDeNascimento, String pais, String cep, String descricao, List<String> competencias) {
         this.nome = nome
         this.sobrenome = sobrenome
         this.email = email
         this.cpf = cpf
         this.dataDeNascimento = dataDeNascimento
-        this.estado = estado
+        this.pais = pais
         this.cep = cep
         this.descricao = descricao
         this.competencias = competencias
@@ -60,7 +60,7 @@ class Candidato implements Usuarios {
         println "CPF: $cpf"
         println "Idade: $idade"
         println "Data de Nascimento: $dataDeNascimento"
-        println "Estado: $estado"
+        println "País: $pais"
         println "CEP: $cep"
         println "Descrição: $descricao"
         println "Competências: ${competencias.join(', ')}"
