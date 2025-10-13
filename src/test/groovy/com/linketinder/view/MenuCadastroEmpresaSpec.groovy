@@ -1,34 +1,53 @@
 package com.linketinder.view
 
 import com.linketinder.database.Database
-import com.linketinder.model.Empresa
 import spock.lang.Specification
 
+/**
+ * Teste para cadastro de candidatos
+ *
+ * Este teste verifica se um novo candidato é adicionado corretamente na lista de candidatos
+ */
+class MenuCadastroCandidatoSpec extends Specification {
 
-class MenuCadastroEmpresaSpec extends Specification {
-
-    def "deve cadastrar nova empresa com sucesso"() {
-        given: "um menu com entrada e de dados simuladas"
+    def "deve cadastrar um novo candidato com sucesso"() {
+        given: "um banco de dados e um menu"
         Database database = new Database()
-        int quantidadeInicialEmpresas = database.empresas.size() // guarda a quantidade inicial de empresas no banco de dados
-        // simula o usuario digitando as informaçoes
-        String input = "Tech Corp\ncontato@techcorp.com\n12.345.678/0001-99\nBrasil\nSP\n12345-678\nEmpresa de tecnologia\nJava, Python, Agile"
 
-        InputStream inputStream = new ByteArrayInputStream(input.getBytes())
-        System.setIn(inputStream)
+        // Guarda quantos candidatos existem antes de cadastrar
+        int candidatosIniciais = database.candidatos.size()
+
+        // Simula o usuário digitando os dados do novo candidato
+        // Cada linha representa uma resposta para cada pergunta do cadastro
+        String input = """Sandubinha Ilustre
+sanduba@email.com
+111.222.333-44
+22
+BA
+40000-000
+Desenvolvedor iniciante aprendendo Groovy
+Groovy, Java, Git
+"""
+        // Redireciona a entrada do teclado para usar nosso texto simulado
+        System.setIn(new ByteArrayInputStream(input.bytes))
 
         Menu menu = new Menu(database)
 
-        when: "o usuário cadastra uma nova empresa"
-        menu.cadastrarEmpresa()
+        when: "cadastramos um novo candidato"
+        menu.cadastrarCandidato()
 
-        then: "a empresa deve estar na lista de empresas do banco de dados"
-        database.empresas.size() == quantidadeInicialEmpresas + 1
+        then: "a lista de candidatos deve ter mais um candidato"
+        database.candidatos.size() == candidatosIniciais + 1
 
-        Empresa novaEmpresa = database.empresas.last()
+        and: "o novo candidato deve ter o nome correto"
+        database.candidatos.last().nome == "Sandubinha Ilustre"
 
-        novaEmpresa.nome == "Tech Corp"
-        novaEmpresa.email == "contato@techcorp.com"
-        novaEmpresa.cnpj == "12.345.678/0001-99"
+        and: "o novo candidato deve ter o email correto"
+        database.candidatos.last().email == "sanduba@email.com"
+
+        and: "o novo candidato deve ter as competências corretas"
+        database.candidatos.last().competencias.contains("Groovy")
+        database.candidatos.last().competencias.contains("Java")
     }
 }
+

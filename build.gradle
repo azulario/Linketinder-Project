@@ -23,6 +23,7 @@ ext {
 dependencies {
     implementation "org.apache.groovy:groovy-all:${groovyVersion}"
     testImplementation "org.spockframework:spock-core:${spockVersion}"
+    implementation 'org.postgresql:postgresql:42.7.1'
     // Optional: Uncomment if you need assertions with Hamcrest/EqualsVerifier/etc.
     // testImplementation 'org.hamcrest:hamcrest:2.2'
 

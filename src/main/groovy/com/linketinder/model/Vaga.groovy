@@ -19,7 +19,7 @@ class Vaga {
     void receberCurtida(Candidato candidato) {
         if (!candidatosCurtiram.contains(candidato)) {
             candidatosCurtiram.add(candidato)
-        } //traduzindo: se o candidato ainda não curtiu a vaga, adiciona ele na lista de candidatos que curtiram
+        }
     }
 
     Integer getNumeroCurtidas() {
