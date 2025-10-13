@@ -45,7 +45,8 @@ class CandidatoDAOSpec extends Specification {
     def "deve inserir um novo candidato no banco de dados"() {
         given: "um candidato válido"
         def candidato = new Candidato(
-            "João Silva",
+            "João",
+            "Silva",
             "joao@email.com",
             "123.456.789-00",
             LocalDate.of(1990, 5, 15),
@@ -66,7 +67,8 @@ class CandidatoDAOSpec extends Specification {
     def "deve listar todos os candidatos cadastrados"() {
         given: "dois candidatos cadastrados no banco"
         def candidato1 = new Candidato(
-            "Maria Santos",
+            "Maria",
+            "Santos",
             "maria@email.com",
             "111.222.333-44",
             LocalDate.of(1995, 8, 20),
@@ -76,7 +78,8 @@ class CandidatoDAOSpec extends Specification {
             ["Python", "Django"]
         )
         def candidato2 = new Candidato(
-            "Pedro Costa",
+            "Pedro",
+            "Costa",
             "pedro@email.com",
             "555.666.777-88",
             LocalDate.of(1988, 3, 10),
@@ -94,13 +97,14 @@ class CandidatoDAOSpec extends Specification {
 
         then: "deve retornar os 2 candidatos cadastrados"
         candidatos.size() == 2
-        candidatos*.nome.containsAll(["Maria Santos", "Pedro Costa"])
+        candidatos*.nome.containsAll(["Maria", "Pedro"])
     }
 
     def "deve buscar um candidato por ID"() {
         given: "um candidato cadastrado no banco"
         def candidato = new Candidato(
-            "Ana Lima",
+            "Ana",
+            "Lima",
             "ana@email.com",
             "999.888.777-66",
             LocalDate.of(1993, 12, 25),
@@ -116,7 +120,7 @@ class CandidatoDAOSpec extends Specification {
 
         then: "deve retornar o candidato correto"
         candidatoEncontrado != null
-        candidatoEncontrado.nome == "Ana Lima"
+        candidatoEncontrado.nome == "Ana"
         candidatoEncontrado.email == "ana@email.com"
     }
 
@@ -131,7 +135,8 @@ class CandidatoDAOSpec extends Specification {
     def "deve atualizar os dados de um candidato"() {
         given: "um candidato cadastrado"
         def candidato = new Candidato(
-            "Carlos Souza",
+            "Carlos",
+            "Souza",
             "carlos@email.com",
             "777.666.555-44",
             LocalDate.of(1991, 6, 10),
@@ -143,7 +148,8 @@ class CandidatoDAOSpec extends Specification {
         dao.inserir(candidato)
 
         when: "atualizar os dados do candidato"
-        candidato.nome = "Carlos Alberto Souza"
+        candidato.nome = "Carlos Alberto"
+        candidato.sobrenome = "Souza Jr"
         candidato.descricao = "Desenvolvedor Mobile Senior"
         candidato.competencias = ["Kotlin", "Swift", "Flutter"]
         dao.atualizar(candidato)
@@ -152,7 +158,8 @@ class CandidatoDAOSpec extends Specification {
         def candidatoAtualizado = dao.buscarPorId(candidato.id)
 
         then: "os dados devem estar atualizados"
-        candidatoAtualizado.nome == "Carlos Alberto Souza"
+        candidatoAtualizado.nome == "Carlos Alberto"
+        candidatoAtualizado.sobrenome == "Souza Jr"
         candidatoAtualizado.descricao == "Desenvolvedor Mobile Senior"
         candidatoAtualizado.competencias.size() == 3
         candidatoAtualizado.competencias.contains("Flutter")
@@ -161,7 +168,8 @@ class CandidatoDAOSpec extends Specification {
     def "deve deletar um candidato do banco"() {
         given: "um candidato cadastrado"
         def candidato = new Candidato(
-            "Paula Rocha",
+            "Paula",
+            "Rocha",
             "paula@email.com",
             "444.333.222-11",
             LocalDate.of(1997, 4, 5),
@@ -186,7 +194,8 @@ class CandidatoDAOSpec extends Specification {
     def "deve listar candidatos com suas competências"() {
         given: "um candidato com múltiplas competências"
         def candidato = new Candidato(
-            "Ricardo Alves",
+            "Ricardo",
+            "Alves",
             "ricardo@email.com",
             "111.999.888-77",
             LocalDate.of(1989, 1, 30),
@@ -210,7 +219,8 @@ class CandidatoDAOSpec extends Specification {
     def "não deve inserir candidato com dados inválidos"() {
         given: "um candidato com email inválido (null)"
         def candidato = new Candidato(
-            "Nome Teste",
+            "Nome",
+            "Teste",
             null,  // email null
             "123.456.789-00",
             LocalDate.of(1990, 1, 1),
@@ -227,4 +237,3 @@ class CandidatoDAOSpec extends Specification {
         thrown(Exception)
     }
 }
-
