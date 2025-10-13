@@ -1,35 +1,13 @@
-==================================================
-```
 # LinkeTinder
-## 🔄 Mudanças da Refatoração
+
 ## Autor
-### O que mudou do projeto anterior:
-- ✅ **Simplificação da estrutura** - Código mais direto e fácil de entender
-- ✅ **Integração JDBC** - Preparação para persistência real no PostgreSQL
-- ✅ **Testes com Spock** - Framework moderno e expressivo
-- ✅ **Padrão DAO** - Separação da lógica de acesso a dados
-- ✅ **Models atualizados** - Campos necessários para banco (id, timestamps, etc)
-- ✅ **Data de nascimento** - Candidatos agora informam data de nascimento em vez de idade
-- ✅ **Sistema de curtidas simplificado** - Lógica mantida simples para fins didáticos
+Nathalia Veiga 
 
-### Documentação adicional:
-- `doc/GUIA_INTEGRACAO_JDBC.txt` - Guia passo a passo da integração JDBC
-- `doc/GUIA_SUBSTITUIR_CODIGO_GITHUB.txt` - Como gerenciar branches no Git
-- `doc/GUIA_ESTUDO_TDD_SPOCK.txt` - Dicas para estudar TDD com Spock
-- `doc/LOGICA_CURTIDAS_EXPLICACAO.txt` - Explicação da lógica de curtidas
-- `doc/LOGICA_TESTES_UNITARIOS_EXPLICACAO.txt` - Explicação dos testes
+## Descrição
+Projeto MVP de backend simplificado para sistema de contratação inspirado no LinkedIn e Tinder, desenvolvido em **Groovy com integração JDBC ao PostgreSQL**. 
 
-## 📚 Aprendizados Aplicados
+Sistema permite cadastrar e listar candidatos e empresas, gerenciar vagas e implementar sistema de curtidas entre candidatos e empresas. Estrutura orientada a objetos, utilizando interface, herança e padrão DAO para persistência de dados.
 
-Este projeto demonstra:
-- ✅ Programação Orientada a Objetos (POO)
-- ✅ Interfaces e Herança
-- ✅ Integração JDBC com PostgreSQL
-- ✅ Padrão DAO (Data Access Object)
-- ✅ Testes Unitários com Spock
-- ✅ TDD (Test-Driven Development)
-- ✅ Estrutura de projeto Gradle
-- ✅ Versionamento com Git
 > **Este projeto está em desenvolvimento para fins de aprendizado e aplicação dos conhecimentos adquiridos no programa Acelera ZG.**
 > 
 > **Versão atual:** Refatoração e simplificação com foco em JDBC e testes unitários com Spock.
@@ -193,12 +171,120 @@ LINKETINDER - MENU PRINCIPAL
 6. Candidato curtir Vaga
 7. Empresa curtir Candidato
 8. Sair
+==================================================
+```
 
-**Software utilizado:** dbdiagram.io
 
-## Tecnologias
-- PostgreSQL
-- 7 tabelas
-- Relacionamentos N:N
+## 🎨 Frontend
 
-Projeto desenvolvido por Nathalia Veiga para fins didáticos e de demonstração de boas práticas em Groovy, TDD e arquitetura orientada a serviços no programa Acelera ZG.
+### Descrição
+Interface web desenvolvida em TypeScript com Vite como build tool e Tailwind CSS para estilização. Possui páginas interativas para visualização de candidatos, empresas e vagas.
+
+### Estrutura do Frontend
+
+```
+frontend/
+├── assets/              # Imagens e recursos estáticos
+│   └── images/          # Avatares SVG dos usuários
+├── css/                 # Estilos
+│   └── tailwind.css     # Arquivo fonte do Tailwind
+├── js/                  # JavaScript compilado (gerado)
+├── ts/                  # Código fonte TypeScript
+│   ├── candidatos.ts    # Lógica da página de candidatos
+│   ├── empresas.ts      # Lógica da página de empresas
+│   └── vagas.ts         # Lógica da página de vagas
+├── public/              # Páginas HTML
+│   ├── index.html       # Página inicial
+│   ├── candidatos.html  # Lista de candidatos
+│   ├── empresas.html    # Lista de empresas
+│   └── vagas.html       # Lista de vagas
+├── dist/                # Build de produção (gerado)
+├── node_modules/        # Dependências npm
+├── package.json         # Configuração npm
+├── tsconfig.json        # Configuração TypeScript
+├── vite.config.ts       # Configuração Vite
+└── tailwind.config.js   # Configuração Tailwind CSS
+```
+
+### Como Executar o Frontend
+
+1. **Instalar dependências:**
+```bash
+cd frontend
+npm install
+```
+
+2. **Modo desenvolvimento (com hot reload):**
+```bash
+npm run dev
+```
+O servidor estará disponível em: `http://localhost:5173`
+
+3. **Build para produção:**
+```bash
+npm run build
+```
+Os arquivos otimizados estarão em `frontend/dist/`
+
+4. **Preview do build de produção:**
+```bash
+npm run preview
+```
+
+### Funcionalidades do Frontend
+
+- ✅ **Página inicial** - Dashboard com estatísticas
+- ✅ **Lista de candidatos** - Visualização de todos os candidatos cadastrados
+- ✅ **Lista de empresas** - Visualização de todas as empresas cadastradas
+- ✅ **Lista de vagas** - Visualização de vagas disponíveis
+- ✅ **Design responsivo** - Adaptável a diferentes tamanhos de tela
+- ✅ **Avatares personalizados** - Imagens SVG para cada perfil
+- 🚧 **Integração com backend** - Em desenvolvimento
+
+### Tecnologias Frontend
+
+- **TypeScript 5.x** - Superset tipado do JavaScript
+- **Vite 5.x** - Build tool moderno e rápido
+- **Tailwind CSS 3.x** - Framework CSS utility-first
+- **Chart.js** - Biblioteca para gráficos e visualizações
+- **Vitest** - Framework de testes para Vite
+
+### Scripts Disponíveis
+
+```json
+npm run dev      // Servidor de desenvolvimento
+npm run build    // Build de produção
+npm run preview  // Preview do build
+npm run test     // Executar testes
+```
+
+## 📚 Aprendizados Aplicados
+
+// ...existing code...
+## 🔄 Mudanças da Refatoração
+
+### O que mudou do projeto anterior:
+- ✅ **Simplificação da estrutura** - Código mais direto e fácil de entender
+- ✅ **Integração JDBC** - Preparação para persistência real no PostgreSQL
+- ✅ **Testes com Spock** - Framework moderno e expressivo
+- ✅ **Padrão DAO** - Separação da lógica de acesso a dados
+- ✅ **Models atualizados** - Campos necessários para banco (id, timestamps, etc)
+- ✅ **Data de nascimento** - Candidatos agora informam data de nascimento em vez de idade
+- ✅ **Sistema de curtidas simplificado** - Lógica mantida simples para fins didáticos
+
+## 📚 Aprendizados Aplicados
+
+Este projeto demonstra:
+- ✅ Programação Orientada a Objetos (POO)
+- ✅ Interfaces e Herança
+- ✅ Integração JDBC com PostgreSQL
+- ✅ Padrão DAO (Data Access Object)
+- ✅ Testes Unitários com Spock
+- ✅ TDD (Test-Driven Development)
+- ✅ Estrutura de projeto Gradle
+- ✅ Versionamento com Git
+
+---
+
+**Projeto desenvolvido por Nathalia Veiga para fins didáticos no programa Acelera ZG.**
+
