@@ -25,50 +25,95 @@ class CandidatoDAO {
      * @param candidato - objeto Candidato a ser inserido
      */
     void inserir(Candidato candidato) {
-        // TODO: Implementar inserção de candidato no banco
-        // 1. Criar SQL INSERT para tabela candidatos
-        //    Colunas: nome, sobrenome, data_nascimento, email, cpf, pais, cep, descricao, senha, criado_em
-        // 2. Abrir conexão com DatabaseConnection.getConnection()
-        // 3. Preparar PreparedStatement com RETURN_GENERATED_KEYS
-        // 4. Setar os parâmetros:
-        //    - stmt.setString(1, candidato.nome)
-        //    - stmt.setString(2, candidato.sobrenome)
-        //    - stmt.setObject(3, candidato.dataNascimento)
-        //    - stmt.setString(4, candidato.email)
-        //    - stmt.setString(5, candidato.cpf)
-        //    - stmt.setString(6, candidato.pais)
-        //    - stmt.setString(7, candidato.cep)
-        //    - stmt.setString(8, candidato.descricao)
-        //    - stmt.setString(9, candidato.senha)
-        //    - stmt.setObject(10, LocalDateTime.now())
-        // 5. Executar stmt.executeUpdate()
-        // 6. Recuperar ID gerado: rs = stmt.getGeneratedKeys()
-        // 7. Atribuir ID ao candidato: candidato.id = rs.getInt(1)
-        // 8. IMPORTANTE: Inserir competências na tabela N:N candidato_competencias
-        //    - Para cada competência em candidato.competencias:
-        //      a) Buscar ou criar competência na tabela competencias
-        //      b) Inserir relacionamento em candidato_competencias
-        // 9. Fechar recursos com DatabaseConnection.closeResources()
-    }
 
+        String sql = """
+            INSERT INTO candidatos (nome, sobrenome, data_nascimento, email, cpf, pais, cep, descricao, senha, criado_em)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """
+
+        Connection conn = null
+        PreparedStatement statement = null
+        ResultSet resultSet = null
+
+
+        try {
+            conn = DatabaseConnection.getConnection()
+            statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+
+            statement.setString(1, candidato.nome)
+            statement.setString(2, candidato.sobrenome)
+            statement.setObject(3, candidato.dataNascimento)
+            statement.setString(4, candidato.email)
+            statement.setString(5, candidato.cpf)
+            statement.setString(6, candidato.pais)
+            statement.setString(7, candidato.cep)
+            statement.setString(8, candidato.descricao)
+            statement.setString(9, candidato.senha ?: "senha123") // senha padrão se não informada
+            statement.setObject(10, LocalDateTime.now())
+
+            int rowsAffected = statement.executeUpdate()
+            println "DEBUG: Rows affected: ${rowsAffected}"
+
+            resultSet = statement.getGeneratedKeys()
+            if (resultSet.next()) {
+                candidato.id = resultSet.getInt(1)
+                println "DEBUG: ID gerado: ${candidato.id}"
+            }
+
+            // Inserir competências na tabela N:N candidato_competencias
+            if (candidato.competencias) {
+                for (competencia in candidato.competencias) {
+                    Integer competenciaId = buscarOuCriarCompetencia(competencia, conn)
+                    String insertCompetenciaSql = """
+                        INSERT INTO candidato_competencias (candidato_id, competencia_id)
+                        VALUES (?, ?)
+                    """
+                    PreparedStatement compStmt = conn.prepareStatement(insertCompetenciaSql)
+                    compStmt.setInt(1, candidato.id)
+                    compStmt.setInt(2, competenciaId)
+                    compStmt.executeUpdate()
+                    compStmt.close()
+                }
+            }
+
+        } catch (Exception e) {
+            println "ERRO ao inserir candidato: ${e.message}"
+            e.printStackTrace()
+        } finally {
+            DatabaseConnection.closeResources(conn, statement, resultSet)
+
+        }
+    }
     /**
      * Lista todos os candidatos cadastrados no banco
      * @return List<Candidato> - lista com todos os candidatos
      */
     List<Candidato> listar() {
-        // TODO: Implementar listagem de candidatos
-        // 1. Criar SQL SELECT * FROM candidatos ORDER BY id
-        // 2. Criar lista vazia: List<Candidato> candidatos = []
-        // 3. Abrir conexão
-        // 4. Criar Statement com conn.createStatement()
-        // 5. Executar query: rs = statement.executeQuery(sql)
-        // 6. Percorrer ResultSet com while(rs.next()):
-        //    - Chamar mapearCandidato(rs) para criar objeto
-        //    - Buscar competências do candidato (JOIN com candidato_competencias)
-        //    - Adicionar candidato na lista
-        // 7. Fechar recursos
-        // 8. Retornar lista
-        return []
+        String sql = "SELECT * FROM candidatos ORDER BY idCandidatos"
+        List<Candidato> candidatos = []
+
+        Connection conn = null
+        Statement statement = null
+        ResultSet resultSet = null
+
+        try {
+            conn = DatabaseConnection.getConnection()
+            statement = conn.createStatement()
+            resultSet = statement.executeQuery(sql)
+
+            while (resultSet.next()) {
+                Candidato candidato = mapearCandidato(resultSet)
+                // Buscar competências do candidato
+                candidato.competencias = buscarCompetencias(candidato.id, conn)
+                candidatos << candidato
+            }
+        } catch (Exception e) {
+            println "ERRO ao listar candidatos: ${e.message}"
+            e.printStackTrace()
+        } finally {
+            DatabaseConnection.closeResources(conn, statement, resultSet)
+        }
+        return candidatos
     }
 
     /**
@@ -77,18 +122,31 @@ class CandidatoDAO {
      * @return Candidato - objeto encontrado ou null
      */
     Candidato buscarPorId(Integer id) {
-        // TODO: Implementar busca por ID
-        // 1. Criar SQL SELECT * FROM candidatos WHERE id = ?
-        // 2. Abrir conexão
-        // 3. Preparar PreparedStatement
-        // 4. Setar parâmetro: stmt.setInt(1, id)
-        // 5. Executar query: rs = stmt.executeQuery()
-        // 6. Se rs.next():
-        //    - Chamar mapearCandidato(rs)
-        //    - Buscar competências do candidato
-        // 7. Fechar recursos
-        // 8. Retornar candidato ou null
-        return null
+        String sql = "SELECT * FROM candidatos WHERE idCandidatos = ?"
+
+        Candidato candidato = null
+        Connection conn = null
+        PreparedStatement statement = null
+        ResultSet resultSet = null
+
+        try {
+            conn = DatabaseConnection.getConnection()
+            statement = conn.prepareStatement(sql)
+            statement.setInt(1, id)
+            resultSet = statement.executeQuery()
+
+            if (resultSet.next()) {
+                candidato = mapearCandidato(resultSet)
+                // Buscar competências do candidato
+                candidato.competencias = buscarCompetencias(candidato.id, conn)
+            }
+        } catch (Exception e) {
+            println "ERRO ao buscar candidato por ID: ${e.message}"
+            e.printStackTrace()
+        } finally {
+            DatabaseConnection.closeResources(conn, statement, resultSet)
+        }
+        return candidato
     }
 
     /**
@@ -107,6 +165,62 @@ class CandidatoDAO {
         //    - Deletar todas as competências antigas: DELETE FROM candidato_competencias WHERE candidato_id = ?
         //    - Inserir novas competências (mesmo processo do inserir)
         // 7. Fechar recursos
+
+        String sql = """
+            UPDATE candidatos 
+            SET nome = ?, sobrenome = ?, data_nascimento = ?, email = ?, cpf = ?, pais = ?, cep = ?, descricao = ?, senha = ?
+            WHERE idCandidatos = ?
+        """
+
+        Connection conn = null
+        PreparedStatement statement = null
+
+        try {
+            conn = DatabaseConnection.getConnection()
+            statement = conn.prepareStatement(sql)
+
+            statement.setString(1, candidato.nome)
+            statement.setString(2, candidato.sobrenome)
+            statement.setObject(3, candidato.dataNascimento)
+            statement.setString(4, candidato.email)
+            statement.setString(5, candidato.cpf)
+            statement.setString(6, candidato.pais)
+            statement.setString(7, candidato.cep)
+            statement.setString(8, candidato.descricao)
+            statement.setString(9, candidato.senha ?: "senha123") // senha padrão se não informada
+            statement.setInt(10, candidato.id)
+
+            int rowsAffected = statement.executeUpdate()
+            println "DEBUG: Rows affected on update: ${rowsAffected}"
+
+            // Atualizar competências
+            String deleteCompetenciasSql = "DELETE FROM candidato_competencias WHERE candidato_id = ?"
+            PreparedStatement deleteStmt = conn.prepareStatement(deleteCompetenciasSql)
+            deleteStmt.setInt(1, candidato.id)
+            deleteStmt.executeUpdate()
+            deleteStmt.close()
+
+            if (candidato.competencias) {
+                for (competencia in candidato.competencias) {
+                    Integer competenciaId = buscarOuCriarCompetencia(competencia, conn)
+                    String insertCompetenciaSql = """
+                        INSERT INTO candidato_competencias (candidato_id, competencia_id)
+                        VALUES (?, ?)
+                    """
+                    PreparedStatement compStmt = conn.prepareStatement(insertCompetenciaSql)
+                    compStmt.setInt(1, candidato.id)
+                    compStmt.setInt(2, competenciaId)
+                    compStmt.executeUpdate()
+                    compStmt.close()
+                }
+            }
+
+        } catch (Exception e) {
+            println "ERRO ao atualizar candidato: ${e.message}"
+            e.printStackTrace()
+        } finally {
+            DatabaseConnection.closeResources(conn, statement, null)
+        }
     }
 
     /**
@@ -114,54 +228,102 @@ class CandidatoDAO {
      * @param id - ID do candidato a ser removido
      */
     void deletar(Integer id) {
-        // TODO: Implementar exclusão de candidato
-        // 1. Criar SQL DELETE FROM candidatos WHERE id = ?
-        // 2. Abrir conexão
-        // 3. Preparar PreparedStatement
-        // 4. Setar parâmetro: stmt.setInt(1, id)
-        // 5. Executar stmt.executeUpdate()
-        // 6. NOTA: As competências em candidato_competencias serão deletadas automaticamente
-        //    por causa do ON DELETE CASCADE definido no banco
-        // 7. Fechar recursos
+        String sql = "DELETE FROM candidatos WHERE idCandidatos = ?"
+
+        Connection conn = null
+        PreparedStatement statement = null
+
+        try {
+            conn = DatabaseConnection.getConnection()
+            statement = conn.prepareStatement(sql)
+            statement.setInt(1, id)
+
+            int rowsAffected = statement.executeUpdate()
+            println "DEBUG: Rows affected on delete: ${rowsAffected}"
+
+        } catch (Exception e) {
+            println "ERRO ao deletar candidato: ${e.message}"
+            e.printStackTrace()
+        } finally {
+            DatabaseConnection.closeResources(conn, statement, null)
+        }
     }
 
     /**
-     * Método auxiliar para mapear ResultSet em objeto Candidato
+     * Metodo auxiliar para mapear ResultSet em objeto Candidato
      * @param rs - ResultSet posicionado na linha atual
      * @return Candidato - objeto criado a partir dos dados
      */
     private Candidato mapearCandidato(ResultSet rs) {
-        // TODO: Implementar mapeamento de ResultSet para Candidato
-        // 1. Criar novo objeto Candidato usando construtor
-        // 2. Setar todos os campos:
-        //    - id: rs.getInt("id")
-        //    - nome: rs.getString("nome")
-        //    - sobrenome: rs.getString("sobrenome")
-        //    - dataNascimento: rs.getDate("data_nascimento")?.toLocalDate()
-        //    - email: rs.getString("email")
-        //    - cpf: rs.getString("cpf")
-        //    - pais: rs.getString("pais")
-        //    - cep: rs.getString("cep")
-        //    - descricao: rs.getString("descricao")
-        //    - senha: rs.getString("senha")
-        //    - criadoEm: rs.getTimestamp("criado_em")?.toLocalDateTime()
-        // 3. Retornar objeto candidato
-        return null
+        Integer candidatoId = rs.getInt("idcandidatos")
+
+        Candidato candidato = new Candidato(
+            rs.getString("nome"),
+            rs.getString("sobrenome"),
+            rs.getString("email"),
+            rs.getString("cpf"),
+            rs.getDate("data_de_nascimento")?.toLocalDate(),
+            rs.getString("pais"),
+            rs.getString("cep"),
+            rs.getString("descricao"),
+            [] // competências serão carregadas separadamente
+        )
+
+        candidato.id = candidatoId
+        candidato.senha = rs.getString("senha")
+        candidato.criadoEm = rs.getTimestamp("criado_em")?.toLocalDateTime()
+
+        return candidato
     }
 
     /**
      * Busca ou cria uma competência no banco de dados
      * @param nomeCompetencia - nome da competência
+     * @param conn - conexão ativa
      * @return Integer - ID da competência
      */
     private Integer buscarOuCriarCompetencia(String nomeCompetencia, Connection conn) {
-        // TODO: Implementar busca/criação de competência
-        // 1. Tentar buscar competência existente:
-        //    SELECT id FROM competencias WHERE nome_competencia = ?
-        // 2. Se encontrou, retornar o ID
-        // 3. Se não encontrou, inserir nova competência:
-        //    INSERT INTO competencias (nome_competencia) VALUES (?)
-        // 4. Retornar ID gerado
+        String sqlBuscar = "SELECT idcompetencias FROM competencias WHERE nome_competencia = ?"
+
+        PreparedStatement stmtBuscar = null
+        ResultSet rs = null
+
+        try {
+            // Tentar buscar competência existente
+            stmtBuscar = conn.prepareStatement(sqlBuscar)
+            stmtBuscar.setString(1, nomeCompetencia)
+            rs = stmtBuscar.executeQuery()
+
+            if (rs.next()) {
+                // Competência já existe, retornar ID
+                return rs.getInt("idcompetencias")
+            }
+
+            // Competência não existe, criar nova
+            String sqlInserir = "INSERT INTO competencias (nome_competencia, criado_em) VALUES (?, ?)"
+            PreparedStatement stmtInserir = conn.prepareStatement(sqlInserir, Statement.RETURN_GENERATED_KEYS)
+            stmtInserir.setString(1, nomeCompetencia)
+            stmtInserir.setObject(2, LocalDateTime.now())
+            stmtInserir.executeUpdate()
+
+            ResultSet rsKeys = stmtInserir.getGeneratedKeys()
+            if (rsKeys.next()) {
+                Integer novoId = rsKeys.getInt(1)
+                rsKeys.close()
+                stmtInserir.close()
+                return novoId
+            }
+
+            stmtInserir.close()
+
+        } catch (Exception e) {
+            println "ERRO ao buscar/criar competência '${nomeCompetencia}': ${e.message}"
+            e.printStackTrace()
+        } finally {
+            if (rs != null) rs.close()
+            if (stmtBuscar != null) stmtBuscar.close()
+        }
+
         return null
     }
 
@@ -172,16 +334,34 @@ class CandidatoDAO {
      * @return List<String> - lista de nomes das competências
      */
     private List<String> buscarCompetencias(Integer candidatoId, Connection conn) {
-        // TODO: Implementar busca de competências do candidato
-        // 1. Criar SQL com JOIN:
-        //    SELECT c.nome_competencia
-        //    FROM competencias c
-        //    INNER JOIN candidato_competencias cc ON c.id = cc.competencia_id
-        //    WHERE cc.candidato_id = ?
-        // 2. Preparar statement e setar candidatoId
-        // 3. Executar query
-        // 4. Percorrer ResultSet e adicionar competências na lista
-        // 5. Retornar lista
-        return []
+        String sql = """
+            SELECT c.nome_competencia
+            FROM competencias c
+            INNER JOIN candidato_competencias cc ON c.idcompetencias = cc.competencia_id
+            WHERE cc.candidato_id = ?
+        """
+
+        List<String> competencias = []
+        PreparedStatement statement = null
+        ResultSet resultSet = null
+
+        try {
+            statement = conn.prepareStatement(sql)
+            statement.setInt(1, candidatoId)
+            resultSet = statement.executeQuery()
+
+            while (resultSet.next()) {
+                competencias << resultSet.getString("nome_competencia")
+            }
+
+        } catch (Exception e) {
+            println "ERRO ao buscar competências do candidato ${candidatoId}: ${e.message}"
+            e.printStackTrace()
+        } finally {
+            if (resultSet != null) resultSet.close()
+            if (statement != null) statement.close()
+        }
+
+        return competencias
     }
 }

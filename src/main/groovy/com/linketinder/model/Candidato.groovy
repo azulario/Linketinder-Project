@@ -6,6 +6,7 @@ import java.time.LocalDateTime
 class Candidato implements Usuarios {
     Integer id
     String nome
+    String sobrenome
     String email
     String cpf
     String senha
@@ -18,8 +19,9 @@ class Candidato implements Usuarios {
     List<Vaga> vagasCurtidas = []
 
     // Construtor único - usado pelo Menu e pelo DAO
-    Candidato(String nome, String email, String cpf, LocalDate dataDeNascimento, String estado, String cep, String descricao, List<String> competencias) {
+    Candidato(String nome, String sobrenome, String email, String cpf, LocalDate dataDeNascimento, String estado, String cep, String descricao, List<String> competencias) {
         this.nome = nome
+        this.sobrenome = sobrenome
         this.email = email
         this.cpf = cpf
         this.dataDeNascimento = dataDeNascimento
@@ -53,6 +55,7 @@ class Candidato implements Usuarios {
         println "CANDIDATO"
         if (id) println "ID: $id"
         println "Nome: $nome"
+        println "Sobrenome: $sobrenome"
         println "Email: $email"
         println "CPF: $cpf"
         println "Idade: $idade"
