@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cadastro Empresa</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-100 to-purple-100 flex flex-col">
+<!-- NAVBAR -->
+<nav class="w-full bg-white/90 backdrop-blur shadow-sm">
+    <div class="mx-auto w-full max-w-7xl px-4">
+        <div class="flex items-center justify-between py-3">
+
+            <!-- Logo/Título -->
+            <div class="flex items-center gap-2">
+                <span class="material-icons text-blue-600 text-2xl">link</span>
+                <h1 class="text-xl font-bold text-gray-800">Linketinder</h1>
+            </div>
+
+            <!-- Botão Hamburger (visível apenas no mobile) -->
+            <button id="menuToggle" class="lg:hidden text-gray-700 hover:text-blue-600 focus:outline-none">
+                <span class="material-icons text-3xl">menu</span>
+            </button>
+
+            <!-- Menu Desktop (visível apenas no desktop) -->
+            <ul class="hidden lg:flex gap-6 text-sm">
+                <li>
+                    <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">home</span>
+                        Início
+                    </a>
+                </li>
+                <li>
+                    <a href="cadastro-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">person_add</span>
+                        Cadastro Candidato
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">work</span>
+                        Perfil do Candidato
+                    </a>
+                </li>
+                <li>
+                    <a href="cadastro-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">business</span>
+                        Cadastro Empresa
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">people</span>
+                        Perfil da Empresa
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Menu Mobile (dropdown) -->
+        <div id="mobileMenu" class="hidden lg:hidden pb-4">
+            <ul class="flex flex-col gap-3 text-sm border-t border-gray-200 pt-4">
+                <li>
+                    <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">home</span>
+                        Início
+                    </a>
+                </li>
+                <li>
+                    <a href="cadastro-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">person_add</span>
+                        Cadastro Candidato
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">work</span>
+                        Perfil do Candidato
+                    </a>
+                </li>
+                <li>
+                    <a href="cadastro-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">business</span>
+                        Cadastro Empresa
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">people</span>
+                        Perfil da Empresa
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="flex-grow">
+    <section class="mx-auto w-full max-w-3xl px-4 py-10 sm:py-16">
+        <!-- Card do formulário -->
+        <div class="bg-white rounded-lg shadow-md p-8">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="material-icons text-blue-600 text-3xl">business</span>
+                <h1 class="text-2xl font-bold text-gray-800">Cadastrar Nova Empresa</h1>
+            </div>
+
+            <form id="formEmpresa" class="grid grid-cols-1 gap-4">
+                <div>
+                    <label for="nomeEmpresa" class="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                        <span class="material-icons text-sm">corporate_fare</span>
+                        Nome da Empresa
+                    </label>
+                    <input id="nomeEmpresa" name="nomeEmpresa" type="text" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Nome da sua empresa" />
+                </div>
+
+                <div>
+                    <label for="cnpj" class="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                        <span class="material-icons text-sm">badge</span>
+                        CNPJ
+                    </label>
+                    <input id="cnpj" name="cnpj" type="text" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="00.000.000/0000-00" />
+                </div>
+
+                <div>
+                    <label for="emailEmpresa" class="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                        <span class="material-icons text-sm">email</span>
+                        Email Corporativo
+                    </label>
+                    <input id="emailEmpresa" name="emailEmpresa" type="email" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="contato@empresa.com" />
+                </div>
+
+                <div>
+                    <label for="fotoUrlEmpresa" class="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                        <span class="material-icons text-sm">image</span>
+                        URL da Logo/Foto
+                    </label>
+                    <input id="fotoUrlEmpresa" name="fotoUrlEmpresa" type="url" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="https://exemplo.com/logo.png" />
+                </div>
+
+                <button type="submit" class="mt-2 w-full rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 flex items-center justify-center gap-2 transition-colors">
+                    <span class="material-icons">add_business</span>
+                    Cadastrar Empresa
+                </button>
+
+                <div id="mensagemEmpresa" class="hidden mt-3 rounded-lg border px-3 py-2 text-sm" aria-live="polite"></div>
+            </form>
+        </div>
+
+        <!-- Lista de empresas -->
+        <div class="mt-8 bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                <span class="material-icons">apartment</span>
+                Empresas Cadastradas
+            </h2>
+            <div id="listaEmpresas" class="space-y-3">
+                <!-- Populado via script -->
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Script do menu -->
+<script>
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuIcon = menuToggle.querySelector('.material-icons');
+
+    menuToggle.addEventListener('click', () => {
+        // Remove a classe hidden e adiciona show para animação
+        if (mobileMenu.classList.contains('show')) {
+            mobileMenu.classList.remove('show');
+            setTimeout(() => {
+                mobileMenu.classList.add('hidden');
+            }, 300);
+            menuIcon.textContent = 'menu';
+        } else {
+            mobileMenu.classList.remove('hidden');
+            setTimeout(() => {
+                mobileMenu.classList.add('show');
+            }, 10);
+            menuIcon.textContent = 'close';
+        }
+    });
+
+    // Fechar menu ao clicar em um link
+    const mobileLinks = mobileMenu.querySelectorAll('a');
+    mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.remove('show');
+            setTimeout(() => {
+                mobileMenu.classList.add('hidden');
+            }, 300);
+            menuIcon.textContent = 'menu';
+        });
+    });
+</script>
+
+<!-- Script do formulário e lista de empresas -->
+<script type="module" src="../js/Controllers/cadastro-empresa-controller.js"></script>
+</body>
+</html>

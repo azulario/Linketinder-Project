@@ -1,0 +1,46 @@
+---
+
+## ✅ Checklist Final Simplificado ()
+
+- [x] 5 páginas HTML criadas
+- [x] Formulários de cadastro funcionando
+- [x] Dados salvando no localStorage
+- [x] Lista de vagas mostrando (empresa anônima)
+- [x] Lista de candidatos mostrando (nome anônimo)
+- [x] Gráfico de competências exibindo
+- [x] Tailwind CSS aplicado
+- [x] README.md criado
+- [x] Código no GitHub
+
+**Dica:** Comece pela index.html, depois os cadastros, e por último as listas + gráfico!
+
+melhorar a logica pro grafico das competencias porque cada item do array
+é uma competencias.
+seria interessante fazer um filtro que ag   rupe as competencias iguais
+e conte quantas vezes cada uma aparece, para depois exibir no grafico
+
+---
+
+## ✅ Checklist do Desafio de Regex (Validações nos formulários)
+
+Candidato
+- [x] Nome (Regex)
+- [x] E-mail (Regex)
+- [x] CPF (formato 000.000.000-00 via Regex)
+- [ ] Tags pré‑padronizadas (validar apenas itens permitidos)
+
+Empresa
+- [x] Nome/Razão social (Regex)
+- [x] E-mail (Regex)
+- [x] CNPJ (formato 00.000.000/0000-00 via Regex)
+- [ ] Tags pré‑padronizadas
+- [x] URL da logo (http/https)
+
+Comportamento
+- [x] Bloquear envio quando inválido
+- [x] Exibir mensagem de erro amigável no campo/formulário
+
+Notas
+- As competências (tags) hoje validam formato e removem duplicatas, mas ainda não conferem contra uma lista fixa de permitidas.
+- LinkedIn, Telefone e CEP ainda não foram implementados no código.
+- Arquivos principais: `ts/validation/validacao_regex.ts`, `ts/Controllers/cadastro-candidato-controller.ts`, `ts/Controllers/cadastro-empresa-controller.ts`.

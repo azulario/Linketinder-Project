@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Linketinder - Seleção</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex flex-col">
+<!-- NAVBAR -->
+<nav class="w-full bg-white/90 backdrop-blur shadow-sm">
+    <div class="mx-auto w-full max-w-7xl px-4">
+        <div class="flex items-center justify-between py-3">
+
+            <!-- Logo/Título -->
+            <div class="flex items-center gap-2">
+                <span class="material-icons text-blue-600 text-2xl">link</span>
+                <h1 class="text-xl font-bold text-gray-800">Linketinder</h1>
+            </div>
+
+            <!-- Botão Hamburger (visível apenas no mobile) -->
+            <button id="menuToggle" class="lg:hidden text-gray-700 hover:text-blue-600 focus:outline-none">
+                <span class="material-icons text-3xl">menu</span>
+            </button>
+
+            <!-- Menu Desktop (visível apenas no desktop) -->
+            <ul class="hidden lg:flex gap-6 text-sm">
+                <li>
+                    <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">home</span>
+                        Início
+                    </a>
+                </li>
+                <li>
+                    <a href="cadastro-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">person_add</span>
+                        Cadastro Candidato
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">work</span>
+                        Perfil do Candidato
+                    </a>
+                </li>
+                <li>
+                    <a href="cadastro-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">business</span>
+                        Cadastro Empresa
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
+                        <span class="material-icons text-lg">people</span>
+                        Perfil da Empresa
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Menu Mobile (dropdown) -->
+        <div id="mobileMenu" class="hidden lg:hidden pb-4">
+            <ul class="flex flex-col gap-3 text-sm border-t border-gray-200 pt-4">
+                <li>
+                    <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">home</span>
+                        Início
+                    </a>
+                </li>
+                <li>
+                    <a href="cadastro-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">person_add</span>
+                        Cadastro Candidato
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil-candidato.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">work</span>
+                        Perfil do Candidato
+                    </a>
+                </li>
+                <li>
+                    <a href="cadastro-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">business</span>
+                        Cadastro Empresa
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil-empresa.html" class="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2 py-2">
+                        <span class="material-icons text-lg">people</span>
+                        Perfil da Empresa
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="flex-grow flex items-center justify-center">
+    <div class="w-full max-w-md h-[90vh] flex flex-col">
+
+
+        <!-- Card principal -->
+        <div class="flex-grow flex items-center justify-center">
+            <div class="relative w-full h-[60vh] sm:h-[70vh] rounded-3xl shadow-xl overflow-hidden bg-gray-200">
+                <!-- Imagem -->
+                <img id="card-img" src="https://via.placeholder.com/400x600.png?text=Foto+Misteriosa"
+                     alt="perfil" class="w-full h-full object-cover">
+
+                <!-- Gradiente escuro no rodapé do card -->
+                <div class="absolute bottom-0 w-full p-4 bg-gradient-to-t from-black/70 to-transparent text-white">
+                    <h2 id="card-nome" class="text-lg sm:text-xl font-bold">Perfil Anônimo</h2>
+                    <p id="card-comps" class="text-xs sm:text-sm text-gray-200">Competências: -</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botões estilo Tinder -->
+        <div class="flex justify-evenly py-4">
+            <button id="btn-dislike"
+                    class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white shadow-md flex items-center justify-center text-red-500 hover:scale-110 transition">
+                <span class="material-icons text-3xl sm:text-4xl">close</span>
+            </button>
+            <button id="btn-like"
+                    class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white shadow-md flex items-center justify-center text-green-500 hover:scale-110 transition">
+                <span class="material-icons text-3xl sm:text-4xl">favorite</span>
+            </button>
+        </div>
+    </div>
+</main>
+
+<!-- Script do menu -->
+<script>
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuIcon = menuToggle.querySelector('.material-icons');
+
+    menuToggle.addEventListener('click', () => {
+        // Remove a classe hidden e adiciona show para animação
+        if (mobileMenu.classList.contains('show')) {
+            mobileMenu.classList.remove('show');
+            setTimeout(() => {
+                mobileMenu.classList.add('hidden');
+            }, 300);
+            menuIcon.textContent = 'menu';
+        } else {
+            mobileMenu.classList.remove('hidden');
+            setTimeout(() => {
+                mobileMenu.classList.add('show');
+            }, 10);
+            menuIcon.textContent = 'close';
+        }
+    });
+
+    // Fechar menu ao clicar em um link
+    const mobileLinks = mobileMenu.querySelectorAll('a');
+    mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.remove('show');
+            setTimeout(() => {
+                mobileMenu.classList.add('hidden');
+            }, 300);
+            menuIcon.textContent = 'menu';
+        });
+    });
+</script>
+
+<script type="module" src="../js/Selecao.js"></script>
+</body>
+</html>
