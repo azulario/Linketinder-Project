@@ -34,6 +34,8 @@ class VagaDAO {
         // 6. Atribuir o ID ao objeto vaga
         // 7. ATENÇÃO: Inserir competências na tabela N:N competencias_vagas
         // 8. Fechar conexão
+
+
     }
 
     /**
