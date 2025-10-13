@@ -258,9 +258,6 @@ npm run preview  // Preview do build
 npm run test     // Executar testes
 ```
 
-## 📚 Aprendizados Aplicados
-
-// ...existing code...
 ## 🔄 Mudanças da Refatoração
 
 ### O que mudou do projeto anterior:
