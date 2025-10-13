@@ -4,6 +4,7 @@ import com.linketinder.database.Database
 import com.linketinder.model.Candidato
 import com.linketinder.model.Empresa
 import com.linketinder.model.Vaga
+import java.time.LocalDate
 
 class Menu {
     private Database database
@@ -128,8 +129,9 @@ class Menu {
         print "CPF: "
         String cpf = scanner.nextLine()
 
-        print "Idade: "
-        Integer idade = Integer.parseInt(scanner.nextLine())
+        print "Data de Nascimento (AAAA-MM-DD): "
+        LocalDate dataDeNascimento = LocalDate.parse(scanner.nextLine())
+
         print "Estado: "
         String estado = scanner.nextLine()
 
@@ -148,7 +150,7 @@ class Menu {
                 nome,
                 email,
                 cpf,
-                idade,
+                dataDeNascimento,
                 estado,
                 cep,
                 descricao,
