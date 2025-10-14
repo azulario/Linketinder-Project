@@ -70,7 +70,7 @@ LinkeTinder/
 ### Como Executar o Backend
 
 #### 1. Pré-requisitos
-- Java 21+
+- Java 17+
 - PostgreSQL 14+ rodando
 - Gradle 8.14+ (ou usar `./gradlew`)
 
@@ -122,7 +122,6 @@ cd backend
 - ✅ **Visualização:** Cards com informações detalhadas
 - ✅ **Estatísticas:** Gráficos e métricas
 - ✅ **Design:** Responsivo com Tailwind CSS
-- 🚧 **Integração:** API REST em desenvolvimento
 
 ### Como Executar o Frontend
 
@@ -141,16 +140,6 @@ npm run build        # Build para produção
 
 ---
 
-## 🐛 Troubleshooting
-
-| Erro | Solução |
-|------|---------|
-| Connection refused | `sudo service postgresql start` |
-| Database does not exist | `psql -U postgres -c "CREATE DATABASE linketinder;"` |
-| Password authentication failed | Verificar senha em `backend/src/.../DatabaseConnection.groovy` |
-| Frontend não abre | Verificar se está na pasta `frontend/` e rodou `npm install` |
-| Gradle não encontrado | Executar `cd backend` antes dos comandos gradle |
-
 ## 📊 Métricas do Projeto
 
 **Backend:**
@@ -164,20 +153,6 @@ npm run build        # Build para produção
 - TypeScript + Vite + Tailwind
 - 8 páginas HTML
 - Design responsivo
-
----
-
-## 🎯 Requisitos do Desafio K1-T9
-
-✅ Integração de 4 tabelas com CRUD completo  
-✅ Uso exclusivo de JDBC (sem JPA/Hibernate)  
-✅ Padrão DAO implementado  
-✅ Relacionamentos N:N e 1:N funcionando  
-✅ Script SQL com dados de exemplo  
-✅ Código versionado no GitHub  
-✅ README atualizado  
-
-**Extras:** 30 testes unitários, frontend TypeScript, tratamento de exceções
 
 ---
 
