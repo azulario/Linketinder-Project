@@ -140,20 +140,4 @@ npm run build        # Build para produção
 
 ---
 
-## 📊 Métricas do Projeto
-
-**Backend:**
-- 1800+ linhas de código Groovy
-- 3 DAOs completos (15 métodos CRUD)
-- 30 testes unitários (100% cobertura)
-- 7 tabelas no PostgreSQL
-- 4 relacionamentos (3 N:N + 1 1:N)
-
-**Frontend:**
-- TypeScript + Vite + Tailwind
-- 8 páginas HTML
-- Design responsivo
-
----
-
 **Projeto desenvolvido por Nathalia Veiga | Acelera ZG 2025**
