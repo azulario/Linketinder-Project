@@ -6,14 +6,14 @@ class Vaga {
     Integer id
     String titulo
     String descricao
-    String cidade
+    Integer enderecoId
+    Endereco endereco
     Integer empresaId
     LocalDateTime criadoEm
     List<String> competencias
     Empresa empresa
-    List<Candidato> candidatosCurtiram
+    List<Candidato> candidatosCurtiram = []
 
-    // Construtor único - usado pelo Menu e pelo DAO
     Vaga(String titulo, String descricao, List<String> competencias, Empresa empresa) {
         this.titulo = titulo
         this.descricao = descricao
@@ -40,12 +40,11 @@ class Vaga {
         if (id) println "ID: $id"
         println "Título: $titulo"
         println "Empresa: ${empresa.nome}"
-        if (cidade) println "Cidade: $cidade"
+        if (endereco) println "Localização: ${endereco.enderecoCompleto}"
         println "Descrição: $descricao"
         println "Competências: ${competencias.join(', ')}"
         println "Curtidas: $numeroCurtidas"
         if (criadoEm) println "Criado em: $criadoEm"
         println "=" * 50
     }
-
 }

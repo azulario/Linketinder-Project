@@ -7,18 +7,26 @@ import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.Statement
 import java.time.LocalDateTime
-import java.time.LocalDate
 
-/**
- * CandidatoDAO - Data Access Object para a entidade Candidato
- *
- * Responsável por todas as operações de banco de dados relacionadas a candidatos:
- * - CREATE (inserir)
- * - READ (listar, buscarPorId)
- * - UPDATE (atualizar)
- * - DELETE (deletar)
- */
 class CandidatoDAO {
+
+    private static final String SQL_INSERIR = """
+        INSERT INTO candidatos (nome, sobrenome, data_de_nascimento, email, cpf, endereco_id, descricao, senha, criado_em)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """
+    private static final String SQL_LISTAR = "SELECT * FROM candidatos ORDER BY idCandidatos"
+    private static final String SQL_BUSCAR_POR_ID = "SELECT * FROM candidatos WHERE idCandidatos = ?"
+    private static final String SQL_ATUALIZAR = """
+        UPDATE candidatos 
+        SET nome = ?, sobrenome = ?, data_de_nascimento = ?, email = ?, cpf = ?, endereco_id = ?, descricao = ?, senha = ?
+        WHERE idCandidatos = ?
+    """
+    private static final String SQL_DELETAR = "DELETE FROM candidatos WHERE idCandidatos = ?"
+    private static final String SQL_INSERIR_COMPETENCIA = "INSERT INTO candidato_competencias (candidato_id, competencia_id) VALUES (?, ?)"
+    private static final String SQL_DELETAR_COMPETENCIAS = "DELETE FROM candidato_competencias WHERE candidato_id = ?"
+
+    private final CompetenciaDAO competenciaDAO = new CompetenciaDAO()
+    private final EnderecoDAO enderecoDAO = new EnderecoDAO()
 
     /**
      * Insere um novo candidato no banco de dados
@@ -26,60 +34,42 @@ class CandidatoDAO {
      */
     void inserir(Candidato candidato) {
 
-        String sql = """
-            INSERT INTO candidatos (nome, sobrenome, data_de_nascimento, email, cpf, pais, cep, descricao, senha, criado_em)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """
-
         Connection conn = null
         PreparedStatement statement = null
         ResultSet resultSet = null
 
-
         try {
             conn = DatabaseConnection.getConnection()
-            statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+
+            Integer enderecoId = null
+            if (candidato.endereco) {
+                enderecoId = enderecoDAO.buscarOuCriar(candidato.endereco)
+                candidato.enderecoId = enderecoId
+            }
+
+            statement = conn.prepareStatement(SQL_INSERIR, Statement.RETURN_GENERATED_KEYS)
 
             statement.setString(1, candidato.nome)
             statement.setString(2, candidato.sobrenome)
             statement.setObject(3, candidato.dataDeNascimento)
             statement.setString(4, candidato.email)
             statement.setString(5, candidato.cpf)
-            statement.setString(6, candidato.pais)
-            statement.setString(7, candidato.cep)
-            statement.setString(8, candidato.descricao)
-            statement.setString(9, candidato.senha ?: "senha123")
-            statement.setObject(10, LocalDateTime.now())
+            statement.setObject(6, enderecoId)
+            statement.setString(7, candidato.descricao)
+            statement.setString(8, candidato.senha ?: "senha123")
+            statement.setObject(9, LocalDateTime.now())
 
-            int rowsAffected = statement.executeUpdate()
-            println "DEBUG: Rows affected: ${rowsAffected}"
+            statement.executeUpdate()
 
             resultSet = statement.getGeneratedKeys()
             if (resultSet.next()) {
                 candidato.id = resultSet.getInt(1)
-                println "DEBUG: ID gerado: ${candidato.id}"
             }
 
-            // Inserir competências na tabela N:N candidato_competencias
-            if (candidato.competencias) {
-                for (competencia in candidato.competencias) {
-                    Integer competenciaId = buscarOuCriarCompetencia(competencia, conn)
-                    String insertCompetenciaSql = """
-                        INSERT INTO candidato_competencias (candidato_id, competencia_id)
-                        VALUES (?, ?)
-                    """
-                    PreparedStatement compStmt = conn.prepareStatement(insertCompetenciaSql)
-                    compStmt.setInt(1, candidato.id)
-                    compStmt.setInt(2, competenciaId)
-                    compStmt.executeUpdate()
-                    compStmt.close()
-                }
-            }
+            inserirCompetencias(candidato.id, candidato.competencias, conn)
 
         } catch (Exception e) {
-            println "ERRO ao inserir candidato: ${e.message}"
-            e.printStackTrace()
-            throw e  // Relançar a exceção para que o teste possa capturá-la
+            throw new RuntimeException("Erro ao inserir candidato: ${e.message}", e)
         } finally {
             DatabaseConnection.closeResources(conn, statement, resultSet)
 
@@ -90,9 +80,7 @@ class CandidatoDAO {
      * @return List<Candidato> - lista com todos os candidatos
      */
     List<Candidato> listar() {
-        String sql = "SELECT * FROM candidatos ORDER BY idCandidatos"
         List<Candidato> candidatos = []
-
         Connection conn = null
         Statement statement = null
         ResultSet resultSet = null
@@ -100,17 +88,20 @@ class CandidatoDAO {
         try {
             conn = DatabaseConnection.getConnection()
             statement = conn.createStatement()
-            resultSet = statement.executeQuery(sql)
+            resultSet = statement.executeQuery(SQL_LISTAR)
 
             while (resultSet.next()) {
                 Candidato candidato = mapearCandidato(resultSet)
-                // Buscar competências do candidato
-                candidato.competencias = buscarCompetencias(candidato.id, conn)
+                candidato.competencias = competenciaDAO.buscarPorCandidato(candidato.id, conn)
+
+                if (candidato.enderecoId) {
+                    candidato.endereco = enderecoDAO.buscarPorId(candidato.enderecoId)
+                }
+
                 candidatos << candidato
             }
         } catch (Exception e) {
-            println "ERRO ao listar candidatos: ${e.message}"
-            e.printStackTrace()
+            throw new RuntimeException("Erro ao listar candidatos: ${e.message}", e)
         } finally {
             DatabaseConnection.closeResources(conn, statement, resultSet)
         }
@@ -123,8 +114,6 @@ class CandidatoDAO {
      * @return Candidato - objeto encontrado ou null
      */
     Candidato buscarPorId(Integer id) {
-        String sql = "SELECT * FROM candidatos WHERE idCandidatos = ?"
-
         Candidato candidato = null
         Connection conn = null
         PreparedStatement statement = null
@@ -132,18 +121,20 @@ class CandidatoDAO {
 
         try {
             conn = DatabaseConnection.getConnection()
-            statement = conn.prepareStatement(sql)
+            statement = conn.prepareStatement(SQL_BUSCAR_POR_ID)
             statement.setInt(1, id)
             resultSet = statement.executeQuery()
 
             if (resultSet.next()) {
                 candidato = mapearCandidato(resultSet)
-                // Buscar competências do candidato
-                candidato.competencias = buscarCompetencias(candidato.id, conn)
+                candidato.competencias = competenciaDAO.buscarPorCandidato(candidato.id, conn)
+
+                if (candidato.enderecoId) {
+                    candidato.endereco = enderecoDAO.buscarPorId(candidato.enderecoId)
+                }
             }
         } catch (Exception e) {
-            println "ERRO ao buscar candidato por ID: ${e.message}"
-            e.printStackTrace()
+            throw new RuntimeException("Erro ao buscar candidato por ID: ${e.message}", e)
         } finally {
             DatabaseConnection.closeResources(conn, statement, resultSet)
         }
@@ -155,71 +146,36 @@ class CandidatoDAO {
      * @param candidato - objeto com dados atualizados
      */
     void atualizar(Candidato candidato) {
-        // TODO: Implementar atualização de candidato
-        // 1. Criar SQL UPDATE candidatos SET ... WHERE id = ?
-        //    Atualizar: nome, sobrenome, data_nascimento, email, cpf, pais, cep, descricao, senha
-        // 2. Abrir conexão
-        // 3. Preparar PreparedStatement
-        // 4. Setar todos os parâmetros (9 campos + id no WHERE)
-        // 5. Executar stmt.executeUpdate()
-        // 6. Atualizar competências:
-        //    - Deletar todas as competências antigas: DELETE FROM candidato_competencias WHERE candidato_id = ?
-        //    - Inserir novas competências (mesmo processo do inserir)
-        // 7. Fechar recursos
-
-        String sql = """
-            UPDATE candidatos 
-            SET nome = ?, sobrenome = ?, data_de_nascimento = ?, email = ?, cpf = ?, pais = ?, cep = ?, descricao = ?, senha = ?
-            WHERE idCandidatos = ?
-        """
-
         Connection conn = null
         PreparedStatement statement = null
 
         try {
             conn = DatabaseConnection.getConnection()
-            statement = conn.prepareStatement(sql)
+
+            Integer enderecoId = candidato.enderecoId
+            if (candidato.endereco) {
+                enderecoId = enderecoDAO.buscarOuCriar(candidato.endereco)
+                candidato.enderecoId = enderecoId
+            }
+
+            statement = conn.prepareStatement(SQL_ATUALIZAR)
 
             statement.setString(1, candidato.nome)
             statement.setString(2, candidato.sobrenome)
             statement.setObject(3, candidato.dataDeNascimento)
             statement.setString(4, candidato.email)
             statement.setString(5, candidato.cpf)
-            statement.setString(6, candidato.pais)
-            statement.setString(7, candidato.cep)
-            statement.setString(8, candidato.descricao)
-            statement.setString(9, candidato.senha ?: "senha123") // senha padrão se não informada
-            statement.setInt(10, candidato.id)
+            statement.setObject(6, enderecoId)
+            statement.setString(7, candidato.descricao)
+            statement.setString(8, candidato.senha ?: "senha123")
+            statement.setInt(9, candidato.id)
 
-            int rowsAffected = statement.executeUpdate()
-            println "DEBUG: Rows affected on update: ${rowsAffected}"
+            statement.executeUpdate()
 
-            // Atualizar competências
-            String deleteCompetenciasSql = "DELETE FROM candidato_competencias WHERE candidato_id = ?"
-            PreparedStatement deleteStmt = conn.prepareStatement(deleteCompetenciasSql)
-            deleteStmt.setInt(1, candidato.id)
-            deleteStmt.executeUpdate()
-            deleteStmt.close()
-
-            if (candidato.competencias) {
-                for (competencia in candidato.competencias) {
-                    Integer competenciaId = buscarOuCriarCompetencia(competencia, conn)
-                    String insertCompetenciaSql = """
-                        INSERT INTO candidato_competencias (candidato_id, competencia_id)
-                        VALUES (?, ?)
-                    """
-                    PreparedStatement compStmt = conn.prepareStatement(insertCompetenciaSql)
-                    compStmt.setInt(1, candidato.id)
-                    compStmt.setInt(2, competenciaId)
-                    compStmt.executeUpdate()
-                    compStmt.close()
-                }
-            }
+            atualizarCompetencias(candidato.id, candidato.competencias, conn)
 
         } catch (Exception e) {
-            println "ERRO ao atualizar candidato: ${e.message}"
-            e.printStackTrace()
-            throw e // Relançar a exceção para que o teste possa capturá-la
+            throw new RuntimeException("Erro ao atualizar candidato: ${e.message}", e)
         } finally {
             DatabaseConnection.closeResources(conn, statement, null)
         }
@@ -230,22 +186,16 @@ class CandidatoDAO {
      * @param id - ID do candidato a ser removido
      */
     void deletar(Integer id) {
-        String sql = "DELETE FROM candidatos WHERE idCandidatos = ?"
-
         Connection conn = null
         PreparedStatement statement = null
 
         try {
             conn = DatabaseConnection.getConnection()
-            statement = conn.prepareStatement(sql)
+            statement = conn.prepareStatement(SQL_DELETAR)
             statement.setInt(1, id)
-
-            int rowsAffected = statement.executeUpdate()
-            println "DEBUG: Rows affected on delete: ${rowsAffected}"
-
+            statement.executeUpdate()
         } catch (Exception e) {
-            println "ERRO ao deletar candidato: ${e.message}"
-            e.printStackTrace()
+            throw new RuntimeException("Erro ao deletar candidato: ${e.message}", e)
         } finally {
             DatabaseConnection.closeResources(conn, statement, null)
         }
@@ -257,113 +207,47 @@ class CandidatoDAO {
      * @return Candidato - objeto criado a partir dos dados
      */
     private Candidato mapearCandidato(ResultSet rs) {
-        Integer candidatoId = rs.getInt("idcandidatos")
-
         Candidato candidato = new Candidato(
             rs.getString("nome"),
             rs.getString("sobrenome"),
             rs.getString("email"),
             rs.getString("cpf"),
             rs.getDate("data_de_nascimento")?.toLocalDate(),
-            rs.getString("pais"),
-            rs.getString("cep"),
             rs.getString("descricao"),
-            [] // competências serão carregadas separadamente
+            []
         )
 
-        candidato.id = candidatoId
+        candidato.id = rs.getInt("idcandidatos")
+        candidato.enderecoId = rs.getObject("endereco_id") as Integer
         candidato.senha = rs.getString("senha")
         candidato.criadoEm = rs.getTimestamp("criado_em")?.toLocalDateTime()
 
         return candidato
     }
 
-    /**
-     * Busca ou cria uma competência no banco de dados
-     * @param nomeCompetencia - nome da competência
-     * @param conn - conexão ativa
-     * @return Integer - ID da competência
-     */
-    private Integer buscarOuCriarCompetencia(String nomeCompetencia, Connection conn) {
-        String sqlBuscar = "SELECT idcompetencias FROM competencias WHERE nome_competencia = ?"
+    private void inserirCompetencias(Integer candidatoId, List<String> competencias, Connection conn) {
+        if (!competencias) return
 
-        PreparedStatement stmtBuscar = null
-        ResultSet rs = null
+        competencias.each { competencia ->
+            Integer competenciaId = competenciaDAO.buscarOuCriar(competencia, conn)
 
-        try {
-            // Tentar buscar competência existente
-            stmtBuscar = conn.prepareStatement(sqlBuscar)
-            stmtBuscar.setString(1, nomeCompetencia)
-            rs = stmtBuscar.executeQuery()
-
-            if (rs.next()) {
-                // Competência já existe, retornar ID
-                return rs.getInt("idcompetencias")
-            }
-
-            // Competência não existe, criar nova
-            String sqlInserir = "INSERT INTO competencias (nome_competencia, criado_em) VALUES (?, ?)"
-            PreparedStatement stmtInserir = conn.prepareStatement(sqlInserir, Statement.RETURN_GENERATED_KEYS)
-            stmtInserir.setString(1, nomeCompetencia)
-            stmtInserir.setObject(2, LocalDateTime.now())
-            stmtInserir.executeUpdate()
-
-            ResultSet rsKeys = stmtInserir.getGeneratedKeys()
-            if (rsKeys.next()) {
-                Integer novoId = rsKeys.getInt(1)
-                rsKeys.close()
-                stmtInserir.close()
-                return novoId
-            }
-
-            stmtInserir.close()
-
-        } catch (Exception e) {
-            println "ERRO ao buscar/criar competência '${nomeCompetencia}': ${e.message}"
-            e.printStackTrace()
-        } finally {
-            if (rs != null) rs.close()
-            if (stmtBuscar != null) stmtBuscar.close()
+            PreparedStatement compStmt = conn.prepareStatement(SQL_INSERIR_COMPETENCIA)
+            compStmt.setInt(1, candidatoId)
+            compStmt.setInt(2, competenciaId)
+            compStmt.executeUpdate()
+            compStmt.close()
         }
-
-        return null
     }
 
-    /**
-     * Busca todas as competências de um candidato
-     * @param candidatoId - ID do candidato
-     * @param conn - conexão ativa
-     * @return List<String> - lista de nomes das competências
-     */
-    private List<String> buscarCompetencias(Integer candidatoId, Connection conn) {
-        String sql = """
-            SELECT c.nome_competencia
-            FROM competencias c
-            INNER JOIN candidato_competencias cc ON c.idcompetencias = cc.competencia_id
-            WHERE cc.candidato_id = ?
-        """
+    private void atualizarCompetencias(Integer candidatoId, List<String> competencias, Connection conn) {
+        deletarCompetencias(candidatoId, conn)
+        inserirCompetencias(candidatoId, competencias, conn)
+    }
 
-        List<String> competencias = []
-        PreparedStatement statement = null
-        ResultSet resultSet = null
-
-        try {
-            statement = conn.prepareStatement(sql)
-            statement.setInt(1, candidatoId)
-            resultSet = statement.executeQuery()
-
-            while (resultSet.next()) {
-                competencias << resultSet.getString("nome_competencia")
-            }
-
-        } catch (Exception e) {
-            println "ERRO ao buscar competências do candidato ${candidatoId}: ${e.message}"
-            e.printStackTrace()
-        } finally {
-            if (resultSet != null) resultSet.close()
-            if (statement != null) statement.close()
-        }
-
-        return competencias
+    private void deletarCompetencias(Integer candidatoId, Connection conn) {
+        PreparedStatement statement = conn.prepareStatement(SQL_DELETAR_COMPETENCIAS)
+        statement.setInt(1, candidatoId)
+        statement.executeUpdate()
+        statement.close()
     }
 }

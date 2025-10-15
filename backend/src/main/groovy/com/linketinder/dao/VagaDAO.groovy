@@ -21,60 +21,63 @@ import java.time.LocalDateTime
  */
 class VagaDAO {
 
+    private static final String SQL_INSERIR = """
+        INSERT INTO vagas (nome_vaga, descricao, empresa_id, endereco_id, criado_em)
+        VALUES (?, ?, ?, ?, ?)
+    """
+    private static final String SQL_LISTAR = "SELECT * FROM vagas ORDER BY idVagas"
+    private static final String SQL_LISTAR_POR_EMPRESA = "SELECT * FROM vagas WHERE empresa_id = ? ORDER BY idVagas"
+    private static final String SQL_BUSCAR_POR_ID = "SELECT * FROM vagas WHERE idVagas = ?"
+    private static final String SQL_ATUALIZAR = """
+        UPDATE vagas 
+        SET nome_vaga = ?, descricao = ?, empresa_id = ?, endereco_id = ?
+        WHERE idVagas = ?
+    """
+    private static final String SQL_DELETAR = "DELETE FROM vagas WHERE idVagas = ?"
+    private static final String SQL_INSERIR_COMPETENCIA = "INSERT INTO competencias_vagas (competencia_id, vaga_id) VALUES (?, ?)"
+    private static final String SQL_DELETAR_COMPETENCIAS = "DELETE FROM competencias_vagas WHERE vaga_id = ?"
+
+    private final EmpresaDAO empresaDAO = new EmpresaDAO()
+    private final CompetenciaDAO competenciaDAO = new CompetenciaDAO()
+    private final EnderecoDAO enderecoDAO = new EnderecoDAO()
+
     /**
      * Insere uma nova vaga no banco de dados
      * @param vaga - objeto Vaga a ser inserido
      */
     void inserir(Vaga vaga) {
-        String sql = """
-            INSERT INTO vagas (nome_vaga, descricao, empresa_id, estado, cidade, criado_em)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """
-
         Connection conn = null
         PreparedStatement statement = null
         ResultSet resultSet = null
 
         try {
             conn = DatabaseConnection.getConnection()
-            statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+
+            Integer enderecoId = null
+            if (vaga.endereco) {
+                enderecoId = enderecoDAO.buscarOuCriar(vaga.endereco)
+                vaga.enderecoId = enderecoId
+            }
+
+            statement = conn.prepareStatement(SQL_INSERIR, Statement.RETURN_GENERATED_KEYS)
 
             statement.setString(1, vaga.titulo)
             statement.setString(2, vaga.descricao)
             statement.setInt(3, vaga.empresaId)
-            statement.setString(4, vaga.empresa?.pais) // estado no banco, mas usamos pais da empresa
-            statement.setString(5, vaga.cidade)
-            statement.setObject(6, LocalDateTime.now())
+            statement.setObject(4, enderecoId)
+            statement.setObject(5, LocalDateTime.now())
 
-            int rowsAffected = statement.executeUpdate()
-            println "DEBUG: Rows affected: ${rowsAffected}"
+            statement.executeUpdate()
 
             resultSet = statement.getGeneratedKeys()
             if (resultSet.next()) {
                 vaga.id = resultSet.getInt(1)
-                println "DEBUG: ID gerado: ${vaga.id}"
             }
 
-            // Inserir competências na tabela N:N competencias_vagas
-            if (vaga.competencias) {
-                for (competencia in vaga.competencias) {
-                    Integer competenciaId = buscarOuCriarCompetencia(competencia, conn)
-                    String insertCompetenciaSql = """
-                        INSERT INTO competencias_vagas (competencia_id, vaga_id)
-                        VALUES (?, ?)
-                    """
-                    PreparedStatement compStmt = conn.prepareStatement(insertCompetenciaSql)
-                    compStmt.setInt(1, competenciaId)
-                    compStmt.setInt(2, vaga.id)
-                    compStmt.executeUpdate()
-                    compStmt.close()
-                }
-            }
+            inserirCompetencias(vaga.id, vaga.competencias, conn)
 
         } catch (Exception e) {
-            println "ERRO ao inserir vaga: ${e.message}"
-            e.printStackTrace()
-            throw e
+            throw new RuntimeException("Erro ao inserir vaga: ${e.message}", e)
         } finally {
             DatabaseConnection.closeResources(conn, statement, resultSet)
         }
@@ -85,9 +88,7 @@ class VagaDAO {
      * @return List<Vaga> - lista com todas as vagas
      */
     List<Vaga> listar() {
-        String sql = "SELECT * FROM vagas ORDER BY idVagas"
         List<Vaga> vagas = []
-
         Connection conn = null
         Statement statement = null
         ResultSet resultSet = null
@@ -95,17 +96,20 @@ class VagaDAO {
         try {
             conn = DatabaseConnection.getConnection()
             statement = conn.createStatement()
-            resultSet = statement.executeQuery(sql)
+            resultSet = statement.executeQuery(SQL_LISTAR)
 
             while (resultSet.next()) {
                 Vaga vaga = mapearVaga(resultSet, conn)
-                // Buscar competências da vaga
-                vaga.competencias = buscarCompetencias(vaga.id, conn)
+                vaga.competencias = competenciaDAO.buscarPorVaga(vaga.id, conn)
+
+                if (vaga.enderecoId) {
+                    vaga.endereco = enderecoDAO.buscarPorId(vaga.enderecoId)
+                }
+
                 vagas << vaga
             }
         } catch (Exception e) {
-            println "ERRO ao listar vagas: ${e.message}"
-            e.printStackTrace()
+            throw new RuntimeException("Erro ao listar vagas: ${e.message}", e)
         } finally {
             DatabaseConnection.closeResources(conn, statement, resultSet)
         }
@@ -118,28 +122,29 @@ class VagaDAO {
      * @return List<Vaga> - lista de vagas da empresa
      */
     List<Vaga> listarPorEmpresa(Integer empresaId) {
-        String sql = "SELECT * FROM vagas WHERE empresa_id = ? ORDER BY idVagas"
         List<Vaga> vagas = []
-
         Connection conn = null
         PreparedStatement statement = null
         ResultSet resultSet = null
 
         try {
             conn = DatabaseConnection.getConnection()
-            statement = conn.prepareStatement(sql)
+            statement = conn.prepareStatement(SQL_LISTAR_POR_EMPRESA)
             statement.setInt(1, empresaId)
             resultSet = statement.executeQuery()
 
             while (resultSet.next()) {
                 Vaga vaga = mapearVaga(resultSet, conn)
-                // Buscar competências da vaga
-                vaga.competencias = buscarCompetencias(vaga.id, conn)
+                vaga.competencias = competenciaDAO.buscarPorVaga(vaga.id, conn)
+
+                if (vaga.enderecoId) {
+                    vaga.endereco = enderecoDAO.buscarPorId(vaga.enderecoId)
+                }
+
                 vagas << vaga
             }
         } catch (Exception e) {
-            println "ERRO ao listar vagas por empresa: ${e.message}"
-            e.printStackTrace()
+            throw new RuntimeException("Erro ao listar vagas por empresa: ${e.message}", e)
         } finally {
             DatabaseConnection.closeResources(conn, statement, resultSet)
         }
@@ -152,8 +157,6 @@ class VagaDAO {
      * @return Vaga - objeto encontrado ou null
      */
     Vaga buscarPorId(Integer id) {
-        String sql = "SELECT * FROM vagas WHERE idVagas = ?"
-
         Vaga vaga = null
         Connection conn = null
         PreparedStatement statement = null
@@ -161,18 +164,20 @@ class VagaDAO {
 
         try {
             conn = DatabaseConnection.getConnection()
-            statement = conn.prepareStatement(sql)
+            statement = conn.prepareStatement(SQL_BUSCAR_POR_ID)
             statement.setInt(1, id)
             resultSet = statement.executeQuery()
 
             if (resultSet.next()) {
                 vaga = mapearVaga(resultSet, conn)
-                // Buscar competências da vaga
-                vaga.competencias = buscarCompetencias(vaga.id, conn)
+                vaga.competencias = competenciaDAO.buscarPorVaga(vaga.id, conn)
+
+                if (vaga.enderecoId) {
+                    vaga.endereco = enderecoDAO.buscarPorId(vaga.enderecoId)
+                }
             }
         } catch (Exception e) {
-            println "ERRO ao buscar vaga por ID: ${e.message}"
-            e.printStackTrace()
+            throw new RuntimeException("Erro ao buscar vaga por ID: ${e.message}", e)
         } finally {
             DatabaseConnection.closeResources(conn, statement, resultSet)
         }
@@ -184,55 +189,32 @@ class VagaDAO {
      * @param vaga - objeto com dados atualizados
      */
     void atualizar(Vaga vaga) {
-        String sql = """
-            UPDATE vagas 
-            SET nome_vaga = ?, descricao = ?, empresa_id = ?, estado = ?, cidade = ?
-            WHERE idVagas = ?
-        """
-
         Connection conn = null
         PreparedStatement statement = null
 
         try {
             conn = DatabaseConnection.getConnection()
-            statement = conn.prepareStatement(sql)
+
+            Integer enderecoId = vaga.enderecoId
+            if (vaga.endereco) {
+                enderecoId = enderecoDAO.buscarOuCriar(vaga.endereco)
+                vaga.enderecoId = enderecoId
+            }
+
+            statement = conn.prepareStatement(SQL_ATUALIZAR)
 
             statement.setString(1, vaga.titulo)
             statement.setString(2, vaga.descricao)
             statement.setInt(3, vaga.empresaId)
-            statement.setString(4, vaga.empresa?.pais)
-            statement.setString(5, vaga.cidade)
-            statement.setInt(6, vaga.id)
+            statement.setObject(4, enderecoId)
+            statement.setInt(5, vaga.id)
 
-            int rowsAffected = statement.executeUpdate()
-            println "DEBUG: Rows affected on update: ${rowsAffected}"
+            statement.executeUpdate()
 
-            // Atualizar competências
-            String deleteCompetenciasSql = "DELETE FROM competencias_vagas WHERE vaga_id = ?"
-            PreparedStatement deleteStmt = conn.prepareStatement(deleteCompetenciasSql)
-            deleteStmt.setInt(1, vaga.id)
-            deleteStmt.executeUpdate()
-            deleteStmt.close()
-
-            if (vaga.competencias) {
-                for (competencia in vaga.competencias) {
-                    Integer competenciaId = buscarOuCriarCompetencia(competencia, conn)
-                    String insertCompetenciaSql = """
-                        INSERT INTO competencias_vagas (competencia_id, vaga_id)
-                        VALUES (?, ?)
-                    """
-                    PreparedStatement compStmt = conn.prepareStatement(insertCompetenciaSql)
-                    compStmt.setInt(1, competenciaId)
-                    compStmt.setInt(2, vaga.id)
-                    compStmt.executeUpdate()
-                    compStmt.close()
-                }
-            }
+            atualizarCompetencias(vaga.id, vaga.competencias, conn)
 
         } catch (Exception e) {
-            println "ERRO ao atualizar vaga: ${e.message}"
-            e.printStackTrace()
-            throw e
+            throw new RuntimeException("Erro ao atualizar vaga: ${e.message}", e)
         } finally {
             DatabaseConnection.closeResources(conn, statement, null)
         }
@@ -243,22 +225,16 @@ class VagaDAO {
      * @param id - ID da vaga a ser removida
      */
     void deletar(Integer id) {
-        String sql = "DELETE FROM vagas WHERE idVagas = ?"
-
         Connection conn = null
         PreparedStatement statement = null
 
         try {
             conn = DatabaseConnection.getConnection()
-            statement = conn.prepareStatement(sql)
+            statement = conn.prepareStatement(SQL_DELETAR)
             statement.setInt(1, id)
-
-            int rowsAffected = statement.executeUpdate()
-            println "DEBUG: Rows affected on delete: ${rowsAffected}"
-
+            statement.executeUpdate()
         } catch (Exception e) {
-            println "ERRO ao deletar vaga: ${e.message}"
-            e.printStackTrace()
+            throw new RuntimeException("Erro ao deletar vaga: ${e.message}", e)
         } finally {
             DatabaseConnection.closeResources(conn, statement, null)
         }
@@ -275,7 +251,7 @@ class VagaDAO {
         Integer empresaId = rs.getInt("empresa_id")
 
         // Buscar empresa
-        Empresa empresa = buscarEmpresa(empresaId, conn)
+        Empresa empresa = buscarEmpresaPorId(empresaId, conn)
 
         Vaga vaga = new Vaga(
             rs.getString("nome_vaga"),
@@ -285,7 +261,7 @@ class VagaDAO {
         )
 
         vaga.id = vagaId
-        vaga.cidade = rs.getString("cidade")
+        vaga.enderecoId = rs.getObject("endereco_id") as Integer
         vaga.criadoEm = rs.getTimestamp("criado_em")?.toLocalDateTime()
 
         return vaga
@@ -297,9 +273,8 @@ class VagaDAO {
      * @param conn - conexão ativa
      * @return Empresa - objeto empresa
      */
-    private Empresa buscarEmpresa(Integer empresaId, Connection conn) {
+    private Empresa buscarEmpresaPorId(Integer empresaId, Connection conn) {
         String sql = "SELECT * FROM empresas WHERE idEmpresas = ?"
-
         PreparedStatement statement = null
         ResultSet rs = null
 
@@ -313,112 +288,50 @@ class VagaDAO {
                     rs.getString("nome_empresa"),
                     rs.getString("email"),
                     rs.getString("cnpj"),
-                    rs.getString("pais"),
-                    rs.getString("pais"), // estado - usando pais já que estado não existe na tabela
-                    rs.getString("cep"),
                     rs.getString("descricao")
                 )
                 empresa.id = empresaId
+                empresa.enderecoId = rs.getObject("endereco_id") as Integer
                 empresa.senha = rs.getString("senha")
                 empresa.criadoEm = rs.getTimestamp("criado_em")?.toLocalDateTime()
+
+                if (empresa.enderecoId) {
+                    empresa.endereco = enderecoDAO.buscarPorId(empresa.enderecoId)
+                }
+
                 return empresa
             }
-        } catch (Exception e) {
-            println "ERRO ao buscar empresa: ${e.message}"
         } finally {
-            if (rs != null) rs.close()
-            if (statement != null) statement.close()
+            rs?.close()
+            statement?.close()
         }
 
         return null
     }
 
-    /**
-     * Busca ou cria uma competência no banco de dados
-     * @param nomeCompetencia - nome da competência
-     * @param conn - conexão ativa
-     * @return Integer - ID da competência
-     */
-    private Integer buscarOuCriarCompetencia(String nomeCompetencia, Connection conn) {
-        String sqlBuscar = "SELECT idcompetencias FROM competencias WHERE nome_competencia = ?"
+    private void inserirCompetencias(Integer vagaId, List<String> competencias, Connection conn) {
+        if (!competencias) return
 
-        PreparedStatement stmtBuscar = null
-        ResultSet rs = null
+        competencias.each { competencia ->
+            Integer competenciaId = competenciaDAO.buscarOuCriar(competencia, conn)
 
-        try {
-            // Tentar buscar competência existente
-            stmtBuscar = conn.prepareStatement(sqlBuscar)
-            stmtBuscar.setString(1, nomeCompetencia)
-            rs = stmtBuscar.executeQuery()
-
-            if (rs.next()) {
-                // Competência já existe, retornar ID
-                return rs.getInt("idcompetencias")
-            }
-
-            // Competência não existe, criar nova
-            String sqlInserir = "INSERT INTO competencias (nome_competencia, criado_em) VALUES (?, ?)"
-            PreparedStatement stmtInserir = conn.prepareStatement(sqlInserir, Statement.RETURN_GENERATED_KEYS)
-            stmtInserir.setString(1, nomeCompetencia)
-            stmtInserir.setObject(2, LocalDateTime.now())
-            stmtInserir.executeUpdate()
-
-            ResultSet rsKeys = stmtInserir.getGeneratedKeys()
-            if (rsKeys.next()) {
-                Integer novoId = rsKeys.getInt(1)
-                rsKeys.close()
-                stmtInserir.close()
-                return novoId
-            }
-
-            stmtInserir.close()
-
-        } catch (Exception e) {
-            println "ERRO ao buscar/criar competência '${nomeCompetencia}': ${e.message}"
-            e.printStackTrace()
-        } finally {
-            if (rs != null) rs.close()
-            if (stmtBuscar != null) stmtBuscar.close()
+            PreparedStatement compStmt = conn.prepareStatement(SQL_INSERIR_COMPETENCIA)
+            compStmt.setInt(1, competenciaId)
+            compStmt.setInt(2, vagaId)
+            compStmt.executeUpdate()
+            compStmt.close()
         }
-
-        return null
     }
 
-    /**
-     * Busca todas as competências de uma vaga
-     * @param vagaId - ID da vaga
-     * @param conn - conexão ativa
-     * @return List<String> - lista de nomes das competências
-     */
-    private List<String> buscarCompetencias(Integer vagaId, Connection conn) {
-        String sql = """
-            SELECT c.nome_competencia
-            FROM competencias c
-            INNER JOIN competencias_vagas cv ON c.idcompetencias = cv.competencia_id
-            WHERE cv.vaga_id = ?
-        """
+    private void atualizarCompetencias(Integer vagaId, List<String> competencias, Connection conn) {
+        deletarCompetencias(vagaId, conn)
+        inserirCompetencias(vagaId, competencias, conn)
+    }
 
-        List<String> competencias = []
-        PreparedStatement statement = null
-        ResultSet resultSet = null
-
-        try {
-            statement = conn.prepareStatement(sql)
-            statement.setInt(1, vagaId)
-            resultSet = statement.executeQuery()
-
-            while (resultSet.next()) {
-                competencias << resultSet.getString("nome_competencia")
-            }
-
-        } catch (Exception e) {
-            println "ERRO ao buscar competências da vaga ${vagaId}: ${e.message}"
-            e.printStackTrace()
-        } finally {
-            if (resultSet != null) resultSet.close()
-            if (statement != null) statement.close()
-        }
-
-        return competencias
+    private void deletarCompetencias(Integer vagaId, Connection conn) {
+        PreparedStatement statement = conn.prepareStatement(SQL_DELETAR_COMPETENCIAS)
+        statement.setInt(1, vagaId)
+        statement.executeUpdate()
+        statement.close()
     }
 }
