@@ -21,12 +21,6 @@ class DatabaseConnection {
     private static final String PASSWORD = "uzumaki"
 
 
-    // try catch é um metodo de tratamento de exceções usado para evitar que o
-    // programa quebre
-    // funciona assim: o código dentro do try é executado, se der algum erro,
-    // o fluxo pula para o catch
-    // o catch pode capturar o erro e tratar ele de alguma forma, como exibir
-    // uma mensagem amigável ou tentar uma ação alternativa.
     /**
      * abre uma nova conexão com o banco de dados
      * @return Connection - objeto de conexão ativo
