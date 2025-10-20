@@ -28,10 +28,7 @@ class CandidatoDAO {
     private final CompetenciaDAO competenciaDAO = new CompetenciaDAO()
     private final EnderecoDAO enderecoDAO = new EnderecoDAO()
 
-    /**
-     * Insere um novo candidato no banco de dados
-     * @param candidato - objeto Candidato a ser inserido
-     */
+
     void inserir(Candidato candidato) {
 
         Connection conn = null
@@ -75,10 +72,7 @@ class CandidatoDAO {
 
         }
     }
-    /**
-     * Lista todos os candidatos cadastrados no banco
-     * @return List<Candidato> - lista com todos os candidatos
-     */
+
     List<Candidato> listar() {
         List<Candidato> candidatos = []
         Connection conn = null
@@ -108,11 +102,6 @@ class CandidatoDAO {
         return candidatos
     }
 
-    /**
-     * Busca um candidato específico pelo ID
-     * @param id - ID do candidato
-     * @return Candidato - objeto encontrado ou null
-     */
     Candidato buscarPorId(Integer id) {
         Candidato candidato = null
         Connection conn = null
@@ -141,10 +130,6 @@ class CandidatoDAO {
         return candidato
     }
 
-    /**
-     * Atualiza os dados de um candidato existente
-     * @param candidato - objeto com dados atualizados
-     */
     void atualizar(Candidato candidato) {
         Connection conn = null
         PreparedStatement statement = null
@@ -181,10 +166,6 @@ class CandidatoDAO {
         }
     }
 
-    /**
-     * Remove um candidato do banco de dados
-     * @param id - ID do candidato a ser removido
-     */
     void deletar(Integer id) {
         Connection conn = null
         PreparedStatement statement = null
@@ -201,11 +182,6 @@ class CandidatoDAO {
         }
     }
 
-    /**
-     * Metodo auxiliar para mapear ResultSet em objeto Candidato
-     * @param rs - ResultSet posicionado na linha atual
-     * @return Candidato - objeto criado a partir dos dados
-     */
     private Candidato mapearCandidato(ResultSet rs) {
         Candidato candidato = new Candidato(
             rs.getString("nome"),

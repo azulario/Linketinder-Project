@@ -4,15 +4,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 
-/**
- * DatabaseConnection - Gerencia conexões com o banco PostgreSQL
- *
- * Esta classe é responsável por:
- * - Abrir conexões com o banco de dados
- * - Fechar conexões de forma segura
- * - Centralizar as configurações de conexão
- *
- */
+
 class DatabaseConnection {
 
     // Configurações do banco de dados
@@ -21,11 +13,6 @@ class DatabaseConnection {
     private static final String PASSWORD = "uzumaki"
 
 
-    /**
-     * abre uma nova conexão com o banco de dados
-     * @return Connection - objeto de conexão ativo
-     * @throws SQLException se não conseguir conectar
-     */
     static Connection getConnection() throws SQLException {
         try {
             // carrega o driver JDBC do PostgreSQL
@@ -52,10 +39,6 @@ class DatabaseConnection {
         }
     }
 
-    /**
-     * Fecha uma conexão com o banco de dados
-     * @param conn - conexão a ser fechada
-     */
     static void closeConnection(Connection conn) {
         if (conn != null) {
             try {
@@ -67,12 +50,7 @@ class DatabaseConnection {
         }
     }
 
-    /**
-     * Fecha recursos JDBC de forma segura (Connection, Statement, ResultSet)
-     * @param conn - conexão a ser fechada
-     * @param stmt - statement a ser fechado
-     * @param rs - result set a ser fechado
-     */
+
     static void closeResources(Connection conn, java.sql.Statement stmt, java.sql.ResultSet rs) {
         if (rs != null) {
             try {

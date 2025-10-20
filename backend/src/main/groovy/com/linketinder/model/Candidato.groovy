@@ -31,6 +31,8 @@ class Candidato implements Usuarios {
         this.criadoEm = LocalDateTime.now()
     }
 
+
+
     // metodo para calcular idade dinamicamente
     Integer getIdade() {
         if (dataDeNascimento == null) return null
