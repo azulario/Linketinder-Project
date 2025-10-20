@@ -1,7 +1,3 @@
--- ========================================
--- BANCO DE DADOS NORMALIZADO - VERSÃO COMPLETA
--- Sistema de Match entre Candidatos e Vagas
--- ========================================
 
 -- Tabela de Endereços (CENTRALIZADA)
 CREATE TABLE enderecos (

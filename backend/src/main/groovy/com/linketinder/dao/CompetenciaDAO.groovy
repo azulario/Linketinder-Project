@@ -1,6 +1,8 @@
 package com.linketinder.dao
 
 import com.linketinder.database.DatabaseConnection
+import com.linketinder.model.Competencia
+
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
@@ -9,97 +11,179 @@ import java.time.LocalDateTime
 
 class CompetenciaDAO {
 
-    private static final String SQL_BUSCAR = "SELECT idcompetencias FROM competencias WHERE nome_competencia = ?"
-    private static final String SQL_INSERIR = "INSERT INTO competencias (nome_competencia, criado_em) VALUES (?, ?)"
+    private static final String SQL_INSERIR = """
+        INSERT INTO competencias (nome_competencia, criado_em)
+        VALUES (?, ?)
+    """
+    private static final String SQL_LISTAR = """
+        SELECT * FROM competencias 
+        ORDER BY nome_competencia
+    """
+    private static final String SQL_BUSCAR_POR_ID = "SELECT * FROM competencias WHERE id_competencias = ?"
+    private static final String SQL_BUSCAR_POR_NOME = "SELECT * FROM competencias WHERE nome_competencia = ?"
+    private static final String SQL_ATUALIZAR = """
+        UPDATE competencias 
+        SET nome_competencia = ? 
+        WHERE id_competencias = ?
+    """
+    private static final String SQL_DELETAR = "DELETE FROM competencias WHERE id_competencias = ?"
 
-    Integer buscarOuCriar(String nomeCompetencia, Connection conn) {
-        Integer id = buscar(nomeCompetencia, conn)
-        return id ?: criar(nomeCompetencia, conn)
-    }
-
-    private Integer buscar(String nomeCompetencia, Connection conn) {
+    Integer inserir(Competencia competencia) {
+        Connection conn = null
         PreparedStatement statement = null
-        ResultSet rs = null
+        ResultSet resultSet = null
 
         try {
-            statement = conn.prepareStatement(SQL_BUSCAR)
-            statement.setString(1, nomeCompetencia)
-            rs = statement.executeQuery()
-
-            if (rs.next()) {
-                return rs.getInt("idcompetencias")
-            }
-        } finally {
-            rs?.close()
-            statement?.close()
-        }
-
-        return null
-    }
-
-    private Integer criar(String nomeCompetencia, Connection conn) {
-        PreparedStatement statement = null
-        ResultSet rsKeys = null
-
-        try {
+            conn = DatabaseConnection.getConnection()
             statement = conn.prepareStatement(SQL_INSERIR, Statement.RETURN_GENERATED_KEYS)
-            statement.setString(1, nomeCompetencia)
+
+            statement.setString(1, competencia.nomeCompetencia)
             statement.setObject(2, LocalDateTime.now())
+
             statement.executeUpdate()
 
-            rsKeys = statement.getGeneratedKeys()
-            if (rsKeys.next()) {
-                return rsKeys.getInt(1)
+            resultSet = statement.getGeneratedKeys()
+            if (resultSet.next()) {
+                competencia.idCompetencias = resultSet.getInt(1)
+                return competencia.idCompetencias
             }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao inserir competência: ${e.message}", e)
         } finally {
-            rsKeys?.close()
-            statement?.close()
+            DatabaseConnection.closeResources(conn, statement, resultSet)
         }
 
         return null
     }
 
-    List<String> buscarPorCandidato(Integer candidatoId, Connection conn) {
-        String sql = """
-            SELECT c.nome_competencia
-            FROM competencias c
-            INNER JOIN candidato_competencias cc ON c.idcompetencias = cc.competencia_id
-            WHERE cc.candidato_id = ?
-        """
-
-        return buscarCompetencias(sql, candidatoId, conn)
-    }
-
-    List<String> buscarPorVaga(Integer vagaId, Connection conn) {
-        String sql = """
-            SELECT c.nome_competencia
-            FROM competencias c
-            INNER JOIN competencias_vagas cv ON c.idcompetencias = cv.competencia_id
-            WHERE cv.vaga_id = ?
-        """
-
-        return buscarCompetencias(sql, vagaId, conn)
-    }
-
-    private List<String> buscarCompetencias(String sql, Integer id, Connection conn) {
-        List<String> competencias = []
+    List<Competencia> listarTodas() {
+        List<Competencia> competencias = []
+        Connection conn = null
         PreparedStatement statement = null
-        ResultSet rs = null
+        ResultSet resultSet = null
 
         try {
-            statement = conn.prepareStatement(sql)
-            statement.setInt(1, id)
-            rs = statement.executeQuery()
+            conn = DatabaseConnection.getConnection()
+            statement = conn.prepareStatement(SQL_LISTAR)
+            resultSet = statement.executeQuery()
 
-            while (rs.next()) {
-                competencias << rs.getString("nome_competencia")
+            while (resultSet.next()) {
+                competencias.add(mapearCompetencia(resultSet))
             }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao listar competências: ${e.message}", e)
         } finally {
-            rs?.close()
-            statement?.close()
+            DatabaseConnection.closeResources(conn, statement, resultSet)
         }
 
         return competencias
+    }
+
+    Competencia buscarPorId(Integer id) {
+        if (!id) return null
+
+        Competencia competencia = null
+        Connection conn = null
+        PreparedStatement statement = null
+        ResultSet resultSet = null
+
+        try {
+            conn = DatabaseConnection.getConnection()
+            statement = conn.prepareStatement(SQL_BUSCAR_POR_ID)
+            statement.setInt(1, id)
+            resultSet = statement.executeQuery()
+
+            if (resultSet.next()) {
+                competencia = mapearCompetencia(resultSet)
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar competência por ID: ${e.message}", e)
+        } finally {
+            DatabaseConnection.closeResources(conn, statement, resultSet)
+        }
+
+        return competencia
+    }
+
+    Competencia buscarPorNome(String nome) {
+        if (!nome) return null
+
+        Competencia competencia = null
+        Connection conn = null
+        PreparedStatement statement = null
+        ResultSet resultSet = null
+
+        try {
+            conn = DatabaseConnection.getConnection()
+            statement = conn.prepareStatement(SQL_BUSCAR_POR_NOME)
+            statement.setString(1, nome)
+            resultSet = statement.executeQuery()
+
+            if (resultSet.next()) {
+                competencia = mapearCompetencia(resultSet)
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar competência por nome: ${e.message}", e)
+        } finally {
+            DatabaseConnection.closeResources(conn, statement, resultSet)
+        }
+
+        return competencia
+    }
+
+    Integer buscarOuCriar(String nomeCompetencia) {
+        Competencia competenciaExistente = buscarPorNome(nomeCompetencia)
+
+        if (competenciaExistente) {
+            return competenciaExistente.idCompetencias
+        }
+
+        Competencia novaCompetencia = new Competencia(nomeCompetencia)
+        return inserir(novaCompetencia)
+    }
+
+    void atualizar(Competencia competencia) {
+        Connection conn = null
+        PreparedStatement statement = null
+
+        try {
+            conn = DatabaseConnection.getConnection()
+            statement = conn.prepareStatement(SQL_ATUALIZAR)
+
+            statement.setString(1, competencia.nomeCompetencia)
+            statement.setInt(2, competencia.idCompetencias)
+
+            statement.executeUpdate()
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar competência: ${e.message}", e)
+        } finally {
+            DatabaseConnection.closeResources(conn, statement, null)
+        }
+    }
+
+    void deletar(Integer id) {
+        Connection conn = null
+        PreparedStatement statement = null
+
+        try {
+            conn = DatabaseConnection.getConnection()
+            statement = conn.prepareStatement(SQL_DELETAR)
+            statement.setInt(1, id)
+            statement.executeUpdate()
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao deletar competência: ${e.message}", e)
+        } finally {
+            DatabaseConnection.closeResources(conn, statement, null)
+        }
+    }
+
+    private Competencia mapearCompetencia(ResultSet rs) {
+        Competencia competencia = new Competencia(
+            rs.getString("nome_competencia")
+        )
+        competencia.idCompetencias = rs.getInt("id_competencias")
+        competencia.criadoEm = rs.getTimestamp("criado_em")
+        return competencia
     }
 }
 

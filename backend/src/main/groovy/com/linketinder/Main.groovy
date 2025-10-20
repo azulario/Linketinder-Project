@@ -1,23 +1,19 @@
 package com.linketinder
 
-import com.linketinder.dao.CandidatoDAO
-import com.linketinder.dao.EmpresaDAO
-import com.linketinder.dao.VagaDAO
-import com.linketinder.model.Candidato
-import com.linketinder.model.Empresa
-import com.linketinder.model.Vaga
-import java.time.LocalDate
+import com.linketinder.service.CandidatoService
+import com.linketinder.service.EmpresaService
+import com.linketinder.service.VagaService
 
 class Main {
-    private CandidatoDAO candidatoDAO
-    private EmpresaDAO empresaDAO
-    private VagaDAO vagaDAO
+    private CandidatoService candidatoService
+    private EmpresaService empresaService
+    private VagaService vagaService
     private Scanner input
 
     Main() {
-        this.candidatoDAO = new CandidatoDAO()
-        this.empresaDAO = new EmpresaDAO()
-        this.vagaDAO = new VagaDAO()
+        this.candidatoService = new CandidatoService()
+        this.empresaService = new EmpresaService()
+        this.vagaService = new VagaService(empresaService)
         this.input = new Scanner(System.in)
     }
 
@@ -30,51 +26,52 @@ class Main {
         Boolean continuar = true
 
         while (continuar) {
-            println "\n" + "=" * 50
-            println "LINKETINDER - MENU PRINCIPAL"
-            println "=" * 50
-            println "1. Listar Candidatos"
-            println "2. Listar Empresas"
-            println "3. Listar Vagas"
-            println "4. Cadastrar novo Candidato"
-            println "5. Cadastrar nova Empresa"
-            println "6. Cadastrar nova Vaga"
-            println "7. Sair"
-            println "=" * 50
-            print "Escolha uma opção: "
-
+            exibirMenu()
             String opcao = input.nextLine()
 
             switch (opcao) {
                 case "1":
-                    listarCandidatos()
+                    candidatoService.listar()
                     break
                 case "2":
-                    listarEmpresas()
+                    empresaService.listar()
                     break
                 case "3":
-                    listarVagas()
+                    vagaService.listar()
                     break
                 case "4":
-                    cadastrarCandidato()
+                    candidatoService.cadastrar(input)
                     break
                 case "5":
-                    cadastrarEmpresa()
+                    empresaService.cadastrar(input)
                     break
                 case "6":
-                    cadastrarVaga()
+                    vagaService.cadastrar(input)
                     break
                 case "7":
                     continuar = false
-                    println "Saindo do sistema. Até logo!"
+                    println "\nSaindo do sistema. Até logo!"
                     break
                 default:
-                    println "Opção inválida. Tente novamente."
+                    println "\n⚠ Opção inválida. Tente novamente."
             }
         }
 
         input.close()
     }
 
-
+    private void exibirMenu() {
+        println "\n" + "=" * 50
+        println "        LINKETINDER - MENU PRINCIPAL"
+        println "=" * 50
+        println "1. Listar Candidatos"
+        println "2. Listar Empresas"
+        println "3. Listar Vagas"
+        println "4. Cadastrar novo Candidato"
+        println "5. Cadastrar nova Empresa"
+        println "6. Cadastrar nova Vaga"
+        println "7. Sair"
+        println "=" * 50
+        print "Escolha uma opção: "
+    }
 }
