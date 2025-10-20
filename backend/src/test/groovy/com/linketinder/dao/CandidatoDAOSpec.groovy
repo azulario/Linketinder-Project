@@ -7,19 +7,7 @@ import spock.lang.Specification
 import java.sql.Connection
 import java.time.LocalDate
 
-/**
- * CandidatoDAOSpec - Testes TDD para CandidatoDAO
- *
- * Testa todas as operações CRUD de candidatos no banco de dados:
- * - Inserir candidato
- * - Listar todos os candidatos
- * - Buscar candidato por ID
- * - Atualizar candidato
- * - Deletar candidato
- *
- * IMPORTANTE: Os testes usam o banco real PostgreSQL
- * Certifique-se que o banco 'linketinder' está rodando e configurado!
- */
+
 class CandidatoDAOSpec extends Specification {
 
     CandidatoDAO dao

@@ -32,6 +32,10 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+run {
+    standardInput = System.in
+}
+
 test {
     useJUnitPlatform()
     testLogging {

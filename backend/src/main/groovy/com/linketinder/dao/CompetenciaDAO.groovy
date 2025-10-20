@@ -142,6 +142,51 @@ class CompetenciaDAO {
         return inserir(novaCompetencia)
     }
 
+    Integer buscarOuCriar(String nomeCompetencia, Connection conn) {
+        PreparedStatement statement = null
+        ResultSet resultSet = null
+        Integer competenciaId = null
+
+        try {
+            statement = conn.prepareStatement(SQL_BUSCAR_POR_NOME)
+            statement.setString(1, nomeCompetencia)
+            resultSet = statement.executeQuery()
+
+            if (resultSet.next()) {
+                competenciaId = resultSet.getInt("id_competencias")
+                return competenciaId
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar competência por nome: ${e.message}", e)
+        } finally {
+            if (statement) statement.close()
+            if (resultSet) resultSet.close()
+        }
+
+
+        PreparedStatement insertStmt = null
+        ResultSet generatedKeys = null
+
+        try {
+            insertStmt = conn.prepareStatement(SQL_INSERIR, Statement.RETURN_GENERATED_KEYS)
+            insertStmt.setString(1, nomeCompetencia)
+            insertStmt.setObject(2, LocalDateTime.now())
+            insertStmt.executeUpdate()
+
+            generatedKeys = insertStmt.getGeneratedKeys()
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1)
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao inserir competência: ${e.message}", e)
+        } finally {
+            if (insertStmt) insertStmt.close()
+            if (generatedKeys) generatedKeys.close()
+        }
+
+        return null
+    }
+
     void atualizar(Competencia competencia) {
         Connection conn = null
         PreparedStatement statement = null

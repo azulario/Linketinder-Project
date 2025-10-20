@@ -15,7 +15,7 @@ class EmpresaService {
     }
 
     List<Empresa> listarTodas() {
-        return empresaDAO.listarTodas()
+        return empresaDAO.listar()
     }
 
     void cadastrar(Scanner input) {

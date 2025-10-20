@@ -14,7 +14,7 @@ class VagaService {
     }
 
     List<Vaga> listarTodas() {
-        return vagaDAO.listarTodas()
+        return vagaDAO.listar()
     }
 
     void cadastrar(Scanner input) {

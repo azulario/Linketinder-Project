@@ -17,7 +17,7 @@ class CandidatoService {
     }
 
     List<Candidato> listarTodos() {
-        return candidatoDAO.listarTodos()
+        return candidatoDAO.listar()
     }
 
     void cadastrar(Scanner input) {
