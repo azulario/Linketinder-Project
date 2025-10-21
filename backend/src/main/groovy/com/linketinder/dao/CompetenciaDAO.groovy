@@ -19,14 +19,14 @@ class CompetenciaDAO {
         SELECT * FROM competencias 
         ORDER BY nome_competencia
     """
-    private static final String SQL_BUSCAR_POR_ID = "SELECT * FROM competencias WHERE id_competencias = ?"
+    private static final String SQL_BUSCAR_POR_ID = "SELECT * FROM competencias WHERE idcompetencias = ?"
     private static final String SQL_BUSCAR_POR_NOME = "SELECT * FROM competencias WHERE nome_competencia = ?"
     private static final String SQL_ATUALIZAR = """
         UPDATE competencias 
         SET nome_competencia = ? 
-        WHERE id_competencias = ?
+        WHERE idcompetencias = ?
     """
-    private static final String SQL_DELETAR = "DELETE FROM competencias WHERE id_competencias = ?"
+    private static final String SQL_DELETAR = "DELETE FROM competencias WHERE idcompetencias = ?"
 
     Integer inserir(Competencia competencia) {
         Connection conn = null
@@ -153,7 +153,7 @@ class CompetenciaDAO {
             resultSet = statement.executeQuery()
 
             if (resultSet.next()) {
-                competenciaId = resultSet.getInt("id_competencias")
+                competenciaId = resultSet.getInt("idcompetencias")
                 return competenciaId
             }
         } catch (Exception e) {
@@ -226,9 +226,69 @@ class CompetenciaDAO {
         Competencia competencia = new Competencia(
             rs.getString("nome_competencia")
         )
-        competencia.idCompetencias = rs.getInt("id_competencias")
+        competencia.idCompetencias = rs.getInt("idcompetencias")
         competencia.criadoEm = rs.getTimestamp("criado_em")
         return competencia
+    }
+
+    List<String> buscarPorCandidato(Integer candidatoId, Connection conn) {
+        List<String> competencias = []
+        PreparedStatement statement = null
+        ResultSet resultSet = null
+
+        String sql = """
+            SELECT c.nome_competencia 
+            FROM competencias c
+            INNER JOIN candidato_competencias cc ON c.idcompetencias = cc.competencia_id
+            WHERE cc.candidato_id = ?
+        """
+
+        try {
+            statement = conn.prepareStatement(sql)
+            statement.setInt(1, candidatoId)
+            resultSet = statement.executeQuery()
+
+            while (resultSet.next()) {
+                competencias.add(resultSet.getString("nome_competencia"))
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar competências do candidato: ${e.message}", e)
+        } finally {
+            if (statement) statement.close()
+            if (resultSet) resultSet.close()
+        }
+
+        return competencias
+    }
+
+    List<String> buscarPorVaga(Integer vagaId, Connection conn) {
+        List<String> competencias = []
+        PreparedStatement statement = null
+        ResultSet resultSet = null
+
+        String sql = """
+            SELECT c.nome_competencia 
+            FROM competencias c
+            INNER JOIN vaga_competencias vc ON c.idcompetencias = vc.competencia_id
+            WHERE vc.vaga_id = ?
+        """
+
+        try {
+            statement = conn.prepareStatement(sql)
+            statement.setInt(1, vagaId)
+            resultSet = statement.executeQuery()
+
+            while (resultSet.next()) {
+                competencias.add(resultSet.getString("nome_competencia"))
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar competências da vaga: ${e.message}", e)
+        } finally {
+            if (statement) statement.close()
+            if (resultSet) resultSet.close()
+        }
+
+        return competencias
     }
 }
 

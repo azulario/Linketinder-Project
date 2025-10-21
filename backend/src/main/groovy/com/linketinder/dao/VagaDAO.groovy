@@ -10,15 +10,6 @@ import java.sql.ResultSet
 import java.sql.Statement
 import java.time.LocalDateTime
 
-/**
- * VagaDAO - Data Access Object para a entidade Vaga
- *
- * Responsável por todas as operações de banco de dados relacionadas a vagas:
- * - CREATE (inserir)
- * - READ (listar, listarPorEmpresa, buscarPorId)
- * - UPDATE (atualizar)
- * - DELETE (deletar)
- */
 class VagaDAO {
 
     private static final String SQL_INSERIR = """
@@ -83,10 +74,6 @@ class VagaDAO {
         }
     }
 
-    /**
-     * Lista todas as vagas cadastradas no banco
-     * @return List<Vaga> - lista com todas as vagas
-     */
     List<Vaga> listar() {
         List<Vaga> vagas = []
         Connection conn = null
@@ -116,11 +103,6 @@ class VagaDAO {
         return vagas
     }
 
-    /**
-     * Lista todas as vagas de uma empresa específica
-     * @param empresaId - ID da empresa
-     * @return List<Vaga> - lista de vagas da empresa
-     */
     List<Vaga> listarPorEmpresa(Integer empresaId) {
         List<Vaga> vagas = []
         Connection conn = null
@@ -151,11 +133,7 @@ class VagaDAO {
         return vagas
     }
 
-    /**
-     * Busca uma vaga específica pelo ID
-     * @param id - ID da vaga
-     * @return Vaga - objeto encontrado ou null
-     */
+
     Vaga buscarPorId(Integer id) {
         Vaga vaga = null
         Connection conn = null
@@ -184,10 +162,6 @@ class VagaDAO {
         return vaga
     }
 
-    /**
-     * Atualiza os dados de uma vaga existente
-     * @param vaga - objeto com dados atualizados
-     */
     void atualizar(Vaga vaga) {
         Connection conn = null
         PreparedStatement statement = null
@@ -220,10 +194,6 @@ class VagaDAO {
         }
     }
 
-    /**
-     * Remove uma vaga do banco de dados
-     * @param id - ID da vaga a ser removida
-     */
     void deletar(Integer id) {
         Connection conn = null
         PreparedStatement statement = null
@@ -240,12 +210,7 @@ class VagaDAO {
         }
     }
 
-    /**
-     * Método auxiliar para mapear ResultSet em objeto Vaga
-     * @param rs - ResultSet posicionado na linha atual
-     * @param conn - conexão para buscar empresa
-     * @return Vaga - objeto criado a partir dos dados
-     */
+
     private Vaga mapearVaga(ResultSet rs, Connection conn) {
         Integer vagaId = rs.getInt("idvagas")
         Integer empresaId = rs.getInt("empresa_id")
@@ -267,12 +232,7 @@ class VagaDAO {
         return vaga
     }
 
-    /**
-     * Busca uma empresa pelo ID
-     * @param empresaId - ID da empresa
-     * @param conn - conexão ativa
-     * @return Empresa - objeto empresa
-     */
+
     private Empresa buscarEmpresaPorId(Integer empresaId, Connection conn) {
         String sql = "SELECT * FROM empresas WHERE idEmpresas = ?"
         PreparedStatement statement = null

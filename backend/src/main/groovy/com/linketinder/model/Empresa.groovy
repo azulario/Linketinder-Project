@@ -15,7 +15,6 @@ class Empresa implements Usuarios {
     List<Vaga> vagas = []
     List<Candidato> candidatosCurtidos = []
 
-    // Construtor único - usado pelo Menu e pelo DAO
     Empresa(String nome, String email, String cnpj, String descricao) {
         this.nome = nome
         this.email = email
@@ -44,7 +43,6 @@ class Empresa implements Usuarios {
         }
     }
 
-    //override é usado para sobrescrever um metodo de uma classe pai ou interface implementada
     @Override
     void exibirInfo() {
         println "=" * 50

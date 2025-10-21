@@ -13,18 +13,16 @@ class CandidatoDAOSpec extends Specification {
     CandidatoDAO dao
     Connection conn
 
-    // Executado ANTES de cada teste
+
     def setup() {
         dao = new CandidatoDAO()
         conn = DatabaseConnection.getConnection()
 
-        // Limpar tabela de candidatos antes de cada teste
-        // Isso garante que os testes sejam isolados e independentes
+
         conn.createStatement().execute("DELETE FROM candidato_competencias")
         conn.createStatement().execute("DELETE FROM candidatos")
     }
 
-    // Executado DEPOIS de cada teste
     def cleanup() {
         if (conn != null && !conn.isClosed()) {
             conn.close()

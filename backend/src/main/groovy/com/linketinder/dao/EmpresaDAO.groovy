@@ -9,15 +9,7 @@ import java.sql.ResultSet
 import java.sql.Statement
 import java.time.LocalDateTime
 
-/**
- * EmpresaDAO - Data Access Object para a entidade Empresa
- *
- * Responsável por todas as operações de banco de dados relacionadas a empresas:
- * - CREATE (inserir)
- * - READ (listar, buscarPorId)
- * - UPDATE (atualizar)
- * - DELETE (deletar)
- */
+
 class EmpresaDAO {
 
     private static final String SQL_INSERIR = """
@@ -35,10 +27,7 @@ class EmpresaDAO {
 
     private final EnderecoDAO enderecoDAO = new EnderecoDAO()
 
-    /**
-     * Insere uma nova empresa no banco de dados
-     * @param empresa - objeto Empresa a ser inserido
-     */
+
     void inserir (Empresa empresa) {
         Connection conn = null
         PreparedStatement statement = null
@@ -76,10 +65,7 @@ class EmpresaDAO {
         }
     }
 
-    /**
-     * Lista todas as empresas cadastradas no banco
-     * @return List<Empresa> - lista com todas as empresas
-     */
+
     List<Empresa> listar() {
         List<Empresa> empresas = []
         Connection conn = null
@@ -109,11 +95,6 @@ class EmpresaDAO {
         return empresas
     }
 
-    /**
-     * Busca uma empresa específica pelo ID
-     * @param id - ID da empresa
-     * @return Empresa - objeto encontrado ou null
-     */
     Empresa buscarPorId(Integer id) {
         Empresa empresa = null
         Connection conn = null
@@ -142,10 +123,7 @@ class EmpresaDAO {
         return empresa
     }
 
-    /**
-     * Atualiza os dados de uma empresa existente
-     * @param empresa - objeto com dados atualizados
-     */
+
     void atualizar(Empresa empresa) {
         Connection conn = null
         PreparedStatement statement = null
@@ -177,10 +155,7 @@ class EmpresaDAO {
         }
     }
 
-    /**
-     * Remove uma empresa do banco de dados
-     * @param id - ID da empresa a ser removida
-     */
+
     void deletar(Integer id) {
         Connection conn = null
         PreparedStatement statement = null

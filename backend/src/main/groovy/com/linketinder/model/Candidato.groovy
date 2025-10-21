@@ -18,7 +18,6 @@ class Candidato implements Usuarios {
     List<String> competencias = []
     List<Vaga> vagasCurtidas = []
 
-    // Construtor único - usado pelo Menu e pelo DAO
     Candidato(String nome, String sobrenome, String email, String cpf, LocalDate dataDeNascimento,
               String descricao, List<String> competencias) {
         this.nome = nome
@@ -32,8 +31,6 @@ class Candidato implements Usuarios {
     }
 
 
-
-    // metodo para calcular idade dinamicamente
     Integer getIdade() {
         if (dataDeNascimento == null) return null
         return LocalDate.now().getYear() - dataDeNascimento.getYear()
