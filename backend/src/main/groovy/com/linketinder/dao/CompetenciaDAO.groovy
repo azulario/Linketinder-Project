@@ -231,6 +231,73 @@ class CompetenciaDAO {
         return competencia
     }
 
+    void associarACandidato(Integer candidatoId, List<String> competencias) {
+        if (!competencias || competencias.isEmpty()) return
+
+        Connection conn = null
+        PreparedStatement deleteStmt = null
+        PreparedStatement insertStmt = null
+
+        try {
+            conn = DatabaseConnection.getConnection()
+
+            // Deletar competências antigas
+            String sqlDelete = "DELETE FROM candidato_competencias WHERE candidato_id = ?"
+            deleteStmt = conn.prepareStatement(sqlDelete)
+            deleteStmt.setInt(1, candidatoId)
+            deleteStmt.executeUpdate()
+            deleteStmt.close()
+
+            // Inserir novas competências
+            String sqlInsert = "INSERT INTO candidato_competencias (candidato_id, competencia_id) VALUES (?, ?)"
+            insertStmt = conn.prepareStatement(sqlInsert)
+
+            competencias.each { nomeCompetencia ->
+                Integer competenciaId = buscarOuCriar(nomeCompetencia)
+                insertStmt.setInt(1, candidatoId)
+                insertStmt.setInt(2, competenciaId)
+                insertStmt.executeUpdate()
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao associar competências ao candidato: ${e.message}", e)
+        } finally {
+            if (deleteStmt) deleteStmt.close()
+            if (insertStmt) insertStmt.close()
+            DatabaseConnection.closeResources(conn, null, null)
+        }
+    }
+
+    List<String> buscarPorCandidato(Integer candidatoId) {
+        Connection conn = null
+        PreparedStatement statement = null
+        ResultSet resultSet = null
+        List<String> competencias = []
+
+        String sql = """
+            SELECT c.nome_competencia 
+            FROM competencias c
+            INNER JOIN candidato_competencias cc ON c.idcompetencias = cc.competencia_id
+            WHERE cc.candidato_id = ?
+        """
+
+        try {
+            conn = DatabaseConnection.getConnection()
+            statement = conn.prepareStatement(sql)
+            statement.setInt(1, candidatoId)
+            resultSet = statement.executeQuery()
+
+            while (resultSet.next()) {
+                competencias.add(resultSet.getString("nome_competencia"))
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar competências do candidato: ${e.message}", e)
+        } finally {
+            DatabaseConnection.closeResources(conn, statement, resultSet)
+        }
+
+        return competencias
+    }
+
     List<String> buscarPorCandidato(Integer candidatoId, Connection conn) {
         List<String> competencias = []
         PreparedStatement statement = null
