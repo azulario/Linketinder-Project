@@ -21,7 +21,7 @@ LinkeTinder/
 │   │   │   ├── database/        # DatabaseConnection
 │   │   │   ├── model/           # Entidades
 │   │   │   └── view/            # Menu interativo
-│   │   └── test/groovy/         # Testes unitários (30/30 ✅)
+│   │   └── test/groovy/         # Testes unitários (38/38 ✅)
 │   ├── build.gradle             # Configuração Gradle
 │   ├── gradlew                  # Gradle wrapper
 │   └── LinkeTinder.sql          # Script do banco
@@ -52,7 +52,7 @@ LinkeTinder/
   - N:N entre Candidato ↔ Competências
   - N:N entre Vaga ↔ Competências  
   - 1:N entre Empresa → Vagas
-- ✅ **Testes:** 30 testes unitários com Spock (100% cobertura DAOs)
+- ✅ **Testes:** 38 testes unitários com Spock (100% cobertura DAOs)
 
 ### Banco de Dados
 
@@ -60,12 +60,23 @@ LinkeTinder/
 ![Diagrama do Banco](backend/diagram-er.png)
 
 **Estrutura:**  
-7 tabelas: `candidatos`, `empresas`, `vagas`, `competencias`, `candidato_competencias`, `competencias_vagas`, `curtidas`
+8 tabelas principais com relacionamentos completos:
+- `enderecos` - Centralizada para normalização
+- `candidatos`, `empresas`, `vagas` - Entidades principais
+- `competencias` - Habilidades técnicas
+- `candidato_competencias`, `competencias_vagas` - Relacionamentos N:N
+- `curtidas` - Sistema de matches
 
 **Relacionamentos:**
-- N:N - Candidato ↔ Competências (via `candidato_competencias`)
-- N:N - Vaga ↔ Competências (via `competencias_vagas`)
-- 1:N - Empresa → Vagas (FK `empresa_id`)
+- **N:N** - Candidato ↔ Competências (via `candidato_competencias`)
+- **N:N** - Vaga ↔ Competências (via `competencias_vagas`)
+- **1:N** - Empresa → Vagas (FK `empresa_id`)
+- **1:N** - Endereço → Candidatos/Empresas/Vagas (FK `endereco_id`)
+- **N:N** - Sistema de Curtidas bidirecional (candidatos ↔ vagas)
+
+**Índices para performance:**
+- Emails, CPF, CNPJ, CEP
+- Foreign Keys e campos de busca frequente
 
 ### Como Executar o Backend
 
@@ -93,7 +104,7 @@ private static final String PASSWORD = "sua_senha_aqui"
 ```bash
 cd backend
 ./gradlew run        # Rodar aplicação
-./gradlew test       # Rodar testes (30/30 ✅)
+./gradlew test       # Rodar testes (38/38 ✅)
 ./gradlew build      # Build do projeto
 ```
 
@@ -103,9 +114,26 @@ cd backend
 - **POO:** Classes, interfaces, herança, encapsulamento
 - **JDBC:** PreparedStatement, gerenciamento de conexões/recursos
 - **Padrão DAO:** Separação de responsabilidades, camada de persistência
+- **BaseDAO:** Classe base reutilizável (DRY - Don't Repeat Yourself)
 - **Relacionamentos:** 1:N e N:N com tabelas intermediárias
-- **TDD:** Testes unitários com Spock Framework
-- **SQL:** DDL, DML, JOINs, Foreign Keys, CASCADE
+- **TDD:** Testes unitários com Spock Framework (38/38 ✅)
+- **SQL:** DDL, DML, JOINs, Foreign Keys, CASCADE, índices
+
+### Melhorias Clean Code Aplicadas
+**Score:** 48% → 72% (+24% de melhoria)
+
+✅ **Refatorações concluídas:**
+- Anotações Groovy (`@EqualsAndHashCode`, `@ToString`) - eliminou ~200 linhas
+- BaseDAO genérico - reutilização de código em 3 DAOs
+- DRY no CompetenciaDAO - redução de 57% de código duplicado
+- Nomes descritivos em português (conexao, comando, resultado)
+- 5 bugs críticos corrigidos (email null, descricao null, sintaxe)
+- Separação de responsabilidades (modelos vs banco)
+
+📊 **Resultados:**
+- 38/38 testes passando (100%)
+- ~280 linhas de código eliminadas
+- Código mais legível e manutenível
 
 ---
 

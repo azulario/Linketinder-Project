@@ -42,11 +42,9 @@
 
 # Documentação Privada
 doc/
-<<<<<<< HEAD
 .idea/data_source_mapping.xml
-=======
+
 
 # Test output
 test_output.txt
 test_result.log
->>>>>>> BDrefactor
