@@ -44,3 +44,4 @@ bin/
 
 ### Documentação Privada ###
 doc/
+.idea/data_source_mapping.xml
