@@ -3,6 +3,7 @@ package com.linketinder.dao
 import com.linketinder.database.DatabaseConnection
 import com.linketinder.model.Vaga
 import com.linketinder.model.Empresa
+import com.linketinder.model.Endereco
 import spock.lang.Specification
 import java.sql.Connection
 
@@ -52,11 +53,9 @@ class VagaDAOSpec extends Specification {
             "TechCorp",
             "contato@techcorp.com",
             "12.345.678/0001-90",
-            "Brasil",
-            "SP",
-            "01234-567",
             "Empresa de tecnologia"
         )
+        empresa.endereco = new Endereco("Brasil", "SP", "São Paulo", "01234-567")
         empresaDao.inserir(empresa)
 
         def vaga = new Vaga(
@@ -65,7 +64,7 @@ class VagaDAOSpec extends Specification {
             ["Java", "Spring", "PostgreSQL"],
             empresa
         )
-        vaga.cidade = "São Paulo"
+        vaga.endereco = new Endereco("Brasil", "SP", "São Paulo", "01234-567")
         vaga.empresaId = empresa.id // Garantir que o empresaId está setado
 
         when: "inserir a vaga no banco"
@@ -82,22 +81,18 @@ class VagaDAOSpec extends Specification {
             "TechCorp",
             "contato@techcorp.com",
             "12.345.678/0001-90",
-            "Brasil",
-            "SP",
-            "01234-567",
             "Empresa de tecnologia"
         )
+        empresa1.endereco = new Endereco("Brasil", "SP", "São Paulo", "01234-567")
         empresaDao.inserir(empresa1)
 
         def empresa2 = new Empresa(
             "DataCorp",
             "contato@datacorp.com",
             "98.765.432/0001-10",
-            "Brasil",
-            "RJ",
-            "98765-432",
             "Empresa de dados"
         )
+        empresa2.endereco = new Endereco("Brasil", "RJ", "Rio de Janeiro", "98765-432")
         empresaDao.inserir(empresa2)
 
         def vaga1 = new Vaga(
@@ -106,7 +101,7 @@ class VagaDAOSpec extends Specification {
             ["Java", "Spring"],
             empresa1
         )
-        vaga1.cidade = "São Paulo"
+        vaga1.endereco = new Endereco("Brasil", "SP", "São Paulo", "01234-567")
         vaga1.empresaId = empresa1.id
 
         def vaga2 = new Vaga(
@@ -115,7 +110,7 @@ class VagaDAOSpec extends Specification {
             ["Python", "SQL"],
             empresa2
         )
-        vaga2.cidade = "Rio de Janeiro"
+        vaga2.endereco = new Endereco("Brasil", "RJ", "Rio de Janeiro", "98765-432")
         vaga2.empresaId = empresa2.id
 
         vagaDao.inserir(vaga1)
@@ -135,30 +130,31 @@ class VagaDAOSpec extends Specification {
             "TechCorp",
             "contato@techcorp.com",
             "12.345.678/0001-90",
-            "Brasil",
-            "SP",
-            "01234-567",
             "Empresa de tecnologia"
         )
+        empresa1.endereco = new Endereco("Brasil", "SP", "São Paulo", "01234-567")
         empresaDao.inserir(empresa1)
 
         def empresa2 = new Empresa(
             "DataCorp",
             "contato@datacorp.com",
             "98.765.432/0001-10",
-            "Brasil",
-            "RJ",
-            "98765-432",
             "Empresa de dados"
         )
+        empresa2.endereco = new Endereco("Brasil", "RJ", "Rio de Janeiro", "98765-432")
         empresaDao.inserir(empresa2)
 
         def vaga1 = new Vaga("Vaga 1 TechCorp", "Descrição 1", ["Java"], empresa1)
         vaga1.empresaId = empresa1.id
+        vaga1.endereco = new Endereco("Brasil", "SP", "São Paulo", "01234-567")
+
         def vaga2 = new Vaga("Vaga 2 TechCorp", "Descrição 2", ["Spring"], empresa1)
         vaga2.empresaId = empresa1.id
+        vaga2.endereco = new Endereco("Brasil", "SP", "São Paulo", "01234-567")
+
         def vaga3 = new Vaga("Vaga 1 DataCorp", "Descrição 3", ["Python"], empresa2)
         vaga3.empresaId = empresa2.id
+        vaga3.endereco = new Endereco("Brasil", "RJ", "Rio de Janeiro", "98765-432")
 
         vagaDao.inserir(vaga1)
         vagaDao.inserir(vaga2)
@@ -178,11 +174,9 @@ class VagaDAOSpec extends Specification {
             "TechCorp",
             "contato@techcorp.com",
             "12.345.678/0001-90",
-            "Brasil",
-            "MG",
-            "01234-567",
             "Empresa de tecnologia"
         )
+        empresa.endereco = new Endereco("Brasil", "MG", "Belo Horizonte", "01234-567")
         empresaDao.inserir(empresa)
 
         def vaga = new Vaga(
@@ -191,7 +185,7 @@ class VagaDAOSpec extends Specification {
             ["Python", "Django"],
             empresa
         )
-        vaga.cidade = "Belo Horizonte"
+        vaga.endereco = new Endereco("Brasil", "MG", "Belo Horizonte", "30000-000")
         vaga.empresaId = empresa.id
         vagaDao.inserir(vaga)
 
@@ -201,7 +195,6 @@ class VagaDAOSpec extends Specification {
         then: "deve retornar a vaga correta"
         vagaEncontrada != null
         vagaEncontrada.titulo == "Desenvolvedor Python"
-        vagaEncontrada.cidade == "Belo Horizonte"
         vagaEncontrada.empresa.nome == "TechCorp"
     }
 
@@ -219,11 +212,9 @@ class VagaDAOSpec extends Specification {
             "TechCorp",
             "contato@techcorp.com",
             "12.345.678/0001-90",
-            "Brasil",
-            "SP",
-            "01234-567",
             "Empresa de tecnologia"
         )
+        empresa.endereco = new Endereco("Brasil", "SP", "São Paulo", "01234-567")
         empresaDao.inserir(empresa)
 
         def vaga = new Vaga(
@@ -232,14 +223,14 @@ class VagaDAOSpec extends Specification {
             ["Java"],
             empresa
         )
-        vaga.cidade = "São Paulo"
+        vaga.endereco = new Endereco("Brasil", "SP", "São Paulo", "01234-567")
         vaga.empresaId = empresa.id
         vagaDao.inserir(vaga)
 
         when: "atualizar os dados da vaga"
         vaga.titulo = "Desenvolvedor Senior"
         vaga.descricao = "Vaga para senior com experiência"
-        vaga.cidade = "Rio de Janeiro"
+        vaga.endereco = new Endereco("Brasil", "RJ", "Rio de Janeiro", "20000-000")
         vaga.competencias = ["Java", "Spring", "Microservices"]
         vagaDao.atualizar(vaga)
 
@@ -249,7 +240,6 @@ class VagaDAOSpec extends Specification {
         then: "os dados devem estar atualizados"
         vagaAtualizada.titulo == "Desenvolvedor Senior"
         vagaAtualizada.descricao == "Vaga para senior com experiência"
-        vagaAtualizada.cidade == "Rio de Janeiro"
         vagaAtualizada.competencias.size() == 3
         vagaAtualizada.competencias.contains("Microservices")
     }
@@ -260,11 +250,9 @@ class VagaDAOSpec extends Specification {
             "TechCorp",
             "contato@techcorp.com",
             "12.345.678/0001-90",
-            "Brasil",
-            "SP",
-            "01234-567",
             "Empresa de tecnologia"
         )
+        empresa.endereco = new Endereco("Brasil", "SP", "São Paulo", "01234-567")
         empresaDao.inserir(empresa)
 
         def vaga = new Vaga(
@@ -274,6 +262,7 @@ class VagaDAOSpec extends Specification {
             empresa
         )
         vaga.empresaId = empresa.id
+        vaga.endereco = new Endereco("Brasil", "SP", "São Paulo", "01234-567")
         vagaDao.inserir(vaga)
         def idVaga = vaga.id
 
@@ -293,11 +282,9 @@ class VagaDAOSpec extends Specification {
             "TechCorp",
             "contato@techcorp.com",
             "12.345.678/0001-90",
-            "Brasil",
-            "SP",
-            "01234-567",
             "Empresa de tecnologia"
         )
+        empresa.endereco = new Endereco("Brasil", "SP", "São Paulo", "01234-567")
         empresaDao.inserir(empresa)
 
         def vaga = new Vaga(
@@ -306,7 +293,7 @@ class VagaDAOSpec extends Specification {
             ["Java", "Microservices", "AWS", "Docker", "Kubernetes"],
             empresa
         )
-        vaga.cidade = "São Paulo"
+        vaga.endereco = new Endereco("Brasil", "SP", "São Paulo", "01234-567")
         vaga.empresaId = empresa.id
         vagaDao.inserir(vaga)
 

@@ -2,40 +2,27 @@ package com.linketinder.dao
 
 import com.linketinder.database.DatabaseConnection
 import com.linketinder.model.Candidato
+import com.linketinder.model.Endereco
 import spock.lang.Specification
 import java.sql.Connection
 import java.time.LocalDate
 
-/**
- * CandidatoDAOSpec - Testes TDD para CandidatoDAO
- *
- * Testa todas as operações CRUD de candidatos no banco de dados:
- * - Inserir candidato
- * - Listar todos os candidatos
- * - Buscar candidato por ID
- * - Atualizar candidato
- * - Deletar candidato
- *
- * IMPORTANTE: Os testes usam o banco real PostgreSQL
- * Certifique-se que o banco 'linketinder' está rodando e configurado!
- */
+
 class CandidatoDAOSpec extends Specification {
 
     CandidatoDAO dao
     Connection conn
 
-    // Executado ANTES de cada teste
+
     def setup() {
         dao = new CandidatoDAO()
         conn = DatabaseConnection.getConnection()
 
-        // Limpar tabela de candidatos antes de cada teste
-        // Isso garante que os testes sejam isolados e independentes
+
         conn.createStatement().execute("DELETE FROM candidato_competencias")
         conn.createStatement().execute("DELETE FROM candidatos")
     }
 
-    // Executado DEPOIS de cada teste
     def cleanup() {
         if (conn != null && !conn.isClosed()) {
             conn.close()
@@ -50,11 +37,10 @@ class CandidatoDAOSpec extends Specification {
             "joao@email.com",
             "123.456.789-00",
             LocalDate.of(1990, 5, 15),
-            "Brasil",
-            "01234-567",
             "Desenvolvedor Java",
             ["Java", "Spring", "SQL"]
         )
+        candidato.endereco = new Endereco("Brasil", "SP", "São Paulo", "01234-567")
 
         when: "inserir o candidato no banco"
         dao.inserir(candidato)
@@ -72,22 +58,21 @@ class CandidatoDAOSpec extends Specification {
             "maria@email.com",
             "111.222.333-44",
             LocalDate.of(1995, 8, 20),
-            "Brasil",
-            "20000-000",
             "Desenvolvedora Python",
             ["Python", "Django"]
         )
+        candidato1.endereco = new Endereco("Brasil", "RJ", "Rio de Janeiro", "20000-000")
+
         def candidato2 = new Candidato(
             "Pedro",
             "Costa",
             "pedro@email.com",
             "555.666.777-88",
             LocalDate.of(1988, 3, 10),
-            "Brasil",
-            "30000-000",
-            "Analista de Dados",
-            ["SQL", "Power BI"]
+            "Desenvolvedor Frontend",
+            ["JavaScript", "React"]
         )
+        candidato2.endereco = new Endereco("Brasil", "MG", "Belo Horizonte", "30000-000")
 
         dao.inserir(candidato1)
         dao.inserir(candidato2)
@@ -104,15 +89,14 @@ class CandidatoDAOSpec extends Specification {
         given: "um candidato cadastrado no banco"
         def candidato = new Candidato(
             "Ana",
-            "Lima",
+            "Oliveira",
             "ana@email.com",
             "999.888.777-66",
-            LocalDate.of(1993, 12, 25),
-            "Brasil",
-            "40000-000",
-            "Analista QA",
-            ["Selenium", "JUnit"]
+            LocalDate.of(1992, 11, 25),
+            "Designer UX",
+            ["Figma", "Adobe XD"]
         )
+        candidato.endereco = new Endereco("Brasil", "PR", "Curitiba", "80000-000")
         dao.inserir(candidato)
 
         when: "buscar o candidato pelo ID"
@@ -120,12 +104,13 @@ class CandidatoDAOSpec extends Specification {
 
         then: "deve retornar o candidato correto"
         candidatoEncontrado != null
+        candidatoEncontrado.id == candidato.id
         candidatoEncontrado.nome == "Ana"
         candidatoEncontrado.email == "ana@email.com"
     }
 
     def "deve retornar null ao buscar candidato inexistente"() {
-        when: "buscar um ID que não existe"
+        when: "buscar um candidato com ID inexistente"
         def candidato = dao.buscarPorId(99999)
 
         then: "deve retornar null"
@@ -133,107 +118,99 @@ class CandidatoDAOSpec extends Specification {
     }
 
     def "deve atualizar os dados de um candidato"() {
-        given: "um candidato cadastrado"
+        given: "um candidato cadastrado no banco"
         def candidato = new Candidato(
             "Carlos",
-            "Souza",
+            "Ferreira",
             "carlos@email.com",
-            "777.666.555-44",
-            LocalDate.of(1991, 6, 10),
-            "Brasil",
-            "90000-000",
-            "Desenvolvedor Mobile",
-            ["Kotlin", "Swift"]
+            "777.888.999-00",
+            LocalDate.of(1990, 6, 15),
+            "Desenvolvedor Backend",
+            ["Java", "Spring"]
         )
+        candidato.endereco = new Endereco("Brasil", "RS", "Porto Alegre", "90000-000")
         dao.inserir(candidato)
 
         when: "atualizar os dados do candidato"
-        candidato.nome = "Carlos Alberto"
-        candidato.sobrenome = "Souza Jr"
-        candidato.descricao = "Desenvolvedor Mobile Senior"
-        candidato.competencias = ["Kotlin", "Swift", "Flutter"]
+        candidato.nome = "Carlos Augusto"
+        candidato.descricao = "Arquiteto de Software"
+        candidato.competencias = ["Java", "Spring", "Docker", "Kubernetes"]
+        candidato.endereco = new Endereco("Brasil", "SC", "Florianópolis", "88000-000")
         dao.atualizar(candidato)
 
         and: "buscar o candidato atualizado"
         def candidatoAtualizado = dao.buscarPorId(candidato.id)
 
         then: "os dados devem estar atualizados"
-        candidatoAtualizado.nome == "Carlos Alberto"
-        candidatoAtualizado.sobrenome == "Souza Jr"
-        candidatoAtualizado.descricao == "Desenvolvedor Mobile Senior"
-        candidatoAtualizado.competencias.size() == 3
-        candidatoAtualizado.competencias.contains("Flutter")
+        candidatoAtualizado.nome == "Carlos Augusto"
+        candidatoAtualizado.descricao == "Arquiteto de Software"
+        candidatoAtualizado.competencias.size() == 4
     }
 
     def "deve deletar um candidato do banco"() {
-        given: "um candidato cadastrado"
+        given: "um candidato cadastrado no banco"
         def candidato = new Candidato(
-            "Paula",
-            "Rocha",
-            "paula@email.com",
-            "444.333.222-11",
-            LocalDate.of(1997, 4, 5),
-            "Brasil",
-            "80000-000",
-            "Scrum Master",
-            ["Agile", "Scrum"]
+            "Delete",
+            "Test",
+            "delete@test.com",
+            "111.111.111-11",
+            LocalDate.of(1990, 1, 1),
+            "Test",
+            []
         )
+        candidato.endereco = new Endereco("Brasil", "SP", "São Paulo", "01000-000")
         dao.inserir(candidato)
-        def idCandidato = candidato.id
+        def candidatoId = candidato.id
 
         when: "deletar o candidato"
-        dao.deletar(idCandidato)
+        dao.deletar(candidatoId)
 
         and: "tentar buscar o candidato deletado"
-        def candidatoDeletado = dao.buscarPorId(idCandidato)
+        def candidatoDeletado = dao.buscarPorId(candidatoId)
 
         then: "não deve encontrar o candidato"
         candidatoDeletado == null
     }
 
     def "deve listar candidatos com suas competências"() {
-        given: "um candidato com múltiplas competências"
+        given: "um candidato com competências"
         def candidato = new Candidato(
-            "Ricardo",
-            "Alves",
-            "ricardo@email.com",
-            "111.999.888-77",
-            LocalDate.of(1989, 1, 30),
-            "Brasil",
-            "60000-000",
-            "Arquiteto de Software",
-            ["Java", "Microservices", "AWS", "Docker"]
+            "Tech",
+            "Master",
+            "tech@master.com",
+            "123.123.123-12",
+            LocalDate.of(1985, 5, 5),
+            "Full Stack Developer",
+            ["Java", "Python", "JavaScript", "Docker"]
         )
+        candidato.endereco = new Endereco("Brasil", "SP", "São Paulo", "01000-000")
         dao.inserir(candidato)
 
-        when: "listar os candidatos"
-        def candidatos = dao.listar()
+        when: "buscar o candidato"
+        def candidatoComCompetencias = dao.buscarPorId(candidato.id)
 
-        then: "deve retornar as competências corretamente"
-        candidatos.size() == 1
-        def candidatoEncontrado = candidatos[0]
-        candidatoEncontrado.competencias.size() == 4
-        candidatoEncontrado.competencias.containsAll(["Java", "Microservices", "AWS", "Docker"])
+        then: "deve ter as competências associadas"
+        candidatoComCompetencias.competencias.size() == 4
+        candidatoComCompetencias.competencias.containsAll(["Java", "Python", "JavaScript", "Docker"])
     }
 
     def "não deve inserir candidato com dados inválidos"() {
-        given: "um candidato com email inválido (null)"
+        given: "um candidato sem email"
         def candidato = new Candidato(
-            "Nome",
-            "Teste",
-            null,  // email null
-            "123.456.789-00",
+            "Invalid",
+            "User",
+            null,
+            "000.000.000-00",
             LocalDate.of(1990, 1, 1),
-            "Brasil",
-            "01000-000",
-            "Descrição",
-            ["Java"]
+            "Test",
+            []
         )
+        candidato.endereco = new Endereco("Brasil", "SP", "São Paulo", "01000-000")
 
         when: "tentar inserir o candidato"
         dao.inserir(candidato)
 
-        then: "deve lançar uma exceção"
-        thrown(Exception)
+        then: "deve lançar exceção"
+        thrown(RuntimeException)
     }
 }

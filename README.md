@@ -57,7 +57,7 @@ LinkeTinder/
 ### Banco de Dados
 
 **Diagrama ER:**  
-![Diagrama do Banco](diagram-er.png)
+![Diagrama do Banco](backend/diagram-er.png)
 
 **Estrutura:**  
 7 tabelas: `candidatos`, `empresas`, `vagas`, `competencias`, `candidato_competencias`, `competencias_vagas`, `curtidas`

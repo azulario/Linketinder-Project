@@ -1,33 +1,32 @@
 package com.linketinder.model
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
 import java.time.LocalDateTime
 
+@EqualsAndHashCode(includes = ['id'])
+@ToString(includeNames = true, includeFields = true)
 class Empresa implements Usuarios {
     Integer id
     String nome
     String email
     String cnpj
     String senha
-    String pais
-    String estado
-    String cep
+    Integer enderecoId
+    Endereco endereco
     String descricao
     LocalDateTime criadoEm
     List<Vaga> vagas = []
-    List<Candidato> candidatosCurtidos
+    List<Candidato> candidatosCurtidos = []
 
-    // Construtor único - usado pelo Menu e pelo DAO
-    Empresa(String nome, String email, String cnpj, String pais, String estado, String cep, String descricao) {
+    Empresa(String nome, String email, String cnpj, String descricao) {
         this.nome = nome
         this.email = email
         this.cnpj = cnpj
-        this.pais = pais
-        this.estado = estado
-        this.cep = cep
         this.descricao = descricao
         this.vagas = []
         this.candidatosCurtidos = []
-        this.criadoEm = LocalDateTime.now()
     }
 
     void adicionarVaga(Vaga vaga) {
@@ -48,7 +47,6 @@ class Empresa implements Usuarios {
         }
     }
 
-    //override é usado para sobrescrever um metodo de uma classe pai ou interface implementada
     @Override
     void exibirInfo() {
         println "=" * 50
@@ -57,9 +55,7 @@ class Empresa implements Usuarios {
         println "Nome: $nome"
         println "Email: $email"
         println "CNPJ: $cnpj"
-        println "País: $pais"
-        println "Estado: $estado"
-        println "CEP: $cep"
+        if (endereco) println "Endereço: ${endereco.enderecoCompleto}"
         println "Descrição: $descricao"
         if (criadoEm) println "Cadastrado em: $criadoEm"
         println "=" * 50
