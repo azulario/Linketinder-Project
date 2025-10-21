@@ -1,188 +1,98 @@
 package com.linketinder.dao
 
-import com.linketinder.database.DatabaseConnection
 import com.linketinder.model.Empresa
 
-import java.sql.Connection
-import java.sql.PreparedStatement
+
 import java.sql.ResultSet
-import java.sql.Statement
 import java.time.LocalDateTime
 
 
-class EmpresaDAO {
-
-    private static final String SQL_INSERIR = """
-        INSERT INTO empresas (nome_empresa, email, cnpj, endereco_id, descricao, senha, criado_em)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    """
+class EmpresaDAO extends BaseDAO<Empresa> {
     private static final String SQL_LISTAR = "SELECT * FROM empresas ORDER BY idEmpresas"
     private static final String SQL_BUSCAR_POR_ID = "SELECT * FROM empresas WHERE idEmpresas = ?"
+    private static final String SQL_INSERIR = """
+        INSERT INTO empresas (
+            nome_empresa,
+            cnpj,
+            email,
+            endereco_id,
+            descricao,
+            senha,
+            criado_em
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+"""
     private static final String SQL_ATUALIZAR = """
         UPDATE empresas 
-        SET nome_empresa = ?, email = ?, cnpj = ?, endereco_id = ?, descricao = ?, senha = ?
+        SET nome_empresa = ?, cnpj = ?, email = ?, endereco_id = ?, descricao = ?, senha = ?
         WHERE idEmpresas = ?
-    """
+"""
     private static final String SQL_DELETAR = "DELETE FROM empresas WHERE idEmpresas = ?"
 
     private final EnderecoDAO enderecoDAO = new EnderecoDAO()
 
-
-    void inserir (Empresa empresa) {
-        Connection conn = null
-        PreparedStatement statement = null
-        ResultSet resultSet = null
-
-        try {
-            conn = DatabaseConnection.getConnection()
-
-            Integer enderecoId = null
-            if (empresa.endereco) {
-                enderecoId = enderecoDAO.buscarOuCriar(empresa.endereco)
-                empresa.enderecoId = enderecoId
-            }
-
-            statement = conn.prepareStatement(SQL_INSERIR, Statement.RETURN_GENERATED_KEYS)
-
-            statement.setString(1, empresa.nome)
-            statement.setString(2, empresa.email)
-            statement.setString(3, empresa.cnpj)
-            statement.setObject(4, enderecoId)
-            statement.setString(5, empresa.descricao)
-            statement.setString(6, empresa.senha ?: "senha123") // senha padrão se não informada
-            statement.setObject(7, LocalDateTime.now())
-
-            statement.executeUpdate()
-
-            resultSet = statement.getGeneratedKeys()
-            if (resultSet.next()) {
-                empresa.id = resultSet.getInt(1)
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao inserir empresa: ${e.message}", e)
-        } finally {
-            DatabaseConnection.closeResources(conn, statement, resultSet)
-        }
-    }
-
-
     List<Empresa> listar() {
-        List<Empresa> empresas = []
-        Connection conn = null
-        Statement statement = null
-        ResultSet resultSet = null
-
-        try {
-            conn = DatabaseConnection.getConnection()
-            statement = conn.createStatement()
-            resultSet = statement.executeQuery(SQL_LISTAR)
-
-            while (resultSet.next()) {
-                Empresa empresa = mapearEmpresa(resultSet)
-
-                if (empresa.enderecoId) {
-                    empresa.endereco = enderecoDAO.buscarPorId(empresa.enderecoId)
-                }
-
-                empresas << empresa
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao listar empresas: ${e.message}", e)
-        } finally {
-            DatabaseConnection.closeResources(conn, statement, resultSet)
+        return executarConsulta(SQL_LISTAR).collect { empresa ->
+            addEndereco(empresa)
         }
-
-        return empresas
     }
 
     Empresa buscarPorId(Integer id) {
-        Empresa empresa = null
-        Connection conn = null
-        PreparedStatement statement = null
-        ResultSet resultSet = null
+        Empresa empresa = buscarUmObjeto(SQL_BUSCAR_POR_ID, id)
+        return empresa ? addEndereco(empresa) : null
+    }
 
-        try {
-            conn = DatabaseConnection.getConnection()
-            statement = conn.prepareStatement(SQL_BUSCAR_POR_ID)
-            statement.setInt(1, id)
-            resultSet = statement.executeQuery()
+    void inserir(Empresa empresa) {
+        Integer enderecoId = empresa.endereco ?
+                enderecoDAO.buscarOuCriar(empresa.endereco) : null
 
-            if (resultSet.next()) {
-                empresa = mapearEmpresa(resultSet)
+        empresa.id = executarInsert(SQL_INSERIR,
+                empresa.nome,
+                empresa.cnpj,
+                empresa.email,
+                enderecoId,
+                empresa.descricao,
+                empresa.senha ?: "senha123",
+                LocalDateTime.now()
+        )
+    }
 
-                if (empresa.enderecoId) {
-                    empresa.endereco = enderecoDAO.buscarPorId(empresa.enderecoId)
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar empresa por ID: ${e.message}", e)
-        } finally {
-            DatabaseConnection.closeResources(conn, statement, resultSet)
-        }
+    void atualizar(Empresa empresa) {
+        Integer enderecoId = empresa.endereco ?
+                enderecoDAO.buscarOuCriar(empresa.endereco) : empresa.enderecoId
 
+        executarUpdate(SQL_ATUALIZAR,
+                empresa.nome,
+                empresa.cnpj,
+                empresa.email,
+                enderecoId,
+                empresa.descricao,
+                empresa.senha ?: "senha123",
+                empresa.id
+        )
+    }
+
+    void deletar(Integer id) {
+        executarUpdate(SQL_DELETAR, id)
+    }
+
+    @Override
+    protected Empresa mapearResultSet(ResultSet resultSet) {
+        Empresa empresa = new Empresa(
+                resultSet.getString("nome_empresa"),
+                resultSet.getString("email"),
+                resultSet.getString("cnpj"),
+                resultSet.getString("descricao")
+        )
+        empresa.id = resultSet.getInt("idEmpresas")
+        empresa.enderecoId = resultSet.getObject("endereco_id") as Integer
         return empresa
     }
 
-
-    void atualizar(Empresa empresa) {
-        Connection conn = null
-        PreparedStatement statement = null
-
-        try {
-            conn = DatabaseConnection.getConnection()
-
-            Integer enderecoId = empresa.enderecoId
-            if (empresa.endereco) {
-                enderecoId = enderecoDAO.buscarOuCriar(empresa.endereco)
-                empresa.enderecoId = enderecoId
-            }
-
-            statement = conn.prepareStatement(SQL_ATUALIZAR)
-
-            statement.setString(1, empresa.nome)
-            statement.setString(2, empresa.email)
-            statement.setString(3, empresa.cnpj)
-            statement.setObject(4, enderecoId)
-            statement.setString(5, empresa.descricao)
-            statement.setString(6, empresa.senha ?: "senha123") // senha padrão se null
-            statement.setInt(7, empresa.id)
-
-            statement.executeUpdate()
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar empresa: ${e.message}", e)
-        } finally {
-            DatabaseConnection.closeResources(conn, statement, null)
+    private Empresa addEndereco(Empresa empresa) {
+        if (empresa.enderecoId) {
+            empresa.endereco = enderecoDAO.buscarPorId(empresa.enderecoId)
         }
-    }
-
-
-    void deletar(Integer id) {
-        Connection conn = null
-        PreparedStatement statement = null
-
-        try {
-            conn = DatabaseConnection.getConnection()
-            statement = conn.prepareStatement(SQL_DELETAR)
-            statement.setInt(1, id)
-            statement.executeUpdate()
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar empresa: ${e.message}", e)
-        } finally {
-            DatabaseConnection.closeResources(conn, statement, null)
-        }
-    }
-
-    private Empresa mapearEmpresa(ResultSet rs) {
-        Empresa empresa = new Empresa(
-            rs.getString("nome_empresa"),
-            rs.getString("email"),
-            rs.getString("cnpj"),
-            rs.getString("descricao")
-        )
-        empresa.id = rs.getInt("idEmpresas")
-        empresa.enderecoId = rs.getObject("endereco_id") as Integer
-        empresa.senha = rs.getString("senha")
-        empresa.criadoEm = rs.getTimestamp("criado_em")?.toLocalDateTime()
         return empresa
     }
 }
