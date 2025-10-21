@@ -1,7 +1,12 @@
 package com.linketinder.model
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
 import java.time.LocalDateTime
 
+@EqualsAndHashCode(includes = ['id'])
+@ToString(includeNames = true, includeFields = true)
 class Endereco {
     Integer id
     String cep
@@ -15,7 +20,6 @@ class Endereco {
         this.estado = estado
         this.cidade = cidade
         this.cep = cep
-        this.criadoEm = LocalDateTime.now()
     }
 
     String getEnderecoCompleto() {
@@ -25,11 +29,6 @@ class Endereco {
         if (pais) partes << pais
         if (cep) partes << "CEP: ${cep}"
         return partes.join(", ")
-    }
-
-    @Override
-    String toString() {
-        return getEnderecoCompleto()
     }
 }
 

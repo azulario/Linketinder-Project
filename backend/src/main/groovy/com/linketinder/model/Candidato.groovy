@@ -1,8 +1,13 @@
 package com.linketinder.model
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
 import java.time.LocalDate
 import java.time.LocalDateTime
 
+@EqualsAndHashCode(includes = ['id'])
+@ToString(includeNames = true, includeFields = true)
 class Candidato implements Usuarios {
     Integer id
     String nome
@@ -27,7 +32,6 @@ class Candidato implements Usuarios {
         this.dataDeNascimento = dataDeNascimento
         this.descricao = descricao
         this.competencias = competencias
-        this.criadoEm = LocalDateTime.now()
     }
 
 
