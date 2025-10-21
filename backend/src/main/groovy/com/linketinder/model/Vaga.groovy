@@ -24,6 +24,16 @@ class Vaga {
         this.criadoEm = LocalDateTime.now()
     }
 
+    // Construtor simplificado para uso do DAO
+    Vaga(String titulo, String descricao, Integer empresaId) {
+        this.titulo = titulo
+        this.descricao = descricao
+        this.empresaId = empresaId
+        this.competencias = []
+        this.candidatosCurtiram = []
+        this.criadoEm = LocalDateTime.now()
+    }
+
     void receberCurtida(Candidato candidato) {
         if (!candidatosCurtiram.contains(candidato)) {
             candidatosCurtiram.add(candidato)

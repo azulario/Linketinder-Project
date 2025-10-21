@@ -336,8 +336,8 @@ class CompetenciaDAO {
         String sql = """
             SELECT c.nome_competencia 
             FROM competencias c
-            INNER JOIN vaga_competencias vc ON c.idcompetencias = vc.competencia_id
-            WHERE vc.vaga_id = ?
+            INNER JOIN competencias_vagas cv ON c.idcompetencias = cv.competencia_id
+            WHERE cv.vaga_id = ?
         """
 
         try {
@@ -356,6 +356,73 @@ class CompetenciaDAO {
         }
 
         return competencias
+    }
+
+    List<String> buscarPorVaga(Integer vagaId) {
+        Connection conn = null
+        PreparedStatement statement = null
+        ResultSet resultSet = null
+        List<String> competencias = []
+
+        String sql = """
+            SELECT c.nome_competencia 
+            FROM competencias c
+            INNER JOIN competencias_vagas cv ON c.idcompetencias = cv.competencia_id
+            WHERE cv.vaga_id = ?
+        """
+
+        try {
+            conn = DatabaseConnection.getConnection()
+            statement = conn.prepareStatement(sql)
+            statement.setInt(1, vagaId)
+            resultSet = statement.executeQuery()
+
+            while (resultSet.next()) {
+                competencias.add(resultSet.getString("nome_competencia"))
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar competências da vaga: ${e.message}", e)
+        } finally {
+            DatabaseConnection.closeResources(conn, statement, resultSet)
+        }
+
+        return competencias
+    }
+
+    void associarAVaga(Integer vagaId, List<String> competencias) {
+        if (!competencias || competencias.isEmpty()) return
+
+        Connection conn = null
+        PreparedStatement deleteStmt = null
+        PreparedStatement insertStmt = null
+
+        try {
+            conn = DatabaseConnection.getConnection()
+
+            // Deletar competências antigas
+            String sqlDelete = "DELETE FROM competencias_vagas WHERE vaga_id = ?"
+            deleteStmt = conn.prepareStatement(sqlDelete)
+            deleteStmt.setInt(1, vagaId)
+            deleteStmt.executeUpdate()
+            deleteStmt.close()
+
+            // Inserir novas competências
+            String sqlInsert = "INSERT INTO competencias_vagas (vaga_id, competencia_id) VALUES (?, ?)"
+            insertStmt = conn.prepareStatement(sqlInsert)
+
+            competencias.each { nomeCompetencia ->
+                Integer competenciaId = buscarOuCriar(nomeCompetencia)
+                insertStmt.setInt(1, vagaId)
+                insertStmt.setInt(2, competenciaId)
+                insertStmt.executeUpdate()
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao associar competências à vaga: ${e.message}", e)
+        } finally {
+            if (deleteStmt) deleteStmt.close()
+            if (insertStmt) insertStmt.close()
+            DatabaseConnection.closeResources(conn, null, null)
+        }
     }
 }
 
