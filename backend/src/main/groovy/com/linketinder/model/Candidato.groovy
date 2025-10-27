@@ -34,7 +34,6 @@ class Candidato implements Usuarios {
         this.competencias = competencias
     }
 
-
     Integer getIdade() {
         if (dataDeNascimento == null) return null
         return LocalDate.now().getYear() - dataDeNascimento.getYear()
@@ -49,24 +48,6 @@ class Candidato implements Usuarios {
 
     Integer getTotalVagasCurtidas() {
         return vagasCurtidas.size()
-    }
-
-    @Override
-    void exibirInfo() {
-        println "=" * 50
-        println "CANDIDATO"
-        if (id) println "ID: $id"
-        println "Nome: $nome $sobrenome"
-        println "Email: $email"
-        println "CPF: $cpf"
-        println "Idade: $idade"
-        println "Data de Nascimento: $dataDeNascimento"
-        if (endereco) println "Endereço: ${endereco.enderecoCompleto}"
-        println "Descrição: $descricao"
-        println "Competências: ${competencias.join(', ')}"
-        if (criadoEm) println "Cadastrado em: $criadoEm"
-        println "=" * 50
-
     }
 
 }

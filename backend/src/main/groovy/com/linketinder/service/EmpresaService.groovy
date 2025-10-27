@@ -4,14 +4,18 @@ import com.linketinder.dao.EmpresaDAO
 import com.linketinder.dao.EnderecoDAO
 import com.linketinder.model.Empresa
 import com.linketinder.model.Endereco
+import com.linketinder.view.EmpresaFormatador
+import com.linketinder.view.IFormatador
 
 class EmpresaService {
     private EmpresaDAO empresaDAO
     private EnderecoDAO enderecoDAO
+    private IFormatador<Empresa> formatador
 
     EmpresaService() {
         this.empresaDAO = new EmpresaDAO()
         this.enderecoDAO = new EnderecoDAO()
+        this.formatador = new EmpresaFormatador()
     }
 
     List<Empresa> listarTodas() {
@@ -69,7 +73,7 @@ class EmpresaService {
 
         empresas.eachWithIndex { Empresa empresa, int i ->
             println "\n${i + 1}. ${empresa.nome}"
-            empresa.exibirInfo()
+            println formatador.formatar(empresa)
             println "-" * 50
         }
     }

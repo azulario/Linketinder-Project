@@ -46,18 +46,4 @@ class Vaga {
     Integer getNumeroCurtidas() {
         return candidatosCurtiram.size()
     }
-
-    void exibirInfo() {
-        println "=" * 50
-        println "VAGA"
-        if (id) println "ID: $id"
-        println "Título: $titulo"
-        println "Empresa: ${empresa.nome}"
-        if (endereco) println "Localização: ${endereco.enderecoCompleto}"
-        println "Descrição: $descricao"
-        println "Competências: ${competencias.join(', ')}"
-        println "Curtidas: $numeroCurtidas"
-        if (criadoEm) println "Criado em: $criadoEm"
-        println "=" * 50
-    }
 }

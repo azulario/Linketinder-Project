@@ -4,16 +4,20 @@ import com.linketinder.dao.CandidatoDAO
 import com.linketinder.dao.EnderecoDAO
 import com.linketinder.model.Candidato
 import com.linketinder.model.Endereco
+import com.linketinder.view.CandidatoFormatador
+import com.linketinder.view.IFormatador
 
 import java.time.LocalDate
 
 class CandidatoService {
     private CandidatoDAO candidatoDAO
     private EnderecoDAO enderecoDAO
+    private IFormatador<Candidato> formatador
 
     CandidatoService() {
         this.candidatoDAO = new CandidatoDAO()
         this.enderecoDAO = new EnderecoDAO()
+        this.formatador = new CandidatoFormatador()
     }
 
     List<Candidato> listarTodos() {
@@ -78,7 +82,7 @@ class CandidatoService {
 
         candidatos.eachWithIndex { Candidato candidato, int i ->
             println "\n${i + 1}. ${candidato.nome}"
-            candidato.exibirInfo()
+            println formatador.formatar(candidato)
             println "-" * 50
         }
     }

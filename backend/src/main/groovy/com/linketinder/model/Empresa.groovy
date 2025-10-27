@@ -46,18 +46,4 @@ class Empresa implements Usuarios {
             candidatosCurtidos.add(candidato)
         }
     }
-
-    @Override
-    void exibirInfo() {
-        println "=" * 50
-        println "EMPRESA"
-        if (id) println "ID: $id"
-        println "Nome: $nome"
-        println "Email: $email"
-        println "CNPJ: $cnpj"
-        if (endereco) println "Endereço: ${endereco.enderecoCompleto}"
-        println "Descrição: $descricao"
-        if (criadoEm) println "Cadastrado em: $criadoEm"
-        println "=" * 50
-    }
 }

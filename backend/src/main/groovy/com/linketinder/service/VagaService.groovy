@@ -3,14 +3,18 @@ package com.linketinder.service
 import com.linketinder.dao.VagaDAO
 import com.linketinder.model.Empresa
 import com.linketinder.model.Vaga
+import com.linketinder.view.IFormatador
+import com.linketinder.view.VagaFormatador
 
 class VagaService {
     private VagaDAO vagaDAO
     private EmpresaService empresaService
+    private IFormatador<Vaga> formatador
 
     VagaService(EmpresaService empresaService) {
         this.vagaDAO = new VagaDAO()
         this.empresaService = empresaService
+        this.formatador = new VagaFormatador()
     }
 
     List<Vaga> listarTodas() {
@@ -70,8 +74,8 @@ class VagaService {
         }
 
         vagas.eachWithIndex { Vaga vaga, int i ->
-            println "\n${i + 1}. Vaga na empresa: ${vaga.nomeEmpresa}"
-            vaga.exibirInfo()
+            println "\n${i + 1}. Vaga na empresa: ${vaga.titulo}"
+            println formatador.formatar(vaga)
             println "-" * 50
         }
     }
