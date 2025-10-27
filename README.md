@@ -6,32 +6,41 @@ Nathalia Veiga
 ## Descrição
 Sistema de contratação inspirado no LinkedIn e Tinder. Aplicação full-stack com backend em **Groovy + JDBC/PostgreSQL** e frontend em **TypeScript + Vite**.
 
-Permite cadastrar candidatos e empresas, gerenciar vagas e implementar sistema de curtidas/matches.
+Permite cadastrar candidatos e empresas, gerenciar vagas, competências e endereços, com sistema completo de relacionamentos N:N.
 
-> **Projeto desenvolvido para o programa Acelera ZG - Desafio K1-T9 (Banco de Dados PostgreSQL)**
+    
 
 ## 📁 Estrutura do Projeto
 
 ```
 LinkeTinder/
-├── backend/                      # 🎯 Backend Groovy + PostgreSQL
+├── backend/                      # Backend Groovy + PostgreSQL
 │   ├── src/
 │   │   ├── main/groovy/com/linketinder/
-│   │   │   ├── dao/             # Padrão DAO (CandidatoDAO, EmpresaDAO, VagaDAO)
-│   │   │   ├── database/        # DatabaseConnection
-│   │   │   ├── model/           # Entidades
-│   │   │   └── view/            # Menu interativo
+│   │   │   ├── dao/             # Padrão DAO (BaseDAO, CandidatoDAO, EmpresaDAO, VagaDAO, CompetenciaDAO, EnderecoDAO)
+│   │   │   ├── database/        # DatabaseConnection (Singleton)
+│   │   │   ├── model/           # Entidades (Candidato, Empresa, Vaga, Competencia, Endereco, Usuarios)
+│   │   │   ├── service/         # Lógica de negócio (CandidatoService, EmpresaService, VagaService)
+│   │   │   ├── view/            # Formatadores de exibição (IFormatador, CandidatoFormatador, EmpresaFormatador, VagaFormatador)
+│   │   │   └── Main.groovy      # Menu interativo principal
 │   │   └── test/groovy/         # Testes unitários (38/38 ✅)
 │   ├── build.gradle             # Configuração Gradle
 │   ├── gradlew                  # Gradle wrapper
 │   └── LinkeTinder.sql          # Script do banco
 │
-└── frontend/                     # 🎨 Frontend TypeScript + Vite
-    ├── ts/                      # Código TypeScript
-    ├── public/                  # Páginas HTML
-    ├── css/                     # Estilos Tailwind
-    ├── package.json             # Dependências npm
-    └── vite.config.ts           # Configuração Vite
+├── frontend/                     # Frontend TypeScript + Vite
+│   ├── ts/                      # Código TypeScript
+│   │   ├── Controllers/         # Controladores
+│   │   ├── models/              # Modelos TypeScript
+│   │   ├── utils/               # Utilitários
+│   │   └── validation/          # Validações
+│   ├── public/                  # Páginas HTML
+│   ├── css/                     # Estilos Tailwind
+│   ├── assets/images/           # Imagens e avatares
+│   ├── package.json             # Dependências npm
+│   └── vite.config.ts           # Configuração Vite
+│
+└── README.md                    # Documentação do projeto
 ```
 
 ---
@@ -46,13 +55,16 @@ LinkeTinder/
 - **Spock 2.3** - Framework de testes unitários
 
 ### Funcionalidades Backend
-- ✅ **CRUD completo:** Candidatos, Empresas e Vagas
-- ✅ **Persistência:** PostgreSQL via JDBC puro
+- ✅ **CRUD completo:** Candidatos, Empresas, Vagas, Competências e Endereços
+- ✅ **Persistência:** PostgreSQL via JDBC puro com PreparedStatements
 - ✅ **Relacionamentos:** 
   - N:N entre Candidato ↔ Competências
   - N:N entre Vaga ↔ Competências  
   - 1:N entre Empresa → Vagas
-- ✅ **Testes:** 38 testes unitários com Spock (100% cobertura DAOs)
+  - 1:N entre Endereço → Candidatos/Empresas/Vagas
+- ✅ **Camadas:** Model, DAO, Service e View (separação de responsabilidades)
+- ✅ **Testes:** 38 testes unitários com Spock (100% passando)
+- ✅ **BaseDAO:** Classe base genérica para reutilização de código
 
 ### Banco de Dados
 
@@ -111,29 +123,16 @@ cd backend
 **Relatório de testes:** `backend/build/reports/tests/test/index.html`
 
 ### Conceitos Aplicados (Backend)
-- **POO:** Classes, interfaces, herança, encapsulamento
-- **JDBC:** PreparedStatement, gerenciamento de conexões/recursos
-- **Padrão DAO:** Separação de responsabilidades, camada de persistência
-- **BaseDAO:** Classe base reutilizável (DRY - Don't Repeat Yourself)
+- **POO:** Classes, interfaces, herança, encapsulamento, polimorfismo
+- **JDBC:** PreparedStatement, Connection pooling, gerenciamento de recursos
+- **Padrão DAO:** Separação de responsabilidades, camada de persistência isolada
+- **BaseDAO Genérico:** Classe base com tipos genéricos para reutilização de código
+- **Padrão Service:** Camada de lógica de negócio entre View e DAO
+- **Formatadores:** Separação de apresentação e dados (padrão Strategy)
 - **Relacionamentos:** 1:N e N:N com tabelas intermediárias
-- **TDD:** Testes unitários com Spock Framework (38/38 ✅)
-- **SQL:** DDL, DML, JOINs, Foreign Keys, CASCADE, índices
-
-### Melhorias Clean Code Aplicadas
-**Score:** 48% → 72% (+24% de melhoria)
-
-✅ **Refatorações concluídas:**
-- Anotações Groovy (`@EqualsAndHashCode`, `@ToString`) - eliminou ~200 linhas
-- BaseDAO genérico - reutilização de código em 3 DAOs
-- DRY no CompetenciaDAO - redução de 57% de código duplicado
-- Nomes descritivos em português (conexao, comando, resultado)
-- 5 bugs críticos corrigidos (email null, descricao null, sintaxe)
-- Separação de responsabilidades (modelos vs banco)
-
-📊 **Resultados:**
-- 38/38 testes passando (100%)
-- ~280 linhas de código eliminadas
-- Código mais legível e manutenível
+- **TDD:** Desenvolvimento orientado a testes com Spock Framework
+- **SQL:** DDL, DML, JOINs, Foreign Keys, CASCADE, índices para performance
+- **Clean Code:** Nomes descritivos, métodos pequenos, responsabilidade única
 
 ---
 
