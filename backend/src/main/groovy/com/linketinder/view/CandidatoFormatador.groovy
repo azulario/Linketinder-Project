@@ -2,11 +2,7 @@ package com.linketinder.view
 
 import com.linketinder.model.Candidato
 
-/**
- * Formatador de texto para Candidato
- * Responsabilidade única: formatar candidatos para exibição em console
- * Aplica Single Responsibility Principle (SRP)
- */
+
 class CandidatoFormatador implements IFormatador<Candidato> {
 
     @Override

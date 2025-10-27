@@ -2,11 +2,6 @@ package com.linketinder.view
 
 import com.linketinder.model.Empresa
 
-/**
- * Formatador de texto para Empresa
- * Responsabilidade única: formatar empresas para exibição em console
- * Aplica Single Responsibility Principle (SRP)
- */
 class EmpresaFormatador implements IFormatador<Empresa> {
 
     @Override

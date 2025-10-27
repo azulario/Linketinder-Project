@@ -2,11 +2,6 @@ package com.linketinder.view
 
 import com.linketinder.model.Vaga
 
-/**
- * Formatador de texto para Vaga
- * Responsabilidade única: formatar vagas para exibição em console
- * Aplica Single Responsibility Principle (SRP)
- */
 class VagaFormatador implements IFormatador<Vaga> {
 
     @Override
