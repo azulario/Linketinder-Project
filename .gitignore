@@ -6,6 +6,12 @@
 !**/src/test/**/build/
 .kotlin/
 
+# Groovy
+*.class
+
+# Groovy dependencies (managed by Gradle)
+lib/
+
 # IntelliJ IDEA
 .idea/
 *.iws
