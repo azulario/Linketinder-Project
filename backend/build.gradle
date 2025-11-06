@@ -1,6 +1,5 @@
 plugins {
     id 'groovy'
-    id 'application'
 }
 
 group = 'org.example'
@@ -12,36 +11,22 @@ java {
     }
 }
 
-application {
-    mainClass = 'com.linketinder.Main'
-}
-
 repositories {
     mavenCentral()
 }
 
-ext {
-    spockVersion = '2.3-groovy-4.0'
-    groovyVersion = '4.0.15'
-}
-
 dependencies {
-    implementation "org.apache.groovy:groovy-all:${groovyVersion}"
-    testImplementation "org.spockframework:spock-core:${spockVersion}"
-    implementation 'org.postgresql:postgresql:42.7.1'
+    implementation 'org.apache.groovy:groovy:4.0.23'
+    implementation 'org.postgresql:postgresql:42.7.3'
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
 
-run {
-    standardInput = System.in
+    // Spock Framework
+    testImplementation platform('org.spockframework:spock-bom:2.3-groovy-4.0')
+    testImplementation 'org.spockframework:spock-core'
 }
 
 test {
     useJUnitPlatform()
-    testLogging {
-        events 'passed', 'skipped', 'failed'
-        exceptionFormat 'full'
-        showStandardStreams = true
-    }
 }
-
