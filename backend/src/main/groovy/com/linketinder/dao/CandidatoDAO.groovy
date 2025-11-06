@@ -6,8 +6,8 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 class CandidatoDAO extends BaseDAO<Candidato> {
-    private static final String SQL_LISTAR = "SELECT * FROM candidatos ORDER BY idCandidatos"
-    private static final String SQL_BUSCAR_POR_ID = "SELECT * FROM candidatos WHERE idCandidatos = ?"
+    private static final String SQL_LISTAR = "SELECT * FROM candidatos ORDER BY idcandidatos"
+    private static final String SQL_BUSCAR_POR_ID = "SELECT * FROM candidatos WHERE idcandidatos = ?"
     private static final String SQL_INSERIR = """
         INSERT INTO candidatos (
             nome,
@@ -32,9 +32,9 @@ class CandidatoDAO extends BaseDAO<Candidato> {
         endereco_id = ?, 
         descricao = ?, 
         senha = ?
-        WHERE idCandidatos = ?
+        WHERE idcandidatos = ?
 """
-    private static final String SQL_DELETAR = "DELETE FROM candidatos WHERE idCandidatos = ?"
+    private static final String SQL_DELETAR = "DELETE FROM candidatos WHERE idcandidatos = ?"
 
     private final CompetenciaDAO competenciaDAO = new CompetenciaDAO()
     private final EnderecoDAO enderecoDAO = new EnderecoDAO()
@@ -107,7 +107,7 @@ class CandidatoDAO extends BaseDAO<Candidato> {
                 resultSet.getString("descricao"),
                 []
         )
-        candidato.id = resultSet.getInt("idCandidatos")
+        candidato.id = resultSet.getInt("idcandidatos")
         candidato.enderecoId = resultSet.getObject("endereco_id") as Integer
         return candidato
     }

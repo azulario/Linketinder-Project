@@ -1,9 +1,18 @@
 plugins {
     id 'groovy'
+    id 'application'
 }
 
 group = 'org.example'
 version = '1.0-SNAPSHOT'
+
+application {
+    mainClass = 'com.linketinder.Main'
+}
+
+run {
+    standardInput = System.in
+}
 
 java {
     toolchain {

@@ -54,3 +54,7 @@ doc/
 # Test output
 test_output.txt
 test_result.log
+
+# Scripts temporários de população de banco
+backend/popular_banco.sql
+

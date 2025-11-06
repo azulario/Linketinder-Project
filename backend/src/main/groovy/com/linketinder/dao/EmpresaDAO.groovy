@@ -8,8 +8,8 @@ import java.time.LocalDateTime
 
 
 class EmpresaDAO extends BaseDAO<Empresa> {
-    private static final String SQL_LISTAR = "SELECT * FROM empresas ORDER BY idEmpresas"
-    private static final String SQL_BUSCAR_POR_ID = "SELECT * FROM empresas WHERE idEmpresas = ?"
+    private static final String SQL_LISTAR = "SELECT * FROM empresas ORDER BY idempresas"
+    private static final String SQL_BUSCAR_POR_ID = "SELECT * FROM empresas WHERE idempresas = ?"
     private static final String SQL_INSERIR = """
         INSERT INTO empresas (
             nome_empresa,
@@ -25,9 +25,9 @@ class EmpresaDAO extends BaseDAO<Empresa> {
     private static final String SQL_ATUALIZAR = """
         UPDATE empresas 
         SET nome_empresa = ?, cnpj = ?, email = ?, endereco_id = ?, descricao = ?, senha = ?
-        WHERE idEmpresas = ?
+        WHERE idempresas = ?
 """
-    private static final String SQL_DELETAR = "DELETE FROM empresas WHERE idEmpresas = ?"
+    private static final String SQL_DELETAR = "DELETE FROM empresas WHERE idempresas = ?"
 
     private final EnderecoDAO enderecoDAO = new EnderecoDAO()
 
@@ -84,7 +84,7 @@ class EmpresaDAO extends BaseDAO<Empresa> {
                 resultSet.getString("cnpj"),
                 resultSet.getString("descricao")
         )
-        empresa.id = resultSet.getInt("idEmpresas")
+        empresa.id = resultSet.getInt("idempresas")
         empresa.enderecoId = resultSet.getObject("endereco_id") as Integer
         return empresa
     }

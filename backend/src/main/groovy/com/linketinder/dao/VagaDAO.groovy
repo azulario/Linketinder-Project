@@ -5,8 +5,8 @@ import java.sql.ResultSet
 import java.time.LocalDateTime
 
 class VagaDAO extends BaseDAO<Vaga> {
-    private static final String SQL_LISTAR = "SELECT * FROM vagas ORDER BY idVagas"
-    private static final String SQL_BUSCAR_POR_ID = "SELECT * FROM vagas WHERE idVagas = ?"
+    private static final String SQL_LISTAR = "SELECT * FROM vagas ORDER BY idvagas"
+    private static final String SQL_BUSCAR_POR_ID = "SELECT * FROM vagas WHERE idvagas = ?"
     private static final String SQL_LISTAR_POR_EMPRESA = """
         SELECT * FROM vagas 
         WHERE empresa_id = ? 
@@ -25,9 +25,9 @@ class VagaDAO extends BaseDAO<Vaga> {
     private static final String SQL_ATUALIZAR = """
         UPDATE vagas 
         SET nome_vaga = ?, descricao = ?, endereco_id = ?, empresa_id = ?
-        WHERE idVagas = ?
-    """
-    private static final String SQL_DELETAR = "DELETE FROM vagas WHERE idVagas = ?"
+        WHERE idvagas = ?
+"""
+    private static final String SQL_DELETAR = "DELETE FROM vagas WHERE idvagas = ?"
 
     private final CompetenciaDAO competenciaDAO = new CompetenciaDAO()
     private final EnderecoDAO enderecoDAO = new EnderecoDAO()
@@ -95,7 +95,7 @@ class VagaDAO extends BaseDAO<Vaga> {
             resultSet.getString("descricao"),
             resultSet.getInt("empresa_id")
         )
-        vaga.id = resultSet.getInt("idVagas")
+        vaga.id = resultSet.getInt("idvagas")
         vaga.enderecoId = resultSet.getObject("endereco_id") as Integer
         return vaga
     }
