@@ -1,6 +1,8 @@
-package main.groovy.com.linketinder.database
+package com.linketinder.database
 
 import groovy.transform.CompileStatic
+import com.linketinder.database.IConnectionProvider
+import com.linketinder.database.PostgreSQLConnection
 
 @CompileStatic
 class ConnectionFactory {
