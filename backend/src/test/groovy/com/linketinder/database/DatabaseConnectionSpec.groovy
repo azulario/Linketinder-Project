@@ -2,105 +2,181 @@ package com.linketinder.database
 
 import spock.lang.Specification
 import java.sql.Connection
+import java.sql.Statement
+import java.sql.ResultSet
 
-/**
- * DatabaseConnectionSpec - Testes unitários para a classe DatabaseConnection
- *
- * Este teste verifica se:
- * 1. A conexão com o banco está funcionando
- * 2. O metodo getConnection() retorna uma conexão válida
- * 3. O metodo closeConnection() fecha a conexão corretamente
- *
- * pro teste teste passar precisa:
- * - PostgreSQL rodando na porta 5432
- * - Banco de dados 'linketinder' criado
- * - Senha correta configurada em DatabaseConnection.groovy
- */
+
 class DatabaseConnectionSpec extends Specification {
 
-    def "deve abrir uma conexão com o banco de dados com sucesso"() {
-        given: "que o PostgreSQL está rodando e configurado corretamente"
-        Connection conn = null
+    Connection connection
 
-        when: "tento abrir uma conexão"
-        conn = DatabaseConnection.getConnection()
-
-        then: "a conexão não deve ser nula"
-        conn != null
-
-        and: "a conexão deve estar ativa (não fechada)"
-        !conn.isClosed()
-
-        and: "deve conseguir acessar metadados do banco"
-        conn.metaData != null
-        conn.metaData.databaseProductName == "PostgreSQL"
-
-        cleanup: "fecha a conexão após o teste"
-        if (conn != null) {
-            DatabaseConnection.closeConnection(conn)
+    def cleanup() {
+        // Fechar conexão após cada teste
+        if (connection != null && !connection.isClosed()) {
+            DatabaseConnection.closeConnection(connection)
         }
     }
 
-    def "deve fechar uma conexão aberta corretamente"() {
-        given: "uma conexão ativa com o banco"
-        Connection conn = DatabaseConnection.getConnection()
+    def "deve estabelecer conexão com banco de dados"() {
+        when: "solicitar conexão"
+        connection = DatabaseConnection.getConnection()
 
-        and: "a conexão está aberta"
-        assert !conn.isClosed()
-
-        when: "fecho a conexão"
-        DatabaseConnection.closeConnection(conn)
-
-        then: "a conexão deve estar fechada"
-        conn.isClosed()
+        then: "deve retornar conexão válida"
+        connection != null
+        !connection.isClosed()
     }
 
-    def "deve lidar com tentativa de fechar conexão nula sem erro"() {
-        given: "uma conexão nula"
-        Connection conn = null
+    def "deve carregar driver PostgreSQL corretamente"() {
+        when: "tentar criar conexão"
+        connection = DatabaseConnection.getConnection()
 
-        when: "tento fechar a conexão nula"
-        DatabaseConnection.closeConnection(conn)
+        then: "driver deve estar carregado"
+        Class.forName("org.postgresql.Driver") != null
+        connection != null
+    }
+
+    def "deve conectar ao banco linketinder"() {
+        when: "estabelecer conexão"
+        connection = DatabaseConnection.getConnection()
+
+        then: "deve estar conectada ao banco correto"
+        connection.catalog == "linketinder"
+    }
+
+    def "deve fechar conexão corretamente"() {
+        given: "conexão estabelecida"
+        connection = DatabaseConnection.getConnection()
+
+        when: "fechar conexão"
+        DatabaseConnection.closeConnection(connection)
+
+        then: "conexão deve estar fechada"
+        connection.isClosed()
+    }
+
+    def "deve lidar com fechamento de conexão nula"() {
+        when: "tentar fechar conexão nula"
+        DatabaseConnection.closeConnection(null)
 
         then: "não deve lançar exceção"
-        noExceptionThrown()
+        notThrown(Exception)
     }
 
-    def "deve conectar múltiplas vezes sem erro"() {
-        given: "uma lista para armazenar conexões"
-        List<Connection> conexoes = []
+    def "deve fechar recursos corretamente"() {
+        given: "conexão com statement e resultset"
+        connection = DatabaseConnection.getConnection()
+        Statement stmt = connection.createStatement()
+        ResultSet rs = stmt.executeQuery("SELECT 1")
 
-        when: "abro 3 conexões diferentes"
-        3.times {
-            conexoes.add(DatabaseConnection.getConnection())
-        }
+        when: "fechar recursos"
+        DatabaseConnection.closeResources(connection, stmt, rs)
 
-        then: "todas as conexões devem ser válidas"
-        conexoes.size() == 3
-        conexoes.every { it != null && !it.isClosed() }
-
-        cleanup: "fecha todas as conexões"
-        conexoes.each { conn ->
-            if (conn != null) {
-                DatabaseConnection.closeConnection(conn)
-            }
-        }
+        then: "todos devem estar fechados"
+        rs.isClosed()
+        stmt.isClosed()
+        connection.isClosed()
     }
 
-    def "deve retornar informações corretas do banco de dados"() {
-        given: "uma conexão com o banco"
-        Connection conn = DatabaseConnection.getConnection()
+    def "deve fechar recursos mesmo com alguns nulos"() {
+        given: "apenas conexão estabelecida"
+        connection = DatabaseConnection.getConnection()
 
-        when: "busco os metadados"
-        def metaData = conn.metaData
+        when: "fechar recursos com statement e resultset nulos"
+        DatabaseConnection.closeResources(connection, null, null)
 
-        then: "deve conter informações do PostgreSQL"
-        metaData.databaseProductName == "PostgreSQL"
-        metaData.URL.contains("jdbc:postgresql://localhost:5432/linketinder")
-        metaData.driverName.contains("PostgreSQL")
+        then: "não deve lançar exceção e conexão deve estar fechada"
+        notThrown(Exception)
+        connection.isClosed()
+    }
+
+    def "deve lidar com todos os recursos nulos"() {
+        when: "tentar fechar recursos nulos"
+        DatabaseConnection.closeResources(null, null, null)
+
+        then: "não deve lançar exceção"
+        notThrown(Exception)
+    }
+
+    def "deve permitir criar múltiplas conexões"() {
+        when: "criar duas conexões"
+        def conn1 = DatabaseConnection.getConnection()
+        def conn2 = DatabaseConnection.getConnection()
+
+        then: "ambas devem ser válidas e independentes"
+        conn1 != null
+        conn2 != null
+        !conn1.isClosed()
+        !conn2.isClosed()
+        conn1 !== conn2
 
         cleanup:
-        DatabaseConnection.closeConnection(conn)
+        DatabaseConnection.closeConnection(conn1)
+        DatabaseConnection.closeConnection(conn2)
+    }
+
+    def "deve executar query simples com sucesso"() {
+        given: "conexão estabelecida"
+        connection = DatabaseConnection.getConnection()
+        Statement stmt = connection.createStatement()
+
+        when: "executar query simples"
+        ResultSet rs = stmt.executeQuery("SELECT 1 as numero")
+
+        then: "deve retornar resultado"
+        rs.next()
+        rs.getInt("numero") == 1
+
+        cleanup:
+        DatabaseConnection.closeResources(connection, stmt, rs)
+    }
+
+    def "deve fechar statement mesmo se já fechado"() {
+        given: "statement já fechado"
+        connection = DatabaseConnection.getConnection()
+        Statement stmt = connection.createStatement()
+        stmt.close()
+
+        when: "tentar fechar recursos"
+        DatabaseConnection.closeResources(connection, stmt, null)
+
+        then: "não deve lançar exceção"
+        notThrown(Exception)
+        connection.isClosed()
+    }
+
+    def "deve fechar resultset mesmo se já fechado"() {
+        given: "resultset já fechado"
+        connection = DatabaseConnection.getConnection()
+        Statement stmt = connection.createStatement()
+        ResultSet rs = stmt.executeQuery("SELECT 1")
+        rs.close()
+
+        when: "tentar fechar recursos"
+        DatabaseConnection.closeResources(connection, stmt, rs)
+
+        then: "não deve lançar exceção"
+        notThrown(Exception)
+        stmt.isClosed()
+        connection.isClosed()
+    }
+
+    def "deve manter auto-commit habilitado por padrão"() {
+        when: "criar conexão"
+        connection = DatabaseConnection.getConnection()
+
+        then: "auto-commit deve estar habilitado"
+        connection.autoCommit
+    }
+
+    def "deve permitir desabilitar auto-commit"() {
+        given: "conexão estabelecida"
+        connection = DatabaseConnection.getConnection()
+
+        when: "desabilitar auto-commit"
+        connection.autoCommit = false
+
+        then: "auto-commit deve estar desabilitado"
+        !connection.autoCommit
     }
 }
 

@@ -15,10 +15,10 @@ class DatabaseConnection {
 
     static Connection getConnection() throws SQLException {
         try {
-            // carrega o driver JDBC do PostgreSQL
+
             Class.forName("org.postgresql.Driver")
 
-            // cria e retorna a conexão
+
             Connection conn = DriverManager.getConnection(URL, USER, PASSWORD)
             println "✓ Conexão com banco de dados estabelecida!"
             return conn

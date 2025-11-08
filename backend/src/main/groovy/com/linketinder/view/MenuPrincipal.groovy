@@ -16,19 +16,19 @@ class MenuPrincipal {
     private MenuVaga menuVaga
 
     MenuPrincipal() {
-        this.input = new Scanner(System.in)
+        Scanner input = new Scanner(System.in)
 
         CandidatoService candidatoService = new CandidatoService()
         EmpresaService empresaService = new EmpresaService()
         VagaService vagaService = new VagaService()
 
-        CandidatoController candidatoController = new CandidatoController(candidatoService)
+        CandidatoController candidatoController = new CandidatoController()
         EmpresaController empresaController = new EmpresaController(empresaService)
         VagaController vagaController = new VagaController(vagaService)
 
         this.menuCandidato = new MenuCandidato(candidatoController, input)
         this.menuEmpresa = new MenuEmpresa(empresaController, input)
-        this.menuVaga = new MenuVaga(vagaController, empresaController input)
+        this.menuVaga = new MenuVaga(vagaController, empresaController, input)
     }
 
     void exibir() {

@@ -21,6 +21,7 @@ class Vaga {
 
     Vaga(String titulo, String descricao, List<String> competencias, Empresa empresa) {
         this.titulo = titulo
+        this.descricao = descricao
         this.competencias = competencias
         this.empresa = empresa
         this.empresaId = empresa?.id
@@ -28,7 +29,17 @@ class Vaga {
         this.criadoEm = LocalDateTime.now()
     }
 
-    // Construtor simplificado para uso do DAO
+    Vaga(String titulo, String descricao, Empresa empresa) {
+        this.titulo = titulo
+        this.descricao = descricao
+        this.empresa = empresa
+        this.empresaId = empresa?.id
+        this.competencias = []
+        this.candidatosCurtiram = []
+        this.criadoEm = LocalDateTime.now()
+    }
+
+
     Vaga(String titulo, String descricao, Integer empresaId) {
         this.titulo = titulo
         this.descricao = descricao

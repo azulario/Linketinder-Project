@@ -7,40 +7,25 @@ import com.linketinder.model.Endereco
 import spock.lang.Specification
 import java.sql.Connection
 
-/**
- * VagaDAOSpec - Testes TDD para VagaDAO
- *
- * Testa todas as operações CRUD de vagas no banco de dados:
- * - Inserir vaga
- * - Listar todas as vagas
- * - Listar vagas por empresa
- * - Buscar vaga por ID
- * - Atualizar vaga
- * - Deletar vaga
- *
- * IMPORTANTE: Os testes usam o banco real PostgreSQL
- * Certifique-se que o banco 'linketinder' está rodando e configurado!
- */
+
 class VagaDAOSpec extends Specification {
 
     VagaDAO vagaDao
     EmpresaDAO empresaDao
     Connection conn
 
-    // Executado ANTES de cada teste
+
     def setup() {
         vagaDao = new VagaDAO()
         empresaDao = new EmpresaDAO()
         conn = DatabaseConnection.getConnection()
 
-        // Limpar tabelas antes de cada teste
-        // Isso garante que os testes sejam isolados e independentes
+
         conn.createStatement().execute("DELETE FROM competencias_vagas")
         conn.createStatement().execute("DELETE FROM vagas")
         conn.createStatement().execute("DELETE FROM empresas")
     }
 
-    // Executado DEPOIS de cada teste
     def cleanup() {
         if (conn != null && !conn.isClosed()) {
             conn.close()

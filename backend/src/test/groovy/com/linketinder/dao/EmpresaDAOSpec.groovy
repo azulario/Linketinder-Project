@@ -6,18 +6,7 @@ import com.linketinder.model.Endereco
 import spock.lang.Specification
 import java.sql.Connection
 
-/**
- * EmpresaDAOSpec - Testes TDD para EmpresaDAO
- *
- * Testa todas as operações CRUD de empresas no banco de dados:
- * - Inserir empresa
- * - Listar todas as empresas
- * - Buscar empresa por ID
- * - Atualizar empresa
- * - Deletar empresa
- *
- * IMPORTANTE: Os testes usam o banco real PostgreSQL
- */
+
 class EmpresaDAOSpec extends Specification {
 
     EmpresaDAO dao
@@ -27,16 +16,14 @@ class EmpresaDAOSpec extends Specification {
         dao = new EmpresaDAO()
         conn = DatabaseConnection.getConnection()
 
-        // Limpar apenas a tabela empresas
-        // CASCADE vai deletar automaticamente vagas e curtidas relacionadas
         try {
             conn.createStatement().execute("TRUNCATE TABLE empresas CASCADE")
         } catch (Exception e) {
-            // Se TRUNCATE falhar, tenta DELETE simples
+
             try {
                 conn.createStatement().execute("DELETE FROM empresas")
             } catch (Exception ex) {
-                // Ignora se a tabela não existir ainda
+
                 println "Aviso: Não foi possível limpar a tabela empresas: ${ex.message}"
             }
         }

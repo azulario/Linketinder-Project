@@ -55,4 +55,34 @@ class EmpresaController {
         }
     }
 
+    Map<String, Object> buscarPorId(Integer id) {
+        try {
+            if (id == null || id <= 0) {
+                return [
+                        sucesso: false,
+                        mensagem: "ID inválido"
+                ] as Map<String, Object>
+            }
+
+            Empresa empresa = empresaService.buscarPorId(id)
+
+            if (empresa) {
+                return [
+                        sucesso: true,
+                        empresa: empresa
+                ] as Map<String, Object>
+            } else {
+                return [
+                        sucesso: false,
+                        mensagem: "Empresa não encontrada"
+                ] as Map<String, Object>
+            }
+        } catch (Exception e) {
+            return [
+                    sucesso: false,
+                    mensagem: "Erro ao buscar empresa: ${e.message}"
+            ] as Map<String, Object>
+        }
+    }
+
 }

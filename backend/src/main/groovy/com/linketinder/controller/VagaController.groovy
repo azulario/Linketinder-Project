@@ -54,4 +54,56 @@ class VagaController {
             ] as Map<String, Object>
         }
     }
+
+    Map<String, Object> buscarPorId(Integer id) {
+        try {
+            if (id == null || id <= 0) {
+                return [
+                        sucesso: false,
+                        mensagem: "ID inválido"
+                ] as Map<String, Object>
+            }
+
+            Vaga vaga = vagaService.buscarPorId(id)
+
+            if (vaga) {
+                return [
+                        sucesso: true,
+                        vaga: vaga
+                ] as Map<String, Object>
+            } else {
+                return [
+                        sucesso: false,
+                        mensagem: "Vaga não encontrada"
+                ] as Map<String, Object>
+            }
+        } catch (Exception e) {
+            return [
+                    sucesso: false,
+                    mensagem: "Erro ao buscar vaga: ${e.message}"
+            ] as Map<String, Object>
+        }
+    }
+
+    Map<String, Object> listarPorEmpresa(Integer empresaId) {
+        try {
+            if (empresaId == null || empresaId <= 0) {
+                return [
+                        sucesso: false,
+                        mensagem: "ID da empresa inválido"
+                ] as Map<String, Object>
+            }
+
+            List<Vaga> vagas = vagaService.listarPorEmpresa(empresaId)
+            return [
+                    sucesso: true,
+                    vagas: vagas
+            ]
+        } catch (Exception e) {
+            return [
+                    sucesso: false,
+                    mensagem: "Erro ao listar vagas por empresa: ${e.message}"
+            ] as Map<String, Object>
+        }
+    }
 }
