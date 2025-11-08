@@ -49,6 +49,8 @@ lib/
 # Documentação Privada
 doc/
 .idea/data_source_mapping.xml
+.idea/dataSource.xml
+
 
 
 # Test output
