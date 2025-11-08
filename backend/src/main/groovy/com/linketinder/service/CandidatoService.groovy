@@ -5,6 +5,8 @@ import com.linketinder.dao.EnderecoDAO
 import com.linketinder.dto.CandidatoDTO
 import com.linketinder.model.Candidato
 import com.linketinder.model.Endereco
+import com.linketinder.view.CandidatoFormatador
+import com.linketinder.view.IFormatador
 import groovy.transform.CompileStatic
 import java.time.LocalDate
 
@@ -12,10 +14,12 @@ import java.time.LocalDate
 class CandidatoService {
     private CandidatoDAO candidatoDAO
     private EnderecoDAO enderecoDAO
+    private IFormatador<Candidato> formatador
 
     CandidatoService() {
         this.candidatoDAO = new CandidatoDAO()
         this.enderecoDAO = new EnderecoDAO()
+        this.formatador = new CandidatoFormatador()
     }
 
     Candidato cadastrar(CandidatoDTO dto) {
@@ -49,81 +53,22 @@ class CandidatoService {
         return candidatoDAO.buscarPorId(id)
     }
 
-    // DEPRECATED - Será removido após migração completa para MVC
-    @Deprecated
-    void cadastrar(Scanner input) {
-        println "\n### CADASTRO DE CANDIDATO ###"
-
-        print "Nome: "
-        String nome = input.nextLine()
-
-        print "Sobrenome: "
-        String sobrenome = input.nextLine()
-
-        print "Email: "
-        String email = input.nextLine()
-
-        print "CPF: "
-        String cpf = input.nextLine()
-
-        print "Data de Nascimento (AAAA-MM-DD): "
-        LocalDate dataDeNascimento = LocalDate.parse(input.nextLine())
-
-        print "País: "
-        String pais = input.nextLine()
-
-        print "Estado: "
-        String estado = input.nextLine()
-
-        print "Cidade: "
-        String cidade = input.nextLine()
-
-        print "CEP: "
-        String cep = input.nextLine()
-
-        print "Descrição: "
-        String descricao = input.nextLine()
-
-        print "Competências (separadas por vírgula): "
-        List<String> competencias = input.nextLine().split(",").collect { it.trim() }
-
-        Endereco endereco = new Endereco(pais, estado, cidade, cep)
-        Integer enderecoId = enderecoDAO.buscarOuCriar(endereco)
-
-        Candidato novoCandidato = new Candidato(
-                nome,
-                sobrenome,
-                email,
-                cpf,
-                dataDeNascimento,
-                descricao,
-                competencias
-        )
-        novoCandidato.enderecoId = enderecoId
-
-        candidatoDAO.inserir(novoCandidato)
-        println "✓ Candidato cadastrado com sucesso!"
+    String formatarCandidato(Candidato candidato) {
+        return formatador.formatar(candidato)
     }
 
-    @Deprecated
-    void listar() {
-        println "\n### LISTA DE CANDIDATOS ###"
-
-        List<Candidato> candidatos = listarTodos()
-
+    String formatarLista(List<Candidato> candidatos) {
         if (candidatos.isEmpty()) {
-            println "Nenhum candidato cadastrado."
-            return
+            return "Nenhum candidato cadastrado."
         }
 
-        candidatos.eachWithIndex { Candidato candidato, int i ->
-            println "\n${i + 1}. ${candidato.nome} ${candidato.sobrenome}"
-            println "Email: ${candidato.email}"
-            println "CPF: ${candidato.cpf}"
-            println "Idade: ${candidato.idade} anos"
-            println "Competências: ${candidato.competencias.join(', ')}"
-            println "-" * 50
+        StringBuilder resultado = new StringBuilder()
+        candidatos.eachWithIndex { Candidato cand, int i ->
+            resultado.append("\n${i + 1}. ${cand.nome}\n")
+            resultado.append(formatador.formatar(cand))
+            resultado.append("\n")
         }
+        return resultado.toString()
     }
 }
 
