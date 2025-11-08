@@ -2,33 +2,63 @@ package com.linketinder.service
 
 import com.linketinder.dao.CandidatoDAO
 import com.linketinder.dao.EnderecoDAO
+import com.linketinder.dto.CandidatoDTO
 import com.linketinder.model.Candidato
 import com.linketinder.model.Endereco
-import com.linketinder.view.CandidatoFormatador
-import com.linketinder.view.IFormatador
-
+import groovy.transform.CompileStatic
 import java.time.LocalDate
 
+@CompileStatic
 class CandidatoService {
     private CandidatoDAO candidatoDAO
     private EnderecoDAO enderecoDAO
-    private IFormatador<Candidato> formatador
 
     CandidatoService() {
         this.candidatoDAO = new CandidatoDAO()
         this.enderecoDAO = new EnderecoDAO()
-        this.formatador = new CandidatoFormatador()
+    }
+
+    Candidato cadastrar(CandidatoDTO dto) {
+
+        Endereco endereco = new Endereco(dto.pais, dto.estado, dto.cidade, dto.cep)
+        Integer enderecoId = enderecoDAO.buscarOuCriar(endereco)
+
+        LocalDate dataDeNascimento = LocalDate.parse(dto.dataDeNascimento)
+
+        Candidato candidato = new Candidato(
+            dto.nome,
+            dto.sobrenome,
+            dto.email,
+            dto.cpf,
+            dataDeNascimento,
+            dto.descricao,
+            dto.competencias
+        )
+        candidato.enderecoId = enderecoId
+
+        candidatoDAO.inserir(candidato)
+
+        return candidato
     }
 
     List<Candidato> listarTodos() {
         return candidatoDAO.listar()
     }
 
+    Candidato buscarPorId(Integer id) {
+        return candidatoDAO.buscarPorId(id)
+    }
+
+    // DEPRECATED - Será removido após migração completa para MVC
+    @Deprecated
     void cadastrar(Scanner input) {
         println "\n### CADASTRO DE CANDIDATO ###"
 
         print "Nome: "
         String nome = input.nextLine()
+
+        print "Sobrenome: "
+        String sobrenome = input.nextLine()
 
         print "Email: "
         String email = input.nextLine()
@@ -61,8 +91,13 @@ class CandidatoService {
         Integer enderecoId = enderecoDAO.buscarOuCriar(endereco)
 
         Candidato novoCandidato = new Candidato(
-                nome, email, cpf, dataDeNascimento,
-                descricao, competencias
+                nome,
+                sobrenome,
+                email,
+                cpf,
+                dataDeNascimento,
+                descricao,
+                competencias
         )
         novoCandidato.enderecoId = enderecoId
 
@@ -70,6 +105,7 @@ class CandidatoService {
         println "✓ Candidato cadastrado com sucesso!"
     }
 
+    @Deprecated
     void listar() {
         println "\n### LISTA DE CANDIDATOS ###"
 
@@ -81,8 +117,11 @@ class CandidatoService {
         }
 
         candidatos.eachWithIndex { Candidato candidato, int i ->
-            println "\n${i + 1}. ${candidato.nome}"
-            println formatador.formatar(candidato)
+            println "\n${i + 1}. ${candidato.nome} ${candidato.sobrenome}"
+            println "Email: ${candidato.email}"
+            println "CPF: ${candidato.cpf}"
+            println "Idade: ${candidato.idade} anos"
+            println "Competências: ${candidato.competencias.join(', ')}"
             println "-" * 50
         }
     }

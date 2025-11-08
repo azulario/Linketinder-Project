@@ -2,26 +2,43 @@ package com.linketinder.service
 
 import com.linketinder.dao.EmpresaDAO
 import com.linketinder.dao.EnderecoDAO
+import com.linketinder.dto.EmpresaDTO
 import com.linketinder.model.Empresa
 import com.linketinder.model.Endereco
-import com.linketinder.view.EmpresaFormatador
-import com.linketinder.view.IFormatador
+import groovy.transform.CompileStatic
 
+@CompileStatic
 class EmpresaService {
     private EmpresaDAO empresaDAO
     private EnderecoDAO enderecoDAO
-    private IFormatador<Empresa> formatador
 
     EmpresaService() {
         this.empresaDAO = new EmpresaDAO()
         this.enderecoDAO = new EnderecoDAO()
-        this.formatador = new EmpresaFormatador()
+    }
+
+    Empresa cadastrar(EmpresaDTO dto) {
+        Endereco endereco = new Endereco(dto.pais, dto.estado, dto.cidade, dto.cep)
+        Integer enderecoId = enderecoDAO.buscarOuCriar(endereco)
+
+        Empresa empresa = new Empresa(dto.nome, dto.email, dto.cnpj, dto.descricao)
+        empresa.enderecoId = enderecoId
+
+        empresaDAO.inserir(empresa)
+
+        return empresa
     }
 
     List<Empresa> listarTodas() {
         return empresaDAO.listar()
     }
 
+    Empresa buscarPorId(Integer id) {
+        return empresaDAO.buscarPorId(id)
+    }
+
+    // DEPRECATED - Será removido após migração completa para MVC
+    @Deprecated
     void cadastrar(Scanner input) {
         println "\n### CADASTRO DE EMPRESA ###"
 
@@ -61,6 +78,8 @@ class EmpresaService {
         println "✓ Empresa cadastrada com sucesso!"
     }
 
+    // DEPRECATED - Será removido após migração completa para MVC
+    @Deprecated
     void listar() {
         println "\n### LISTA DE EMPRESAS ###"
 
@@ -73,7 +92,9 @@ class EmpresaService {
 
         empresas.eachWithIndex { Empresa empresa, int i ->
             println "\n${i + 1}. ${empresa.nome}"
-            println formatador.formatar(empresa)
+            println "Email: ${empresa.email}"
+            println "CNPJ: ${empresa.cnpj}"
+            println "Descrição: ${empresa.descricao}"
             println "-" * 50
         }
     }

@@ -1,19 +1,20 @@
 package com.linketinder.dto
 
 import groovy.transform.CompileStatic
-import java.time.LocalDate
 
 @CompileStatic
 class CandidatoDTO {
     String nome
+    String sobrenome
     String email
     String cpf
-    LocalDate dataNascimento
+    String dataDeNascimento  // String porque vem do formulário
+    String cep
     String pais
     String estado
     String cidade
     String descricao
-    List<String> competencias
+    List<String> competencias = []
 
     List<String> validar() {
         List<String> erros = []
@@ -22,18 +23,20 @@ class CandidatoDTO {
             erros.add("Nome é obrigatório.")
         }
 
+        if (!sobrenome || sobrenome.trim().isEmpty()) {
+            erros.add("Sobrenome é obrigatório.")
+        }
+
         if (!email || !email.contains("@")) {
             erros.add("Email inválido.")
-
         }
 
-        if (!cpf || cpf.trim().length() != 11) {
+        if (!cpf || cpf.replaceAll("\\D", "").length() != 11) {
             erros.add("CPF deve ter 11 dígitos.")
-
         }
 
-        if (!dataNascimento || dataNascimento.isAfter(LocalDate.now())) {
-            erros.add("Data de nascimento inválida.")
+        if (!dataDeNascimento || dataDeNascimento.trim().isEmpty()) {
+            erros.add("Data de nascimento é obrigatória.")
         }
 
         if (!pais || pais.trim().isEmpty()) {

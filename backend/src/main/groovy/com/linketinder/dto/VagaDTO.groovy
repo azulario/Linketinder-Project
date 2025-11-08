@@ -2,43 +2,33 @@ package com.linketinder.dto
 
 import groovy.transform.CompileStatic
 
-
 @CompileStatic
 class VagaDTO {
     String titulo
     String descricao
-    String pais
-    String estado
-    String cidade
-    List<String> competenciasRequeridas
+    Integer empresaId
+    List<String> competencias = []
 
     List<String> validar() {
         List<String> erros = []
 
         if (!titulo || titulo.trim().isEmpty()) {
-            erros.add("Título é obrigatório.")
+            erros.add("Título da vaga é obrigatório.")
         }
 
         if (!descricao || descricao.trim().isEmpty()) {
-            erros.add("Descrição é obrigatória.")
+            erros.add("Descrição da vaga é obrigatória.")
         }
 
-        if (!pais || pais.trim().isEmpty()) {
-            erros.add("País é obrigatório.")
+        if (empresaId == null || empresaId <= 0) {
+            erros.add("ID da empresa inválido.")
         }
 
-        if (!estado || estado.trim().isEmpty()) {
-            erros.add("Estado é obrigatório.")
-        }
-
-        if (!cidade || cidade.trim().isEmpty()) {
-            erros.add("Cidade é obrigatória.")
-        }
-
-        if (!competenciasRequeridas || competenciasRequeridas.isEmpty()) {
-            erros.add("Pelo menos uma competência requerida é obrigatória.")
+        if (!competencias || competencias.isEmpty()) {
+            erros.add("Pelo menos uma competência é obrigatória.")
         }
 
         return erros
     }
 }
+

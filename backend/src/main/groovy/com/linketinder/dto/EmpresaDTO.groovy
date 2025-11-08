@@ -10,21 +10,21 @@ class EmpresaDTO {
     String pais
     String estado
     String cidade
+    String cep
     String descricao
-    List<String> competenciasRequeridas
 
     List<String> validar() {
         List<String> erros = []
 
         if (!nome || nome.trim().isEmpty()) {
-            erros.add("Nome é obrigatório.")
+            erros.add("Nome da empresa é obrigatório.")
         }
 
         if (!email || !email.contains("@")) {
             erros.add("Email inválido.")
         }
 
-        if (!cnpj || cnpj.trim().length() != 14) {
+        if (!cnpj || cnpj.replaceAll("\\D", "").length() != 14) {
             erros.add("CNPJ deve ter 14 dígitos.")
         }
 
@@ -40,14 +40,15 @@ class EmpresaDTO {
             erros.add("Cidade é obrigatória.")
         }
 
-        if (!descricao || descricao.trim().isEmpty()) {
-            erros.add("Descrição é obrigatória.")
+        if (!cep || cep.trim().isEmpty()) {
+            erros.add("CEP é obrigatório.")
         }
 
-        if (!competenciasRequeridas || competenciasRequeridas.isEmpty()) {
-            erros.add("Pelo menos uma competência requerida é obrigatória.")
+        if (!descricao || descricao.trim().isEmpty()) {
+            erros.add("Descrição é obrigatória.")
         }
 
         return erros
     }
 }
+
