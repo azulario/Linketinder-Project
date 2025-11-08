@@ -124,7 +124,7 @@ class MenuCandidato {
         Map resultado = controller.listarTodos()
 
         if (resultado.sucesso) {
-            List<Candidato> candidatos = resultado.dados as List<Candidato>
+            List<Candidato> candidatos = resultado.candidatos as List<Candidato>
 
             if (candidatos.isEmpty()) {
                 println "\nNenhum candidato cadastrado."
@@ -152,7 +152,7 @@ class MenuCandidato {
             Map resultado = controller.buscarPorId(id)
 
             if (resultado.sucesso) {
-                Candidato candidato  = resultado.dados as Candidato
+                Candidato candidato  = resultado.candidato as Candidato
 
                 println "\n### CANDIDATO ENCONTRADO ###"
                 println formatador.formatar(candidato)

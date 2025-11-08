@@ -115,7 +115,7 @@ class MenuEmpresa {
         Map resultado = controller.listarTodas()
 
         if (resultado.sucesso) {
-            List<Empresa> empresas = resultado.dados as List<Empresa>
+            List<Empresa> empresas = resultado.empresas as List<Empresa>
 
             if (empresas.isEmpty()) {
                 println "Nenhuma empresa cadastrada."

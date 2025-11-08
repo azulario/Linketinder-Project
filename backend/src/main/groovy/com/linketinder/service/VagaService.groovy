@@ -21,6 +21,12 @@ class VagaService {
         this.formatador = new VagaFormatador()
     }
 
+    VagaService(VagaDAO vagaDAO, EmpresaDAO empresaDAO) {
+        this.vagaDAO = vagaDAO
+        this.empresaDAO = empresaDAO
+        this.formatador = new VagaFormatador()
+    }
+
     Vaga cadastrar(VagaDTO dto) {
 
         Empresa empresa = empresaDAO.buscarPorId(dto.empresaId)

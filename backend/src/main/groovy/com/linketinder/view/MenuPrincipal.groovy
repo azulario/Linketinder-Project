@@ -16,13 +16,13 @@ class MenuPrincipal {
     private MenuVaga menuVaga
 
     MenuPrincipal() {
-        Scanner input = new Scanner(System.in)
+        this.input = new Scanner(System.in)
 
         CandidatoService candidatoService = new CandidatoService()
         EmpresaService empresaService = new EmpresaService()
         VagaService vagaService = new VagaService()
 
-        CandidatoController candidatoController = new CandidatoController()
+        CandidatoController candidatoController = new CandidatoController(candidatoService)
         EmpresaController empresaController = new EmpresaController(empresaService)
         VagaController vagaController = new VagaController(vagaService)
 
@@ -60,11 +60,11 @@ class MenuPrincipal {
                     case 0:
                         println "Saindo do sistema. Até logo!"
                         continuar = false
-                        return
+                        break
                     default:
                         println "Opção inválida. Por favor, tente novamente."
                 }
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException ignored) {
                 println "Opção inválida. Por favor, insira um número válido."
             }
         }

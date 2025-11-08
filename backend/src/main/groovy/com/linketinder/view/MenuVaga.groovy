@@ -132,7 +132,7 @@ class MenuVaga {
             return
         }
 
-        List<Vaga> vagas = resultado.dados as List<Vaga>
+        List<Vaga> vagas = resultado.vagas as List<Vaga>
 
         if (vagas.isEmpty()) {
             println "Nenhuma vaga cadastrada."
