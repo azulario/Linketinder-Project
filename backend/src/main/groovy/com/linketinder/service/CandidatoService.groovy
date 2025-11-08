@@ -22,6 +22,12 @@ class CandidatoService {
         this.formatador = new CandidatoFormatador()
     }
 
+    CandidatoService(CandidatoDAO candidatoDAO, EnderecoDAO enderecoDAO) {
+        this.candidatoDAO = candidatoDAO
+        this.enderecoDAO = enderecoDAO
+        this.formatador = new CandidatoFormatador()
+    }
+
     Candidato cadastrar(CandidatoDTO dto) {
 
         Endereco endereco = new Endereco(dto.pais, dto.estado, dto.cidade, dto.cep)
