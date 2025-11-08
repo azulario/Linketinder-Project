@@ -16,10 +16,7 @@ class CandidatoServiceSpec extends Specification {
     def setup() {
         candidatoDAO = Mock(CandidatoDAO)
         enderecoDAO = Mock(EnderecoDAO)
-
-        service = new CandidatoService()
-        service.candidatoDAO = candidatoDAO
-        service.enderecoDAO = enderecoDAO
+        service = new CandidatoService(candidatoDAO, enderecoDAO)
     }
 
     def "deve cadastrar um candidato com sucesso"() {
@@ -38,14 +35,6 @@ class CandidatoServiceSpec extends Specification {
             cep: "01234-567"
         )
 
-        and: "o enderecoDAO retorna um ID"
-        enderecoDAO.buscarOuCriar(_ as Endereco) >> 1
-
-        and: "o candidatoDAO insere com sucesso"
-        candidatoDAO.inserir(_ as Candidato) >> { Candidato c ->
-            c.id = 10
-        }
-
         when: "cadastrar o candidato"
         def resultado = service.cadastrar(dto)
 
@@ -57,8 +46,8 @@ class CandidatoServiceSpec extends Specification {
         resultado.enderecoId == 1
 
         and: "deve ter chamado os DAOs"
-        1 * enderecoDAO.buscarOuCriar(_ as Endereco)
-        1 * candidatoDAO.inserir(_ as Candidato)
+        1 * enderecoDAO.buscarOuCriar(_ as Endereco) >> 1
+        1 * candidatoDAO.inserir(_ as Candidato) >> { Candidato c -> c.id = 10; return null }
     }
 
     def "deve listar todos os candidatos"() {
@@ -67,7 +56,6 @@ class CandidatoServiceSpec extends Specification {
             new Candidato("João", "Silva", "joao@email.com", "123.456.789-00", null, "Dev", ["Java"]),
             new Candidato("Maria", "Santos", "maria@email.com", "987.654.321-00", null, "Dev", ["Python"])
         ]
-        candidatoDAO.listar() >> candidatos
 
         when: "listar todos os candidatos"
         def resultado = service.listarTodos()
@@ -78,14 +66,13 @@ class CandidatoServiceSpec extends Specification {
         resultado[1].nome == "Maria"
 
         and: "deve ter chamado o DAO"
-        1 * candidatoDAO.listar()
+        1 * candidatoDAO.listar() >> candidatos
     }
 
     def "deve buscar candidato por ID"() {
         given: "um candidato no banco"
         def candidato = new Candidato("João", "Silva", "joao@email.com", "123.456.789-00", null, "Dev", ["Java"])
         candidato.id = 1
-        candidatoDAO.buscarPorId(1) >> candidato
 
         when: "buscar por ID"
         def resultado = service.buscarPorId(1)
@@ -96,7 +83,7 @@ class CandidatoServiceSpec extends Specification {
         resultado.nome == "João"
 
         and: "deve ter chamado o DAO"
-        1 * candidatoDAO.buscarPorId(1)
+        1 * candidatoDAO.buscarPorId(1) >> candidato
     }
 
     def "deve formatar candidato"() {

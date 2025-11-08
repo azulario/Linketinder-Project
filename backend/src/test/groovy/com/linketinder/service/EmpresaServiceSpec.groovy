@@ -16,10 +16,7 @@ class EmpresaServiceSpec extends Specification {
     def setup() {
         empresaDAO = Mock(EmpresaDAO)
         enderecoDAO = Mock(EnderecoDAO)
-
-        service = new EmpresaService()
-        service.empresaDAO = empresaDAO
-        service.enderecoDAO = enderecoDAO
+        service = new EmpresaService(empresaDAO, enderecoDAO)
     }
 
     def "deve cadastrar uma empresa com sucesso"() {
@@ -29,20 +26,11 @@ class EmpresaServiceSpec extends Specification {
             email: "contato@techcorp.com",
             cnpj: "12.345.678/0001-90",
             descricao: "Empresa de tecnologia",
-            competencias: ["Java", "Cloud"],
             pais: "Brasil",
             estado: "SP",
             cidade: "São Paulo",
             cep: "01234-567"
         )
-
-        and: "o enderecoDAO retorna um ID"
-        enderecoDAO.buscarOuCriar(_ as Endereco) >> 1
-
-        and: "o empresaDAO insere com sucesso"
-        empresaDAO.inserir(_ as Empresa) >> { Empresa e ->
-            e.id = 10
-        }
 
         when: "cadastrar a empresa"
         def resultado = service.cadastrar(dto)
@@ -55,8 +43,8 @@ class EmpresaServiceSpec extends Specification {
         resultado.enderecoId == 1
 
         and: "deve ter chamado os DAOs"
-        1 * enderecoDAO.buscarOuCriar(_ as Endereco)
-        1 * empresaDAO.inserir(_ as Empresa)
+        1 * enderecoDAO.buscarOuCriar(_ as Endereco) >> 1
+        1 * empresaDAO.inserir(_ as Empresa) >> { Empresa e -> e.id = 10; return null }
     }
 
     def "deve listar todas as empresas"() {
@@ -65,7 +53,6 @@ class EmpresaServiceSpec extends Specification {
             new Empresa("Tech Corp", "tech@email.com", "12.345.678/0001-90", "Empresa tech"),
             new Empresa("Dev Solutions", "dev@email.com", "98.765.432/0001-10", "Consultoria")
         ]
-        empresaDAO.listar() >> empresas
 
         when: "listar todas as empresas"
         def resultado = service.listarTodas()
@@ -76,14 +63,13 @@ class EmpresaServiceSpec extends Specification {
         resultado[1].nome == "Dev Solutions"
 
         and: "deve ter chamado o DAO"
-        1 * empresaDAO.listar()
+        1 * empresaDAO.listar() >> empresas
     }
 
     def "deve buscar empresa por ID"() {
         given: "uma empresa no banco"
         def empresa = new Empresa("Tech Corp", "tech@email.com", "12.345.678/0001-90", "Empresa tech")
         empresa.id = 1
-        empresaDAO.buscarPorId(1) >> empresa
 
         when: "buscar por ID"
         def resultado = service.buscarPorId(1)
@@ -94,7 +80,7 @@ class EmpresaServiceSpec extends Specification {
         resultado.nome == "Tech Corp"
 
         and: "deve ter chamado o DAO"
-        1 * empresaDAO.buscarPorId(1)
+        1 * empresaDAO.buscarPorId(1) >> empresa
     }
 }
 

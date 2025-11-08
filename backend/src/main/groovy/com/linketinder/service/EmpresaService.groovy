@@ -21,6 +21,12 @@ class EmpresaService {
         this.formatador = new EmpresaFormatador()
     }
 
+    EmpresaService(EmpresaDAO empresaDAO, EnderecoDAO enderecoDAO) {
+        this.empresaDAO = empresaDAO
+        this.enderecoDAO = enderecoDAO
+        this.formatador = new EmpresaFormatador()
+    }
+
     Empresa cadastrar(EmpresaDTO dto) {
         Endereco endereco = new Endereco(dto.pais, dto.estado, dto.cidade, dto.cep)
         Integer enderecoId = enderecoDAO.buscarOuCriar(endereco)
