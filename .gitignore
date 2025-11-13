@@ -46,10 +46,14 @@ lib/
 # Mac OS
 .DS_Store
 
-# Documentação Privada
+# Documentação Privada (comentado - manter documentação pública)
 doc/
-.idea/data_source_mapping.xml
+
+# IntelliJ IDEA - Database configurations
+.idea/dataSources.xml
+.idea/dataSources.local.xml
 .idea/dataSource.xml
+.idea/data_source_mapping.xml
 
 
 
