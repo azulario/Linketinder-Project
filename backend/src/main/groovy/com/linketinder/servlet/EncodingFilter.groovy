@@ -19,12 +19,12 @@ class EncodingFilter implements Filter {
         response.setCharacterEncoding("UTF-8")
         response.setContentType("application/json; charset=UTF-8")
 
-        httpResponse.setHeader("Access-Control-Allow-Origin", "*")
-        httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-        httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        response.setHeader("Access-Control-Allow-Origin", "*")
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
-        if (httpRequest.getMethod().equalsIgnoreCase("OPTIONS")) {
-            httpResponse.setStatus(HttpServletResponse.SC_OK)
+        if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
+            response.setStatus(HttpServletResponse.SC_OK)
             return
         }
 
