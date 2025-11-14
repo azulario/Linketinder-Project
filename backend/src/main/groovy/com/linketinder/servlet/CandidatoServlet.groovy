@@ -65,9 +65,17 @@ class CandidatoServlet extends HttpServlet {
 
            CandidatoDTO dto = gson.fromJson(body, CandidatoDTO.class)
 
+           // Validação de campos obrigatórios
            if (!dto.nome || !dto.email) {
                enviarErro(response, HttpServletResponse.SC_BAD_REQUEST,
                        "Nome e email são obrigatórios.")
+               return
+           }
+
+           // Validação de campos de endereço obrigatórios
+           if (!dto.pais || !dto.estado || !dto.cidade || !dto.cep) {
+               enviarErro(response, HttpServletResponse.SC_BAD_REQUEST,
+                       "Campos de endereço (pais, estado, cidade, cep) são obrigatórios.")
                return
            }
 
