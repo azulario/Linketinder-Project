@@ -20,6 +20,9 @@ class Empresa implements Usuarios {
     List<Vaga> vagas = []
     List<Candidato> candidatosCurtidos = []
 
+    Empresa() {
+    }
+
     Empresa(String nome, String email, String cnpj, String descricao) {
         this.nome = nome
         this.email = email
@@ -27,6 +30,14 @@ class Empresa implements Usuarios {
         this.descricao = descricao
         this.vagas = []
         this.candidatosCurtidos = []
+    }
+
+    Empresa(Integer id, String nome, String email, String cnpj, String descricao) {
+        this.id = id
+        this.nome = nome
+        this.email = email
+        this.cnpj = cnpj
+        this.descricao = descricao
     }
 
     void adicionarVaga(Vaga vaga) {
