@@ -8,9 +8,6 @@ import com.google.gson.stream.JsonWriter
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-/**
- * Adaptador para serialização/desserialização de LocalDate com Gson
- */
 class LocalDateAdapter extends TypeAdapter<LocalDate> {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE
