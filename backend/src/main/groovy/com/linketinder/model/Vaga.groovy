@@ -19,6 +19,9 @@ class Vaga {
     Empresa empresa
     List<Candidato> candidatosCurtiram = []
 
+    Vaga() {
+    }
+
     Vaga(String titulo, String descricao, List<String> competencias, Empresa empresa) {
         this.titulo = titulo
         this.descricao = descricao
